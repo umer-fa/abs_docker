@@ -26,7 +26,7 @@ COPY ./ssl /home/comely-io/ssl/
 COPY ./app/admin/composer.json /home/comely-io/admin/composer.json
 COPY ./app/admin/src /home/comely-io/admin/src/
 COPY ./app/admin/www /home/comely-io/admin/www/
-COPY common /home/comely-io/admin/common/
+COPY ./app/common /home/comely-io/admin/common/
 
 USER root
 RUN chown -R comely-io:comely-io /home/comely-io/
