@@ -13,9 +13,9 @@ WORKDIR /root
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-COPY ./api/nginx.conf /etc/nginx/nginx.template.conf
-COPY ./api/supervisord.conf /etc/supervisord.conf
-COPY ./api/entrypoint.sh /root/api/entrypoint.sh
+COPY ./app/api/nginx.conf /etc/nginx/nginx.template.conf
+COPY ./app/api/supervisord.conf /etc/supervisord.conf
+COPY ./app/api/entrypoint.sh /root/api/entrypoint.sh
 
 WORKDIR /etc/nginx
 RUN rm -rf sites-available sites-enabled nginx.conf
@@ -23,9 +23,9 @@ RUN rm -rf sites-available sites-enabled nginx.conf
 RUN adduser --disabled-password --gecos '' comely-io
 USER comely-io
 COPY ./ssl /home/comely-io/ssl/
-COPY ./api/composer.json /home/comely-io/api/composer.json
-COPY ./api/src /home/comely-io/api/src/
-COPY ./api/www /home/comely-io/api/www/
+COPY ./app/api/composer.json /home/comely-io/api/composer.json
+COPY ./app/api/src /home/comely-io/api/src/
+COPY ./app/api/www /home/comely-io/api/www/
 COPY common /home/comely-io/api/common/
 
 USER root
