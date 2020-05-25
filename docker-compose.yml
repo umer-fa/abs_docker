@@ -1,0 +1,63 @@
+version: "3.7"
+services:
+  admin:
+    build:
+      context: ./app
+      dockerfile: admin/Dockerfile
+    restart: always
+    volumes:
+      - ./log/admin:/root/admin/log
+    env_file:
+      - .env
+    ports:
+      - "${ADMIN_PORT}:6000"
+    depends_on:
+      - db
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.3
+  api:
+    build:
+      context: ./app
+      dockerfile: api/Dockerfile
+    restart: always
+    volumes:
+      - ./log/api:/root/api/log
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT}:6000"
+    depends_on:
+      - db
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.4
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:33061:${DB_PORT}"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - comely-app-db:/var/lib/mysql
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.2
+
+# Volumes Configuration
+volumes:
+  comely-app-db:
+
+# Networks Configuration
+networks:
+  comely-app-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.20.0/28
+        gateway: 10.0.20.1
