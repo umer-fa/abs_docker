@@ -1,0 +1,10 @@
+# Cache engine, possible values are: memcached, redis
+# Set as "~" (null) to not use caching service
+# Recommended caching engine is "redis"
+engine: redis
+# Cache store hostname (domain or IP address)
+host: 10.0.20.3
+# Port (i.e. 11211 or 6379)
+port: 6379
+# Recommended value 1, don't change unless you know what you're doing
+time_out: 1

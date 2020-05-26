@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "127.0.0.1:33061:3306"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - comely-app-db:/var/lib/mysql
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.2
+  redis:
+    build:
+      context: ../app/redis
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.3
+
+# Volumes Configuration
+volumes:
+  comely-app-db:

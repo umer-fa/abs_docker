@@ -1,0 +1,15 @@
+# Databases Configuration
+# Primary database ID/Node
+primary:
+  driver: mysql
+  host: localhost
+  name: app-primary # It is recommended to NOT change this name
+  username: root # If built DB service, default username is "root"
+  password: ~ # If built DB service, it will automatically pick root password
+# API Logs
+api_logs:
+  driver: mysql
+  host: localhost
+  name: api_logs # It is recommended to NOT change this name
+  username: root # If built DB service, default username is "root"
+  password: ~ # If built DB service, it will automatically pick root password

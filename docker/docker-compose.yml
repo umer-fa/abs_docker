@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  admin:
+    build:
+      context: ../
+      dockerfile: app/admin/Dockerfile
+    restart: always
+    volumes:
+      - ../log/admin:/root/admin/log
+    env_file:
+      - .env
+    ports:
+      - "${ADMIN_PORT}:6000"
+    depends_on:
+      - db
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.11
+  api:
+    build:
+      context: ../
+      dockerfile: app/api/Dockerfile
+    restart: always
+    volumes:
+      - ../log/api:/root/api/log
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT}:6000"
+    depends_on:
+      - db
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.12
+
+# Networks Configuration
+networks:
+  comely-app-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.20.0/27
