@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPT=`realpath $0`
+SCRIPT_PATH=`dirname $SCRIPT`
+cd $SCRIPT_PATH/docker
+docker-compose -f docker-compose.yml -f docker-compose.full.yml $@
+cd ../

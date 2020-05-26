@@ -1,4 +1,8 @@
 #!/bin/bash
+SCRIPT=`realpath $0`
+SCRIPT_PATH=`dirname $SCRIPT`
+cd $SCRIPT_PATH
+
 if [ -z "$1" ];
   then
   echo -e "\e[33mWhich configuration to build?\e[0m (\e[36mfull\e[0m|\e[36mlite\e[0m)"
@@ -26,5 +30,5 @@ if [[ ! -f "$DOCKER_COMPOSE_FILE" ]]; then
 fi
 
 docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} up -d --build
-docker-compose ps
 cd ../
+./services ps
