@@ -24,5 +24,4 @@ abstract class Kernel
         return static::$instance;
     }
 
-    private Databa
 }
