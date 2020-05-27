@@ -55,4 +55,20 @@ class Kernel
         $this->dirs = new Directories();
         $this->dbs = new Databases();
     }
+
+    /**
+     * @return Directories
+     */
+    public function dirs(): Directories
+    {
+        return $this->dirs;
+    }
+
+    /**
+     * @return Databases
+     */
+    public function db(): Databases
+    {
+        return $this->dbs;
+    }
 }
