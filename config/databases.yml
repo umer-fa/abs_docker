@@ -3,6 +3,7 @@
 primary:
   driver: mysql
   host: localhost
+  port: ~ # Leave NULL for default port
   name: app-primary # It is recommended to NOT change this name
   username: root # If built DB service, default username is "root"
   password: ~ # If built DB service, it will automatically pick root password
@@ -10,6 +11,7 @@ primary:
 api_logs:
   driver: mysql
   host: localhost
+  port: ~ # Leave NULL for default port
   name: api_logs # It is recommended to NOT change this name
   username: root # If built DB service, default username is "root"
   password: ~ # If built DB service, it will automatically pick root password
