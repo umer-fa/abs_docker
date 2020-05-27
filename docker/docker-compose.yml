@@ -6,7 +6,7 @@ services:
       dockerfile: app/admin/Dockerfile
     restart: always
     volumes:
-      - ../log/admin:/home/comely-io/log
+      - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
     env_file:
       - .env
@@ -21,7 +21,7 @@ services:
       dockerfile: app/api/Dockerfile
     restart: always
     volumes:
-      - ../log/api:/home/comely-io/log
+      - ../log/api:/home/comely-io/api/log
       - ../storage:/home/comely-io/api/storage
     env_file:
       - .env
