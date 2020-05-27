@@ -23,6 +23,7 @@ RUN rm -rf sites-available sites-enabled nginx.conf
 RUN adduser --disabled-password --gecos '' comely-io
 USER comely-io
 COPY ./ssl /home/comely-io/ssl/
+COPY ./config /home/comely-io/admin/config/
 COPY ./app/admin/composer.json /home/comely-io/admin/composer.json
 COPY ./app/admin/src /home/comely-io/admin/src/
 COPY ./app/admin/www /home/comely-io/admin/www/

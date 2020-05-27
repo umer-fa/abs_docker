@@ -6,7 +6,8 @@ services:
       dockerfile: app/admin/Dockerfile
     restart: always
     volumes:
-      - ../log/admin:/root/admin/log
+      - ../log/admin:/home/comely-io/log
+      - ../storage:/home/comely-io/admin/storage
     env_file:
       - .env
     ports:
@@ -20,7 +21,8 @@ services:
       dockerfile: app/api/Dockerfile
     restart: always
     volumes:
-      - ../log/api:/root/api/log
+      - ../log/api:/home/comely-io/log
+      - ../storage:/home/comely-io/api/storage
     env_file:
       - .env
     ports:
