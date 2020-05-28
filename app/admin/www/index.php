@@ -3,35 +3,13 @@ declare(strict_types=1);
 
 require "../vendor/autoload.php";
 
-var_dump("Admin");
-
 $kernel = \App\Common\Kernel::Bootstrap();
-var_dump($kernel->dirs()->root()->path());
-var_dump($kernel->dirs()->root()->permissions());
 
-try {
-    var_dump($kernel->dirs()->storage()->path());
-    var_dump($kernel->dirs()->storage()->permissions());
-} catch (Exception $e) {
-    var_dump(get_class($e));
-    var_dump($e->getMessage());
-    var_dump($e->getTraceAsString());
-}
+trigger_error('Testing error handler', E_USER_NOTICE);
+sleep(2);
+trigger_error('Testing error handler', E_USER_WARNING);
+sleep(2);
+$kernel->setDebug(true);
+trigger_error('Testing error handler 3', E_USER_WARNING);
 
-try {
-    var_dump($kernel->dirs()->log()->path());
-    var_dump($kernel->dirs()->log()->permissions());
-} catch (Exception $e) {
-    var_dump(get_class($e));
-    var_dump($e->getMessage());
-    var_dump($e->getTraceAsString());
-}
-
-try {
-    var_dump($kernel->dirs()->config()->path());
-    var_dump($kernel->dirs()->config()->permissions());
-} catch (Exception $e) {
-    var_dump(get_class($e));
-    var_dump($e->getMessage());
-    var_dump($e->getTraceAsString());
-}
+throw new RuntimeException('Finished');
