@@ -27,4 +27,25 @@ class Validator
         $filterIP = filter_var($hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6);
         return $filterIP ? $filterIP : null;
     }
+
+    /**
+     * @param $val
+     * @return bool
+     */
+    public static function getBool($val): bool
+    {
+        if (is_bool($val)) {
+            return $val;
+        }
+
+        if (is_int($val) && $val === 1) {
+            return true;
+        }
+
+        if (is_string($val) && in_array(strtolower($val), ["1", "true", "on", "yes"])) {
+            return true;
+        }
+
+        return false;
+    }
 }
