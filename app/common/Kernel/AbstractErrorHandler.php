@@ -30,7 +30,7 @@ abstract class AbstractErrorHandler
         $this->setTraceLevel(E_ERROR);
 
         set_error_handler([$this, "errorHandler"]);
-        set_error_handler([$this, "handleThrowable"]);
+        set_exception_handler([$this, "handleThrowable"]);
     }
 
     /**
