@@ -1,6 +1,8 @@
 FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 RUN apt-get update && apt-get install -y software-properties-common curl zip git
 RUN apt-get install -y supervisor
@@ -16,11 +18,14 @@ RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 COPY ./app/api/nginx.conf /etc/nginx/nginx.template.conf
 COPY ./app/api/supervisord.conf /etc/supervisord.conf
 COPY ./app/api/entrypoint.sh /root/api/entrypoint.sh
+COPY ./app/api/php7.4-fpm.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 WORKDIR /etc/nginx
 RUN rm -rf sites-available sites-enabled nginx.conf
 
-RUN adduser --disabled-password --gecos '' comely-io
+RUN groupadd -g $HOST_GID comely-io
+RUN adduser --disabled-password --gecos '' -u $HOST_UID -gid $HOST_GID comely-io
+
 USER comely-io
 WORKDIR /home/comely-io/
 COPY ./ssl ssl/
