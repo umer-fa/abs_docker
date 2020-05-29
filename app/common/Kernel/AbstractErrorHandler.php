@@ -27,7 +27,7 @@ abstract class AbstractErrorHandler
     {
         $this->kernel = $k;
         $this->pathOffset = strlen($k->dirs()->root()->path());
-        $this->setTraceLevel(E_ERROR);
+        $this->setTraceLevel(E_WARNING);
 
         set_error_handler([$this, "errorHandler"]);
         set_exception_handler([$this, "handleThrowable"]);
@@ -38,7 +38,7 @@ abstract class AbstractErrorHandler
      */
     final public function setTraceLevel(int $lvl): void
     {
-        if (!in_array($lvl, [E_ERROR, E_NOTICE, E_WARNING])) {
+        if ($lvl < 0 || $lvl > 0xffff) {
             throw new \InvalidArgumentException('Invalid trace level');
         }
 
