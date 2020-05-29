@@ -32,7 +32,8 @@ class StdErrorHandler extends AbstractErrorHandler
         $terminate = !in_array($err->type, [2, 8, 512, 1024, 2048, 8192, 16384]);
         $includeTrace = $err->type <= $this->traceLevel;
         if ($includeTrace) {
-            $this->bufferTrace($buffer, debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            $trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 2);
+            $this->bufferTrace($buffer, $trace);
         }
 
         $buffer[] = "";
