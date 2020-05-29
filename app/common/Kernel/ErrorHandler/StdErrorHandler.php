@@ -121,6 +121,6 @@ class StdErrorHandler extends AbstractErrorHandler
             }
         }
 
-        $buffer[$count][0] = "└";
+        $buffer[$count] = "└─" . substr($buffer[$count], 6);
     }
 }
