@@ -96,9 +96,7 @@ class StdErrorHandler extends AbstractErrorHandler
 
         $buffer[] = "\e[33mBacktrace:\e[0m";
         $buffer[] = "┬";
-        $count = -1;
         foreach ($trace as $sf) {
-            $count++;
             $function = $sf["function"] ?? null;
             $class = $sf["class"] ?? null;
             $type = $sf["type"] ?? null;
@@ -120,7 +118,5 @@ class StdErrorHandler extends AbstractErrorHandler
                 $buffer[] = "├─ " . $traceString;
             }
         }
-
-        $buffer[$count] = "└─" . substr($buffer[$count], 6);
     }
 }
