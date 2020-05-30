@@ -6,6 +6,8 @@ namespace App\Common\Config;
 use App\Common\Config\AppConfig\CacheConfig;
 use App\Common\Config\AppConfig\DbCred;
 use App\Common\Exception\AppConfigException;
+use App\Common\Exception\AppDirException;
+use App\Common\Kernel;
 use Comely\Utils\Validator\Exception\InvalidValueException;
 use Comely\Utils\Validator\Exception\ValidationException;
 use Comely\Utils\Validator\Validator;
@@ -40,10 +42,12 @@ class AppConfig
 
     /**
      * AppConfig constructor.
+     * @param Kernel $k
      * @throws AppConfigException
+     * @throws AppDirException
      * @throws \Comely\Yaml\Exception\ParserException
      */
-    public function __construct()
+    public function __construct(Kernel $k)
     {
         // Read ENV vars
         try {
@@ -125,7 +129,7 @@ class AppConfig
         }
 
         // Read YAML files
-        $configPath = "../../config/";
+        $configPath = $k->dirs()->config()->path();
         $dbConfig = Yaml::Parse($configPath . "databases.yml")->generate();
         $dbIndex = -1;
         foreach ($dbConfig as $label => $args) {

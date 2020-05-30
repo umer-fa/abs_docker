@@ -46,8 +46,8 @@ class Kernel
         return static::$instance = new static();
     }
 
-    /** @var AppConfig|null */
-    private ?AppConfig $config = null;
+    /** @var AppConfig */
+    private AppConfig $config;
     /** @var Directories */
     private Directories $dirs;
     /** @var Databases */
@@ -61,6 +61,9 @@ class Kernel
 
     /**
      * Kernel constructor.
+     * @throws Exception\AppConfigException
+     * @throws Exception\AppDirException
+     * @throws \Comely\Yaml\Exception\ParserException
      */
     protected function __construct()
     {
@@ -70,7 +73,7 @@ class Kernel
         $this->errHandler = new StdErrorHandler($this);
         $this->errs = new Errors($this);
 
-
+        $this->initConfig(Validator::getBool(trim(getenv("COMELY_APP_CACHED_CONFIG"))));
     }
 
     /**
@@ -136,11 +139,17 @@ class Kernel
      */
     public function config(): AppConfig
     {
-        if ($this->config) {
-            return $this->config;
-        }
+        return $this->config;
+    }
 
-        $cachedConfig = Validator::getBool(trim(getenv("COMELY_APP_CACHED_CONFIG")));
+    /**
+     * @param bool $cachedConfig
+     * @throws Exception\AppConfigException
+     * @throws Exception\AppDirException
+     * @throws \Comely\Yaml\Exception\ParserException
+     */
+    private function initConfig(bool $cachedConfig): void
+    {
         if ($cachedConfig) {
             try {
                 $cachedConfigObj = $this->dirs->tmp()
@@ -166,11 +175,10 @@ class Kernel
 
             if ($appConfig instanceof AppConfig) {
                 $this->config = $appConfig;
-                return $this->config;
             }
         }
 
-        $appConfig = new AppConfig();
+        $appConfig = new AppConfig($this);
         if ($cachedConfig) {
             try {
                 $this->dirs->tmp()
@@ -185,6 +193,5 @@ class Kernel
         }
 
         $this->config = $appConfig;
-        return $this->config;
     }
 }
