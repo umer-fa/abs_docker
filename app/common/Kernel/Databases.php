@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Common\Kernel;
 
 use App\Common\Config\AppConfig;
-use App\Common\Exception\ConfigException;
+use App\Common\Exception\AppConfigException;
 use Comely\Database\Database;
 use Comely\Database\Server\DbCredentials;
 
@@ -19,7 +19,7 @@ class Databases
 
     /**
      * @return Database
-     * @throws ConfigException
+     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function primary(): Database
@@ -29,7 +29,7 @@ class Databases
 
     /**
      * @return Database
-     * @throws ConfigException
+     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function apiLogs(): Database
@@ -40,7 +40,7 @@ class Databases
     /**
      * @param string $label
      * @return Database
-     * @throws ConfigException
+     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function get(string $label = "primary"): Database
@@ -53,7 +53,7 @@ class Databases
         $appConfig = AppConfig::getInstance();
         $dbConfig = $appConfig->db($label);
         if (!$dbConfig) {
-            throw new ConfigException(sprintf('Database "%s" is not configured', $label));
+            throw new AppConfigException(sprintf('Database "%s" is not configured', $label));
         }
 
         $dbCredentials = (new DbCredentials($dbConfig->driver))

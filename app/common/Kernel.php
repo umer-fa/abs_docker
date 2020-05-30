@@ -59,7 +59,7 @@ class Kernel
     /**
      * Kernel constructor.
      */
-    private function __construct()
+    protected function __construct()
     {
         $this->debug = Validator::getBool(getenv("COMELY_APP_DEBUG"));
         $this->dirs = new Directories();
