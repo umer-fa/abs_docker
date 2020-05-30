@@ -115,7 +115,6 @@ class AppConfig
             throw new AppConfigException(sprintf('ENV[API_HOST]: %s', get_class($e)));
         }
 
-
         $this->apiHost = $apiHost;
 
         try {
