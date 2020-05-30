@@ -16,6 +16,12 @@ if [ "$HOST_UID" -eq 0 ]; then
   exit
 fi
 
+APP_TMP_DIR="tmp/";
+if [[ ! -d "$APP_TMP_DIR" ]]; then
+  mkdir "tmp"
+  chmod -R 777 tmp
+fi
+
 if [[ -z "$DOCKER_COMPOSE" ]]; then
   DOCKER_COMPOSE=$1
 fi
