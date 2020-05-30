@@ -63,7 +63,7 @@ class CacheConfig
 
         try {
             /** @var int $timeOut */
-            $timeOut = Validator::Integer($config["port"])->range(1, 30)->validate();
+            $timeOut = Validator::Integer($config["time_out"])->range(1, 30)->validate();
         } catch (ValidationException $e) {
             throw new AppConfigException(sprintf('Cache[time_out]: %s', get_class($e)));
         }
