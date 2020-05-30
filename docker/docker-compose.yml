@@ -8,6 +8,7 @@ services:
     volumes:
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
+      - ../tmp:/home/comely-io/admin/tmp
     environment:
       COMELY_APP_DEBUG: true
       COMELY_APP_CACHED_CONFIG: true
@@ -26,6 +27,7 @@ services:
     volumes:
       - ../log/api:/home/comely-io/api/log
       - ../storage:/home/comely-io/api/storage
+      - ../tmp:/home/comely-io/api/tmp
     environment:
       COMELY_APP_CACHED_CONFIG: true
     env_file:
