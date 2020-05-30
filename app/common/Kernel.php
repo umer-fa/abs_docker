@@ -46,8 +46,8 @@ class Kernel
         return static::$instance = new static();
     }
 
-    /** @var AppConfig */
-    private AppConfig $config;
+    /** @var AppConfig|null */
+    private ?AppConfig $config = null;
     /** @var Directories */
     private Directories $dirs;
     /** @var Databases */
