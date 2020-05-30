@@ -74,7 +74,7 @@ class DbCred
 
         try {
             /** @var string $name */
-            $name = Validator::String($args["name"])->match('/^\w{3,32}$/')->validate();
+            $name = Validator::String($args["name"])->match('/^[\w\-]{3,32}$/')->validate();
         } catch (ValidationException $e) {
             throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB name', $label, get_class($e)));
         }
