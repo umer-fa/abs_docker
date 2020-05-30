@@ -8,6 +8,9 @@ services:
     volumes:
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
+    environment:
+      COMELY_APP_DEBUG: true
+      COMELY_APP_CACHED_CONFIG: true
     env_file:
       - .env
     ports:
@@ -23,6 +26,8 @@ services:
     volumes:
       - ../log/api:/home/comely-io/api/log
       - ../storage:/home/comely-io/api/storage
+    environment:
+      COMELY_APP_CACHED_CONFIG: true
     env_file:
       - .env
     ports:
