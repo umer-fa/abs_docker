@@ -10,8 +10,8 @@ services:
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
     environment:
-      COMELY_APP_DEBUG: true
-      COMELY_APP_CACHED_CONFIG: true
+      COMELY_APP_DEBUG: 1
+      COMELY_APP_CACHED_CONFIG: "true"
     env_file:
       - .env
     ports:
@@ -29,7 +29,7 @@ services:
       - ../storage:/home/comely-io/api/storage
       - ../tmp:/home/comely-io/api/tmp
     environment:
-      COMELY_APP_CACHED_CONFIG: true
+      COMELY_APP_CACHED_CONFIG: "true"
     env_file:
       - .env
     ports:
