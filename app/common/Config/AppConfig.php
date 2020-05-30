@@ -130,7 +130,7 @@ class AppConfig
 
         // Read YAML files
         $configPath = $k->dirs()->config()->path();
-        $dbConfig = Yaml::Parse($configPath . "databases.yml")->generate();
+        $dbConfig = Yaml::Parse($configPath . "/databases.yml")->generate();
         $dbIndex = -1;
         foreach ($dbConfig as $label => $args) {
             $dbIndex++;
@@ -149,7 +149,7 @@ class AppConfig
             $this->dbs[$label] = $dbCred;
         }
 
-        $this->cache = new CacheConfig(Yaml::Parse($configPath . "cache.yml")->generate());
+        $this->cache = new CacheConfig(Yaml::Parse($configPath . "/cache.yml")->generate());
 
         // Timestamp
         $this->timeStamp = time();
