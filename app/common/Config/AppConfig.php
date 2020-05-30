@@ -17,20 +17,6 @@ use Comely\Yaml\Yaml;
  */
 class AppConfig
 {
-    /** @var AppConfig|null */
-    private static ?AppConfig $instance = null;
-
-    public static function getInstance(): self
-    {
-        // Todo: Cached configuration file
-
-        if (!static::$instance) {
-            static::$instance = new self();
-        }
-
-        return static::$instance;
-    }
-
     /** @var string */
     private string $adminHost;
     /** @var int */
@@ -49,13 +35,15 @@ class AppConfig
     private array $dbs = [];
     /** @var CacheConfig */
     private CacheConfig $cache;
+    /** @var int */
+    private int $timeStamp;
 
     /**
      * AppConfig constructor.
      * @throws AppConfigException
      * @throws \Comely\Yaml\Exception\ParserException
      */
-    private function __construct()
+    public function __construct()
     {
         // Read ENV vars
         try {
@@ -158,6 +146,9 @@ class AppConfig
         }
 
         $this->cache = new CacheConfig(Yaml::Parse($configPath . "cache.yml")->generate());
+
+        // Timestamp
+        $this->timeStamp = time();
     }
 
     /**

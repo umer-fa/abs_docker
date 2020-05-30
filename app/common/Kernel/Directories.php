@@ -22,6 +22,8 @@ class Directories
     private ?Directory $storage = null;
     /** @var Directory|null */
     private ?Directory $log = null;
+    /** @var Directory|null */
+    private ?Directory $tmp = null;
 
     /**
      * Directories constructor.
@@ -65,6 +67,19 @@ class Directories
         }
 
         return $this->storage;
+    }
+
+    /**
+     * @return Directory
+     * @throws AppDirException
+     */
+    public function tmp(): Directory
+    {
+        if (!$this->tmp) {
+            $this->tmp = $this->dir("tmp", "/tmp", true);
+        }
+
+        return $this->tmp;
     }
 
     /**

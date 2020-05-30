@@ -3,18 +3,29 @@ declare(strict_types=1);
 
 require "../vendor/autoload.php";
 
-$kernel = \App\Common\Kernel::Bootstrap();
+try {
+    $kernel = \App\Admin\AdminService::Bootstrap();
+    $router = $kernel->router();
 
-trigger_error('Testing error handler 1', E_NOTICE);
-sleep(2);
-trigger_error('Testing error handler 2', E_USER_WARNING);
-sleep(2);
-$kernel->errorHandler()->setTraceLevel(E_USER_WARNING);
-trigger_error('Testing error handler 3', E_USER_WARNING);
+    $authRoute = $router->route('/login', 'App\Admin\Controllers\Login');
+    $defaultRoute = $router->route('/*', 'App\Admin\Controllers\*')
+        ->ignorePathIndexes(0)
+        ->fallbackController('App\Admin\Controllers\Dashboard');
 
-test();
+    $adminAuth = $kernel->config()->adminHttpAuth();
+    if ($adminAuth) {
+        $auth = new \Comely\Http\Router\Authentication\BasicAuth("Administration Panel");
+        $auth->user($adminAuth[0], $adminAuth[1]);
 
-function test()
-{
-    throw new RuntimeException('Finished');
+        // Apply HTTP basic authentication to routes
+        $defaultRoute->auth($auth);
+        $authRoute->auth($auth);
+    }
+
+    \Comely\Http\RESTful::Request($router, function (\Comely\Http\Router\AbstractController $page) {
+        $page->router()->response()->send($page);
+    });
+} catch (Exception $e) {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    throw $e;
 }

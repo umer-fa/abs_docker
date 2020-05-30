@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Common\Kernel;
 
-use App\Common\Config\AppConfig;
 use App\Common\Exception\AppConfigException;
+use App\Common\Kernel;
 use Comely\Database\Database;
 use Comely\Database\Server\DbCredentials;
 
@@ -50,7 +50,7 @@ class Databases
             return $this->dbs[$label];
         }
 
-        $appConfig = AppConfig::getInstance();
+        $appConfig = Kernel::getInstance()->config();
         $dbConfig = $appConfig->db($label);
         if (!$dbConfig) {
             throw new AppConfigException(sprintf('Database "%s" is not configured', $label));

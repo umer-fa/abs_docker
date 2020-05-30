@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Common;
 
+use App\Common\Config\AppConfig;
 use App\Common\Exception\AppBootstrapException;
 use App\Common\Kernel\AbstractErrorHandler;
 use App\Common\Kernel\Databases;
 use App\Common\Kernel\Directories;
 use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
+use Comely\Filesystem\Exception\PathNotExistException;
 
 /**
  * Class Kernel
@@ -21,12 +23,11 @@ class Kernel
 
     /**
      * @return static
-     * @throws AppBootstrapException
      */
     public static function getInstance(): self
     {
         if (!static::$instance) {
-            throw new AppBootstrapException('App kernel not bootstrapped');
+            throw new \UnexpectedValueException('App kernel not bootstrapped');
         }
 
         return static::$instance;
@@ -45,6 +46,8 @@ class Kernel
         return static::$instance = new static();
     }
 
+    /** @var AppConfig */
+    private AppConfig $config;
     /** @var Directories */
     private Directories $dirs;
     /** @var Databases */
@@ -61,11 +64,13 @@ class Kernel
      */
     protected function __construct()
     {
-        $this->debug = Validator::getBool(getenv("COMELY_APP_DEBUG"));
+        $this->debug = Validator::getBool(trim(getenv("COMELY_APP_DEBUG")));
         $this->dirs = new Directories();
         $this->dbs = new Databases();
         $this->errHandler = new StdErrorHandler($this);
         $this->errs = new Errors($this);
+
+
     }
 
     /**
@@ -124,5 +129,62 @@ class Kernel
     public function db(): Databases
     {
         return $this->dbs;
+    }
+
+    /**
+     * @return AppConfig
+     */
+    public function config(): AppConfig
+    {
+        if ($this->config) {
+            return $this->config;
+        }
+
+        $cachedConfig = Validator::getBool(trim(getenv("COMELY_APP_CACHED_CONFIG")));
+        if ($cachedConfig) {
+            try {
+                $cachedConfigObj = $this->dirs->tmp()
+                    ->file("comely-appConfig.php.cache", false)
+                    ->read();
+            } catch (PathNotExistException $e) {
+            } catch (\Exception $e) {
+                trigger_error('Failed to load cached configuration', E_USER_WARNING);
+                if ($this->debug) {
+                    Errors::Exception2Error($e, E_USER_WARNING);
+                }
+            }
+        }
+
+        if (isset($cachedConfigObj) && $cachedConfigObj) {
+            $appConfig = unserialize($cachedConfigObj, [
+                "allowed_classes" => [
+                    'App\Common\Config\AppConfig',
+                    'App\Common\Config\AppConfig\DbCred',
+                    'App\Common\Config\AppConfig\CacheConfig',
+                ]
+            ]);
+
+            if ($appConfig instanceof AppConfig) {
+                $this->config = $appConfig;
+                return $this->config;
+            }
+        }
+
+        $appConfig = new AppConfig();
+        if ($cachedConfig) {
+            try {
+                $this->dirs->tmp()
+                    ->file("comely-appConfig.php.cache", true)
+                    ->edit(serialize($appConfig), true);
+            } catch (\Exception $e) {
+                trigger_error('Failed to write cached configuration', E_USER_WARNING);
+                if ($this->debug) {
+                    Errors::Exception2Error($e, E_USER_WARNING);
+                }
+            }
+        }
+
+        $this->config = $appConfig;
+        return $this->config;
     }
 }
