@@ -72,6 +72,14 @@ class CacheConfig
     }
 
     /**
+     * @return array|string[]
+     */
+    public function __debugInfo(): array
+    {
+        return ["Private CacheConfig Object"];
+    }
+
+    /**
      * @return string|null
      */
     public function engine(): ?string

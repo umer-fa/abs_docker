@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Common\Config\AppConfig;
 
-use App\Common\Exception\ConfigException;
+use App\Common\Exception\AppConfigException;
 use Comely\Utils\Validator\Exception\InvalidValueException;
 use Comely\Utils\Validator\Exception\ValidationException;
 use Comely\Utils\Validator\Validator;
@@ -33,7 +33,7 @@ class DbCred
      * DbCred constructor.
      * @param string $label
      * @param array $args
-     * @throws ConfigException
+     * @throws AppConfigException
      */
     public function __construct(string $label, array $args)
     {
@@ -43,7 +43,7 @@ class DbCred
             /** @var string $driver */
             $driver = Validator::String($args["driver"])->lowerCase()->inArray(["mysql", "pgsql", "sqlite"])->validate();
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid database driver', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid database driver', $label, get_class($e)));
         }
 
         $this->driver = $driver;
@@ -59,7 +59,7 @@ class DbCred
                 return $hostname;
             });
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid DB hostname', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB hostname', $label, get_class($e)));
         }
 
         $this->host = $host;
@@ -67,7 +67,7 @@ class DbCred
         try {
             $port = Validator::Integer($args["port"])->range(1000, 0xffff)->nullable()->validate();
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid DB port', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB port', $label, get_class($e)));
         }
 
         $this->port = $port;
@@ -76,7 +76,7 @@ class DbCred
             /** @var string $name */
             $name = Validator::String($args["name"])->match('/^\w{3,32}$/')->validate();
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid DB name', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB name', $label, get_class($e)));
         }
 
         $this->name = $name;
@@ -84,7 +84,7 @@ class DbCred
         try {
             $username = Validator::String($args["username"])->nullable()->match('/^\w{3,32}$/')->validate();
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid DB username', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB username', $label, get_class($e)));
         }
 
         $this->username = $username;
@@ -92,7 +92,7 @@ class DbCred
         try {
             $password = Validator::String($args["password"])->nullable()->match('/^\w{3,64}$/')->validate();
         } catch (ValidationException $e) {
-            throw new ConfigException(sprintf('DB[%s]: [%s] Invalid DB password', $label, get_class($e)));
+            throw new AppConfigException(sprintf('DB[%s]: [%s] Invalid DB password', $label, get_class($e)));
         }
 
         $this->password = $password;
