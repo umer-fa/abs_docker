@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Common\Exception;
 
 /**
- * Class ConfigException
+ * Class AppConfigException
  * @package App\Common\Exception
  */
-class ConfigException extends \Exception
+class AppConfigException extends \Exception
 {
 }
