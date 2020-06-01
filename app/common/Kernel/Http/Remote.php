@@ -76,9 +76,9 @@ class Remote
         }
 
         // Port
-        $this->port = $_SERVER["REMOTE_PORT"] ?? null;
-        if (!is_null($this->port)) {
-            $this->port = intval($this->port);
+        $port = $_SERVER["REMOTE_PORT"] ?? null;
+        if (!is_null($port)) {
+            $this->port = intval($port);
         }
     }
 }
