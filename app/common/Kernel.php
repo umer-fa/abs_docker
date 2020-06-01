@@ -10,6 +10,7 @@ use App\Common\Kernel\Databases;
 use App\Common\Kernel\Directories;
 use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
+use App\Common\Kernel\Memory;
 use Comely\Filesystem\Exception\PathNotExistException;
 
 /**
@@ -58,6 +59,8 @@ class Kernel
     private Errors $errs;
     /** @var bool */
     private bool $debug;
+    /** @var Memory|null */
+    private ?Memory $mem = null;
 
     /**
      * Kernel constructor.
@@ -132,6 +135,18 @@ class Kernel
     public function db(): Databases
     {
         return $this->dbs;
+    }
+
+    /**
+     * @return Memory
+     */
+    public function memory(): Memory
+    {
+        if (!$this->mem) {
+            $this->mem = new Memory();
+        }
+
+        return $this->mem;
     }
 
     /**
