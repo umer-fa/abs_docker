@@ -9,11 +9,15 @@ use Comely\Http\Router\AbstractController;
  * Class Login
  * @package App\Admin\Controllers
  */
-class Login extends AbstractController
+class Login extends AbstractAdminController
 {
-    public function callback(): void
+    public function adminCallback(): void
     {
+    }
+
+    public function get(): void
+    {
+        var_dump($this->request()->method());
         var_dump(get_called_class());
-        var_dump($this->request());
     }
 }

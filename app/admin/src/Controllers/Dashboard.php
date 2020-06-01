@@ -7,6 +7,9 @@ namespace App\Admin\Controllers;
  * Class Dashboard
  * @package App\Admin\Controllers
  */
-class Dashboard extends Login
+class Dashboard extends AbstractAdminController
 {
+    public function adminCallback(): void
+    {
+    }
 }
