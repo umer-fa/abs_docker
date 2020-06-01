@@ -1,5 +1,18 @@
 version: "3.7"
 services:
+  engine:
+    build:
+      context: ../
+      dockerfile: app/engine/Dockerfile
+    restart: always
+    volumes:
+      - ../storage:/home/comely-io/engine/storage
+      - ../tmp:/home/comely-io/engine/tmp
+    env_file:
+      - .env
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.11
   admin:
     build:
       context: ../
@@ -18,7 +31,7 @@ services:
       - "${ADMIN_PORT}:6000"
     networks:
       comely-app-net:
-        ipv4_address: 10.0.20.11
+        ipv4_address: 10.0.20.12
   api:
     build:
       context: ../
@@ -36,7 +49,7 @@ services:
       - "${API_PORT}:6000"
     networks:
       comely-app-net:
-        ipv4_address: 10.0.20.12
+        ipv4_address: 10.0.20.13
 
 # Networks Configuration
 networks:
