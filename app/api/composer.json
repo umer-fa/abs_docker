@@ -7,7 +7,8 @@
     "ext-gmp": "*",
     "ext-openssl": "*",
     "comely-io/http": "1.0.45",
-    "comely-io/db-orm": "1.2.10"
+    "comely-io/db-orm": "1.2.10",
+    "comely-io/cache": "1.0.24"
   },
   "autoload": {
     "psr-4": {

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Admin\Controllers;
 
-use Comely\Http\Router\AbstractController;
-
 /**
  * Class Login
  * @package App\Admin\Controllers

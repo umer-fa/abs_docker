@@ -1,0 +1,15 @@
+#!/bin/bash
+PHP=`which php`
+BIN=$(dirname $0)/exec.php
+
+old="${IFS}"
+IFS=";"
+ARGS="'$*'"
+IFS=${old}
+
+if [[ -f "${BIN}" ]]
+then
+${PHP} -f ${BIN} ${ARGS}
+else
+echo -e "\e[31mUnable to locate BIN script\e[0m"
+fi

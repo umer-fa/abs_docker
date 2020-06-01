@@ -1,5 +1,5 @@
 {
-  "name": "comely-io/abstract-docker-app-admin",
+  "name": "comely-io/abstract-docker-app-engine",
   "minimum-stability": "dev",
   "require": {
     "php-64bit": "^7.4",
@@ -7,16 +7,14 @@
     "ext-gmp": "*",
     "ext-openssl": "*",
     "comely-io/filesystem": "1.0.13",
+    "comely-io/cli": "1.0.24",
     "comely-io/yaml": "1.0.10",
-    "comely-io/http": "1.0.45",
     "comely-io/db-orm": "1.2.10",
-    "comely-io/sessions": "1.0.12",
-    "comely-io/knit": "2.2.11",
     "comely-io/cache": "1.0.24"
   },
   "autoload": {
     "psr-4": {
-      "App\\Admin\\": "src/",
+      "App\\Engine\\": "src/",
       "App\\Common\\": "common/"
     }
   }
