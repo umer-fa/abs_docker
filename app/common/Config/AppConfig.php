@@ -216,4 +216,20 @@ class AppConfig
 
         return null;
     }
+
+    /**
+     * @return string
+     */
+    public function adminHost(): string
+    {
+        return $this->adminHost;
+    }
+
+    /**
+     * @return int
+     */
+    public function adminPort(): int
+    {
+        return $this->adminPort;
+    }
 }
