@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Common\Kernel;
 
 use App\Common\Exception\AppDirException;
+use App\Common\Kernel\Traits\NoDumpTrait;
+use App\Common\Kernel\Traits\NotCloneableTrait;
+use App\Common\Kernel\Traits\NotSerializableTrait;
 use Comely\Filesystem\Directory;
 use Comely\Filesystem\Exception\FilesystemException;
 use Comely\Filesystem\Exception\PathNotExistException;
@@ -28,6 +31,10 @@ class Directories
     private ?Directory $sess = null;
     /** @var Directory|null */
     private ?Directory $knit = null;
+
+    use NoDumpTrait;
+    use NotCloneableTrait;
+    use NotSerializableTrait;
 
     /**
      * Directories constructor.

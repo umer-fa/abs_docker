@@ -14,6 +14,10 @@ use Comely\Database\Server\DbCredentials;
  */
 class Databases
 {
+    use Kernel\Traits\NoDumpTrait;
+    use Kernel\Traits\NotCloneableTrait;
+    use Kernel\Traits\NotSerializableTrait;
+
     /** @var array */
     private array $dbs = [];
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Common\Kernel;
 
 use App\Common\Kernel;
+use App\Common\Kernel\Traits\NoDumpTrait;
+use App\Common\Kernel\Traits\NotCloneableTrait;
+use App\Common\Kernel\Traits\NotSerializableTrait;
 use Comely\Http\Router;
 
 /**
@@ -20,6 +23,10 @@ class Http
     private Kernel\Http\Remote $remote;
     /** @var Http\Cookies */
     private Kernel\Http\Cookies $cookies;
+
+    use NoDumpTrait;
+    use NotCloneableTrait;
+    use NotSerializableTrait;
 
     /**
      * Http constructor.
