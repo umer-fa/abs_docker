@@ -9,7 +9,9 @@
     "comely-io/filesystem": "1.0.13",
     "comely-io/yaml": "1.0.10",
     "comely-io/http": "1.0.45",
-    "comely-io/db-orm": "1.2.10"
+    "comely-io/db-orm": "1.2.10",
+    "comely-io/sessions": "1.0.12",
+    "comely-io/knit": "2.2.11"
   },
   "autoload": {
     "psr-4": {

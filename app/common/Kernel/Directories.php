@@ -24,6 +24,10 @@ class Directories
     private ?Directory $log = null;
     /** @var Directory|null */
     private ?Directory $tmp = null;
+    /** @var Directory|null */
+    private ?Directory $sess = null;
+    /** @var Directory|null */
+    private ?Directory $knit = null;
 
     /**
      * Directories constructor.
@@ -80,6 +84,32 @@ class Directories
         }
 
         return $this->tmp;
+    }
+
+    /**
+     * @return Directory
+     * @throws AppDirException
+     */
+    public function sessions(): Directory
+    {
+        if (!$this->sess) {
+            $this->sess = $this->dir("sessions", "/tmp/sessions", true);
+        }
+
+        return $this->sess;
+    }
+
+    /**
+     * @return Directory
+     * @throws AppDirException
+     */
+    public function knit(): Directory
+    {
+        if (!$this->knit) {
+            $this->knit = $this->dir("knit", "/tmp/knit", true);
+        }
+
+        return $this->knit;
     }
 
     /**

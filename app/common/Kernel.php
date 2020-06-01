@@ -19,7 +19,7 @@ use Comely\Filesystem\Exception\PathNotExistException;
 class Kernel
 {
     /** @var Kernel|null */
-    private static ?Kernel $instance = null;
+    protected static ?Kernel $instance = null;
 
     /**
      * @return static

@@ -4,7 +4,7 @@ declare(strict_types=1);
 require "../vendor/autoload.php";
 
 try {
-    $kernel = \App\Admin\AdminService::Bootstrap();
+    $kernel = \App\Admin\AppAdmin::Bootstrap();
     $router = $kernel->router();
 
     $authRoute = $router->route('/login', 'App\Admin\Controllers\Login');
