@@ -30,6 +30,7 @@ class Http
         $this->kernel = $k;
         $this->router = new Router();
         $this->remote = new Kernel\Http\Remote();
+        $this->cookies = new Kernel\Http\Cookies();
     }
 
     /**
