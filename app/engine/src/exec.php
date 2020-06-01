@@ -4,16 +4,23 @@ declare(strict_types=1);
 chdir(__DIR__); // Change PHP current working directory
 require "../vendor/autoload.php";
 
-// Prepare Arguments
-$args = $argv[1] ?? "";
-$args = explode(";", substr($args, 1, -1));
+try {
+    $kernel = \App\Common\Kernel::Bootstrap();
 
-// Instantiate CLI
-$bin = new \Comely\Filesystem\Directory(__DIR__ . DIRECTORY_SEPARATOR . "scripts");
-$cli = new \Comely\CLI\CLI($bin, $args);
+    // Prepare Arguments
+    $args = $argv[1] ?? "";
+    $args = explode(";", substr($args, 1, -1));
 
-// Listen to events, etc...
-$cli->events()->beforeExec();
+    // Instantiate CLI
+    $bin = new \Comely\Filesystem\Directory(__DIR__ . DIRECTORY_SEPARATOR . "scripts");
+    $cli = new \Comely\CLI\CLI($bin, $args);
 
-// Execute
-$cli->exec();
+    // Listen to events, etc...
+    $cli->events()->beforeExec();
+
+    // Execute
+    $cli->exec();
+} catch (Exception $e) {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    throw $e;
+}
