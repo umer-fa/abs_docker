@@ -92,14 +92,9 @@ abstract class AbstractAdminController extends GenericHttpController
     public function knit(): Knit
     {
         $knit = parent::knit();
-        $currentTemplate = trim(strval(getenv("COMELY_APP_ADMIN_TMPL")));
-        if (!$currentTemplate) {
-            $currentTemplate = "default";
-        }
 
         try {
-            $templateDir = $this->app->dirs()->root()->dir("templates", false)
-                ->dir($currentTemplate, false);
+            $templateDir = $this->app->dirs()->root()->dir("template", false);
         } catch (FilesystemException $e) {
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw new AppException('Cannot load template directory');
