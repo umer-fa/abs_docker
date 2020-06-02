@@ -198,7 +198,6 @@ class Kernel
                     'App\Common\Config\AppConfig\DbCred',
                     'App\Common\Config\AppConfig\CacheConfig',
                     'App\Common\Config\AppConfig\CipherKeys',
-                    'Comely\DataTypes\Buffer\Binary',
                 ]
             ]);
 

@@ -5,6 +5,7 @@ namespace App\Common\Kernel;
 
 use App\Common\Exception\AppConfigException;
 use App\Common\Kernel;
+use Comely\DataTypes\Buffer\Binary;
 use Comely\Utils\Security\Cipher;
 
 /**
@@ -103,14 +104,7 @@ class Ciphers
             throw new AppConfigException(sprintf('Cipher key "%s" does not exist', $key));
         }
 
-        $defaultEntropy = hash("sha256", "enter some random words or PRNG entropy here", false);
-        if (hash_equals($defaultEntropy, $entropy->base16()->hexits())) {
-            throw new AppConfigException(
-                sprintf('Cipher key "%s" is set to default value; Please change it first', $key)
-            );
-        }
-
-        $cipher = new Cipher($entropy);
+        $cipher = new Cipher(new Binary($entropy));
         $this->ciphers[$key] = $cipher;
         return $cipher;
     }

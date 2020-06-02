@@ -5,7 +5,6 @@ namespace App\Common\Config\AppConfig;
 
 use App\Common\Exception\AppConfigException;
 use Comely\DataTypes\Buffer\Base16;
-use Comely\DataTypes\Buffer\Binary;
 
 /**
  * Class CipherKeys
@@ -23,7 +22,9 @@ class CipherKeys
      */
     public function __construct(array $keys)
     {
+        $defaultEntropy = hash("sha256", "enter some random words or PRNG entropy here", true);
         $index = 0;
+
         foreach ($keys as $label => $entropy) {
             if (!preg_match('/^\w{2,16}$/', $label)) {
                 throw new AppConfigException(sprintf('Invalid cipher key label at index %d', $index));
@@ -37,15 +38,19 @@ class CipherKeys
                 $entropy = hash("sha256", $entropy);
             }
 
-            $this->keys[strtolower($label)] = (new Base16($entropy))->binary();
+            if ($entropy === $defaultEntropy) {
+                throw new AppConfigException(sprintf('Cipher key "%s" entropy is set to default; It must be changed', $label));
+            }
+
+            $this->keys[strtolower($label)] = (new Base16($entropy))->binary()->raw();
         }
     }
 
     /**
      * @param string $name
-     * @return Binary|null
+     * @return string|null
      */
-    public function get(string $name): ?Binary
+    public function get(string $name): ?string
     {
         return $this->keys[strtolower($name)] ?? null;
     }
