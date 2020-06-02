@@ -22,7 +22,6 @@ class CipherKeys
      */
     public function __construct(array $keys)
     {
-        $defaultEntropy = hash("sha256", "enter some random words or PRNG entropy here", true);
         $index = 0;
 
         foreach ($keys as $label => $entropy) {
@@ -36,10 +35,6 @@ class CipherKeys
 
             if (!preg_match('/^[a-f0-9]{64}$/i', $entropy)) {
                 $entropy = hash("sha256", $entropy);
-            }
-
-            if ($entropy === $defaultEntropy) {
-                throw new AppConfigException(sprintf('Cipher key "%s" entropy is set to default; It must be changed', $label));
             }
 
             $this->keys[strtolower($label)] = (new Base16($entropy))->binary()->raw();

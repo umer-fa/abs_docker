@@ -18,6 +18,7 @@ class Ciphers
     private Kernel $kernel;
     /** @var array */
     private array $ciphers = [];
+    private string $defEntropy;
 
     use Kernel\Traits\NoDumpTrait;
     use Kernel\Traits\NotCloneableTrait;
@@ -30,6 +31,7 @@ class Ciphers
     public function __construct(Kernel $appKernel)
     {
         $this->kernel = $appKernel;
+        $this->defEntropy = hash("sha256", "enter some random words or PRNG entropy here", true);
     }
 
     /**
@@ -102,6 +104,8 @@ class Ciphers
         $entropy = $this->kernel->config()->cipher()->get($key);
         if (!$entropy) {
             throw new AppConfigException(sprintf('Cipher key "%s" does not exist', $key));
+        } elseif ($entropy === $this->defEntropy) {
+            throw new AppConfigException(sprintf('Cipher key "%s" entropy is set to default; It must be changed', $key));
         }
 
         $cipher = new Cipher(new Binary($entropy));
