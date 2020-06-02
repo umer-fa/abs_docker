@@ -21,6 +21,11 @@ use Comely\Filesystem\Filesystem;
  */
 class Kernel
 {
+    /** @var string */
+    public const NAME = "Abstract Comely-IO App";
+    /** @var int[] */
+    public const ROOT_ADMINISTRATORS = [1];
+
     /** @var Kernel|null */
     protected static ?Kernel $instance = null;
 
