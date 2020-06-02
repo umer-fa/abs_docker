@@ -19,6 +19,7 @@ services:
       dockerfile: app/admin/Dockerfile
     restart: always
     volumes:
+      - ../app/admin/templates:/home/comely-io/admin/templates
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
