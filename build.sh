@@ -16,13 +16,13 @@ if [ "$HOST_UID" -eq 0 ]; then
   exit
 fi
 
-APP_CONFIG_DIR="config/";
+APP_CONFIG_DIR="config/"
 if [[ ! -d "$APP_CONFIG_DIR" ]]; then
-  echo -e "\e[31mERROR:\e[0m Config directory \"\e[36m${$APP_CONFIG_DIR}\e[0m\" does not exist";
+  echo -e "\e[31mERROR:\e[0m Config directory \"\e[36m${APP_CONFIG_DIR}\e[0m\" does not exist";
   exit
 fi
 
-APP_TMP_DIR="tmp/";
+APP_TMP_DIR="tmp/"
 if [[ ! -d "$APP_TMP_DIR" ]]; then
   mkdir "tmp"
   chmod -R 777 tmp
@@ -51,5 +51,5 @@ fi
 docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} build --build-arg HOST_UID=${HOST_UID} --build-arg HOST_GID=${HOST_GID}
 
 cd ../
-./services up -d
-./services ps
+./services.sh up -d
+./services.sh ps
