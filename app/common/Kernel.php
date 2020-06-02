@@ -13,6 +13,7 @@ use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
 use App\Common\Kernel\Memory;
 use Comely\Filesystem\Exception\PathNotExistException;
+use Comely\Filesystem\Filesystem;
 
 /**
  * Class Kernel
@@ -177,6 +178,8 @@ class Kernel
      */
     private function initConfig(bool $cachedConfig): void
     {
+        Filesystem::clearStatCache($this->dirs->tmp()->suffix("comely-appConfig.php.cache"));
+
         if ($cachedConfig) {
             try {
                 $cachedConfigObj = $this->dirs->tmp()
