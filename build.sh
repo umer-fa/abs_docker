@@ -16,6 +16,12 @@ if [ "$HOST_UID" -eq 0 ]; then
   exit
 fi
 
+APP_CONFIG_DIR="config/";
+if [[ ! -d "$APP_CONFIG_DIR" ]]; then
+  echo -e "\e[31mERROR:\e[0m Config directory \"\e[36m${$APP_CONFIG_DIR}\e[0m\" does not exist";
+  exit
+fi
+
 APP_TMP_DIR="tmp/";
 if [[ ! -d "$APP_TMP_DIR" ]]; then
   mkdir "tmp"
