@@ -13,9 +13,15 @@ class Login extends AbstractAdminController
     {
     }
 
+    /**
+     * @throws \Comely\Knit\Exception\KnitException
+     * @throws \Comely\Knit\Exception\TemplateException
+     */
     public function get(): void
     {
-        var_dump($this->request()->method());
-        var_dump(get_called_class());
+        $this->page()->title('Administrator Login')->index(0, 0, 1);
+
+        $template = $this->template("login.knit");
+        $this->body($template);
     }
 }
