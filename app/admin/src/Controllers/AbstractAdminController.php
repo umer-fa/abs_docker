@@ -98,7 +98,6 @@ abstract class AbstractAdminController extends GenericHttpController
         }
 
         try {
-            var_dump($this->app->dirs()->root()->path());
             $templateDir = $this->app->dirs()->root()->dir("templates", false)
                 ->dir($currentTemplate, false);
         } catch (FilesystemException $e) {
