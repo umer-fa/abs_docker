@@ -8,6 +8,8 @@ use App\Common\Exception\AppException;
 use App\Common\Kernel\Http\Controllers\GenericHttpController;
 use Comely\Database\Queries\Query;
 use Comely\Database\Schema;
+use Comely\Filesystem\Exception\FilesystemException;
+use Comely\Knit\Knit;
 
 /**
  * Class AbstractAdminController
@@ -81,6 +83,30 @@ abstract class AbstractAdminController extends GenericHttpController
     private function authenticate(): void
     {
         throw new AppException('Not authenticated');
+    }
+
+    /**
+     * @return Knit
+     * @throws AppException
+     */
+    public function knit(): Knit
+    {
+        $knit = parent::knit();
+        $currentTemplate = trim(strval(getenv("COMELY_APP_ADMIN_TMPL")));
+        if (!$currentTemplate) {
+            $currentTemplate = "default";
+        }
+
+        try {
+            $templateDir = $this->app->dirs()->root()->dir("templates", false)
+                ->dir($currentTemplate, false);
+        } catch (FilesystemException $e) {
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw new AppException('Cannot load template directory');
+        }
+
+        $knit->dirs()->templates($templateDir);
+        return $knit;
     }
 
     /**
