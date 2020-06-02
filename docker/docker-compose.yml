@@ -20,7 +20,7 @@ services:
     restart: always
     volumes:
       - ../app/admin/templates/default/knit:/home/comely-io/admin/template
-      - ../app/admin/templates/default/assets:/home/comely-io/admin/www/default
+      - ../app/admin/templates/default/www:/home/comely-io/admin/www/default
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
