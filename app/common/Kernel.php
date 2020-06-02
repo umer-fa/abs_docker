@@ -6,6 +6,7 @@ namespace App\Common;
 use App\Common\Config\AppConfig;
 use App\Common\Exception\AppBootstrapException;
 use App\Common\Kernel\AbstractErrorHandler;
+use App\Common\Kernel\Ciphers;
 use App\Common\Kernel\Databases;
 use App\Common\Kernel\Directories;
 use App\Common\Kernel\ErrorHandler\Errors;
@@ -57,6 +58,8 @@ class Kernel
     private AbstractErrorHandler $errHandler;
     /** @var Errors */
     private Errors $errs;
+    /** @var Ciphers */
+    private Ciphers $ciphers;
     /** @var bool */
     private bool $debug;
     /** @var Memory|null */
@@ -75,6 +78,7 @@ class Kernel
         $this->dbs = new Databases();
         $this->errHandler = new StdErrorHandler($this);
         $this->errs = new Errors($this);
+        $this->ciphers = new Ciphers($this);
 
         $this->initConfig(Validator::getBool(trim(getenv("COMELY_APP_CACHED_CONFIG"))));
     }
@@ -155,6 +159,14 @@ class Kernel
     public function config(): AppConfig
     {
         return $this->config;
+    }
+
+    /**
+     * @return Ciphers
+     */
+    public function ciphers(): Ciphers
+    {
+        return $this->ciphers;
     }
 
     /**
