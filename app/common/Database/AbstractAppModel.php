@@ -7,10 +7,10 @@ use App\Common\Kernel;
 use Comely\Database\Schema\ORM\Abstract_ORM_Model;
 
 /**
- * Class AbstractORMModel
+ * Class AbstractAppModel
  * @package App\Common\Database
  */
-abstract class AbstractORMModel extends Abstract_ORM_Model
+abstract class AbstractAppModel extends Abstract_ORM_Model
 {
     /** @var Kernel|null */
     protected ?Kernel $app = null;
