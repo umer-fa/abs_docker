@@ -10,8 +10,7 @@
     {knit "_favicon"}
     <link href="{$page.root}default/css/bootstrap.min.css" rel="stylesheet">
     <link href="{$page.root}default/css/noty.min.css" rel="stylesheet">
-    <link href="{$page.root}default/css/custom/override.min.css" rel="stylesheet">
-    <link href="{$page.root}default/css/custom/login.min.css" rel="stylesheet">
+    <link href="{$page.root}default/css/login.min.css" rel="stylesheet">
 </head>
 <body class="text-center">
 <form class="form-signin">
