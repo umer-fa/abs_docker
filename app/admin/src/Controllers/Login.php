@@ -21,6 +21,8 @@ class Login extends AbstractAdminController
     {
         $this->page()->title('Administrator Login')->index(0, 0, 1);
 
+        var_dump($this->session()->id());
+
         $template = $this->template("login.knit");
         $this->body($template);
     }

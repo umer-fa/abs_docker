@@ -152,7 +152,7 @@ abstract class GenericHttpController extends AbstractAppController
      */
     protected function initSession(?string $id = null, bool $setCookie = true): void
     {
-        $sessionId = $id ?? $_COOKIE["COMELY_SESS_ID"] ?? null;
+        $sessionId = $id ?? $_COOKIE["COMELYSESSID"] ?? null;
         if ($sessionId) {
             try {
                 $this->session = $this->app->sessions()->resume($sessionId);
@@ -165,8 +165,8 @@ abstract class GenericHttpController extends AbstractAppController
             $this->session = $this->app->sessions()->start();
         }
 
-        if ($setCookie && isset($cookieName)) {
-            $this->app->http()->cookies()->set($cookieName, $this->session->id());
+        if ($setCookie) {
+            $this->app->http()->cookies()->set("COMELYSESSID", $this->session->id());
         }
     }
 

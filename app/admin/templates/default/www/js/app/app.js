@@ -24,7 +24,7 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         if ($(this).is("form")) {
-            var form = this;
+            let form = this;
             regularXhrForm(form, function (result) {
                 if (result.hasOwnProperty("status")) {
                     if (result["status"] === true) {

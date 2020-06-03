@@ -8,13 +8,14 @@
     <meta name="generator" content="Jekyll v4.0.1">
     <title>{$page.title}</title>
     {knit "_favicon"}
+    <link href="{$page.root}default/css/animate.min.css" rel="stylesheet">
     <link href="{$page.root}default/css/bootstrap.min.css" rel="stylesheet">
     <link href="{$page.root}default/css/noty.min.css" rel="stylesheet">
     <link href="{$page.root}default/css/login.min.css" rel="stylesheet">
     <link href="{$page.root}default/css/style.min.css" rel="stylesheet">
 </head>
 <body class="text-center">
-<form class="form-signin">
+<form class="form-signin xhr-form">
     <img class="mb-4" src="{$page.root}favicon/android-chrome-192x192.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">{$page.title}</h1>
     <label for="inputEmail" class="sr-only">Email address</label>
