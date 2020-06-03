@@ -1,1 +1,1 @@
-input,option,select{font-family:"Roboto",sans-serif !important;font-size:1.1rem !important;font-weight:300 !important}
+@import url("//fonts.googleapis.com/css?family=Roboto:100,300,400,400i,500,700");@media(min-width:768px){body{margin-top:60px}}input,select,option,textarea{font-weight:300}textarea.no-resize{resize:none}
