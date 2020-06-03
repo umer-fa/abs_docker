@@ -21,8 +21,13 @@ use Comely\Filesystem\Filesystem;
  */
 class Kernel
 {
-    /** @var string */
-    public const NAME = "Abstract Comely-IO App";
+    /** @var string App Name, Extending class should change these constant */
+    public const NAME = "Comely App Kernel";
+    /** string Comely App Kernel Version (Major.Minor.Release-Suffix) */
+    public const VERSION = "2020.155";
+    /** int Comely App Kernel Version (Major . Minor . Release) */
+    public const VERSION_ID = 202015500;
+
     /** @var int[] */
     public const ROOT_ADMINISTRATORS = [1];
 
