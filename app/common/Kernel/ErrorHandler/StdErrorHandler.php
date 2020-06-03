@@ -22,6 +22,8 @@ class StdErrorHandler extends AbstractErrorHandler
      */
     public function handleError(ErrorMsg $err): bool
     {
+        $this->kernel->errors()->append($err);
+
         $buffer[] = "";
         $buffer[] = sprintf("\e[36m[%s]\e[0m", date("d-m-Y H:i"));
         $buffer[] = sprintf("\e[33mError:\e[0m \e[31m%s\e[0m", $err->typeStr);

@@ -5,6 +5,8 @@ require "../vendor/autoload.php";
 
 try {
     $kernel = \App\Admin\AppAdmin::Bootstrap();
+    $errorHandler = new \App\Common\Kernel\ErrorHandler\HttpErrorHandler($kernel);
+    $kernel->setErrorHandler($errorHandler);
     $router = $kernel->router();
 
     $authRoute = $router->route('/login', 'App\Admin\Controllers\Login');

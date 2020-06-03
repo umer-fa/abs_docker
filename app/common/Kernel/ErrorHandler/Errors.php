@@ -65,7 +65,7 @@ class Errors
     {
         $errorMsg = $this->prepareErrorMsg($message, $type, $traceLevel);
         $errorMsg->triggered = true;
-        $this->append($errorMsg);
+        $this->kernel->errorHandler()->handleError($errorMsg);
     }
 
     /**
@@ -77,7 +77,7 @@ class Errors
     {
         $errorMsg = $this->prepareErrorMsg($message, $type, $traceLevel);
         $errorMsg->triggered = $this->kernel->isDebug();
-        $this->append($errorMsg);
+        $this->kernel->errorHandler()->handleError($errorMsg);
     }
 
     /**
