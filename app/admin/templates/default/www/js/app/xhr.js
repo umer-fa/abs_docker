@@ -1,3 +1,6 @@
+let errorsContainer = $("div#errors-reporter");
+let totpModal = $("div#totpModal");
+
 function xhrCall(to, data, options, callback) {
     let defaultOptions = {
         cache: false,
@@ -6,11 +9,11 @@ function xhrCall(to, data, options, callback) {
     };
 
     // Check if options param was passed
-    if (typeof(options) === "object") {
+    if (typeof (options) === "object") {
         $.extend(defaultOptions, options); // Merge
     }
 
-    if (typeof(data) !== "object") {
+    if (typeof (data) !== "object") {
         console.log("xhrCall expects object for second parameter");
         return false;
     }
@@ -21,9 +24,9 @@ function xhrCall(to, data, options, callback) {
 
     // Ajax
     $.ajax(defaultOptions).done(function (res) {
-        if (typeof(callback) === "function") {
+        if (typeof (callback) === "function") {
             if (defaultOptions["dataType"] === "json") {
-                if (typeof(res) === "object") {
+                if (typeof (res) === "object") {
                     callback(res);
                 } else {
                     console.log("Expecting an object from XHR")
@@ -40,25 +43,42 @@ function xhrCall(to, data, options, callback) {
 
 function xhrForm(form, callback) {
     if ($(form).is("form")) {
-        var to = $(form).attr("action");
+        let to = $(form).attr("action");
         $(form).find(":submit").attr("disabled", true);
         xhrCall(to, $(form).serializeArray(), {type: "post"}, callback);
         $(form).find(":submit").attr("disabled", false);
     }
 }
 
-function xhrFormData(form, callback) {
-    if ($(form).is("form")) {
-        var to = $(form).attr("action");
-        $(form).find(":submit").attr("disabled", true);
-        xhrCall(to, new FormData($(form)[0]), {type: "post", processData: false, contentType: false}, callback);
-        $(form).find(":submit").attr("disabled", false);
-    }
-}
-
 function processFormResult(form, result) {
     if ($(form).is("form")) {
-        if (typeof(result) === "object") {
+        if (typeof (result) === "object") {
+            if (result.hasOwnProperty("messages")) {
+                let messages = result["messages"];
+                if ($.isArray(messages)) {
+                    // Form fields messages
+                    $(messages).each(function (num, message) {
+                        if (typeof message === "object") {
+                            let param = message["param"];
+                            if (typeof param === "string" && param.length) {
+                                let elem = $(form).find(':input[name="' + param + '"]');
+                                if (elem && elem.length) {
+                                    $(elem).addClass("is-invalid");
+
+                                    let paramMessage = message["message"];
+                                    if (paramMessage.length) {
+                                        let paramMessageElem = $("<div></div>");
+                                        $(paramMessageElem).addClass("invalid-feedback animated fadeInUp");
+                                        $(paramMessageElem).text(paramMessage);
+                                        $(paramMessageElem).insertAfter(elem);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
             // Adding "has-error" class to field
             if (result.hasOwnProperty("param")) {
                 $(form).find(':input[name="' + result["param"] + '"]')
@@ -66,14 +86,17 @@ function processFormResult(form, result) {
             }
 
             // Issue noty
-            xhrResult(result);
+            xhrResult(result, form);
         }
     }
 }
 
 function xhrMessageNotyType(type) {
     if (typeof type === "string") {
+        type = type.toLowerCase();
         switch (type) {
+            case "notice":
+                return "warning";
             case "error":
             case "danger":
                 return "error";
@@ -87,17 +110,29 @@ function xhrMessageNotyType(type) {
     }
 }
 
-function xhrResult(result) {
-    if (typeof(result) === "object") {
+function xhrResult(result, form) {
+    let ignoreFormParams = false;
+    if (form && form.length) {
+        ignoreFormParams = true;
+    }
+
+    if (typeof (result) === "object") {
         if (result.hasOwnProperty("messages")) {
-            var messages = result["messages"];
+            let messages = result["messages"];
             if ($.isArray(messages)) {
                 $(messages).each(function (num, message) {
                     if (typeof message === "object") {
+                        let msgParam = message["param"];
+                        if (msgParam && msgParam.length) {
+                            if (ignoreFormParams === true) {
+                                return;
+                            }
+                        }
+
                         if (message.hasOwnProperty("type") && message.hasOwnProperty("message")) {
-                            var notyType = xhrMessageNotyType(message["type"]);
-                            var notyMessage = message["message"];
-                            var notyLayout = "bottomRight";
+                            let notyType = xhrMessageNotyType(message["type"]);
+                            let notyMessage = message["message"];
+                            let notyLayout = "bottomRight";
                             if (notyType === "success") {
                                 notyLayout = "bottom"
                             }
@@ -108,6 +143,70 @@ function xhrResult(result) {
                 });
             }
         }
+
+        if (result.hasOwnProperty("status")) {
+            if (result["status"] === false) {
+                if (result.hasOwnProperty("totpAuthModal") && result["totpAuthModal"] === true) {
+                    $(totpModal).modal('show');
+                }
+            }
+
+            if (result.hasOwnProperty("totpModalClose")) {
+                $(totpModal).modal('hide');
+            }
+        }
+
+        let hasErrors = false;
+        if (result.hasOwnProperty("errors")) {
+            let errors = result["errors"];
+            if ($.isArray(errors) && errors.length > 0) {
+                hasErrors = true;
+                if (errorsContainer && errorsContainer.length) {
+                    let errorsContainerList = $(errorsContainer).find("#errors-list");
+                    $(errors).each(function (i, error) {
+                        if (typeof error === "object") {
+                            let thisError = $("<div></div>");
+                            $(thisError).addClass("alert alert-dismissible fade show alert-" + xhrMessageNotyType(error["type"]));
+                            $(thisError).text(error["message"]);
+                            $(thisError).append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>');
+                            $(errorsContainerList).append(thisError);
+                        }
+                    });
+
+                    $(errorsContainer).slideDown();
+                }
+            }
+        }
+
+        let letChangeLocation = true;
+        let changeLocationTrigger = $("<div></div>").addClass("alert alert-warning");
+        if (hasErrors === true) {
+            if ($(errorsContainer).length) {
+                letChangeLocation = false;
+            }
+        }
+
+        if (result.hasOwnProperty("redirect")) {
+            if (letChangeLocation === true) {
+                setTimeout(function () {
+                    document.location.replace(result["redirect"]);
+                }, 1500);
+            } else {
+                $(changeLocationTrigger).append('To continue, please click <a href="' + result["redirect"] + '"><strong>here</strong></a>');
+                $(errorsContainer).find("#errors-list").append(changeLocationTrigger);
+                $(errorsContainer).slideDown();
+            }
+        } else if (result.hasOwnProperty("refresh")) {
+            if (letChangeLocation === true) {
+                setTimeout(function () {
+                    document.location.reload();
+                }, 1500);
+            } else {
+                $(changeLocationTrigger).append('To continue, please click <a href="javascript:document.location.reload();"><strong>here</strong></a>');
+                $(errorsContainer).find("#errors-list").append(changeLocationTrigger);
+                $(errorsContainer).slideDown();
+            }
+        }
     }
 }
 
@@ -115,12 +214,14 @@ function resetForm(form) {
     if ($(form).is("form")) {
         $(form).find(":input")
             .removeClass("is-invalid");
+
+        $(form).find("div.invalid-feedback").remove();
     }
 }
 
 function issueNoty3(type, text, pos, params) {
     if (pos == null) pos = "bottom";
-    var notyParams = {
+    let notyParams = {
         type: type,
         layout: pos,
         theme: "bootstrap-v4",
@@ -133,7 +234,7 @@ function issueNoty3(type, text, pos, params) {
         }
     };
 
-    if (typeof(params) === "object") {
+    if (typeof (params) === "object") {
         $.extend(notyParams, params); // Merge
     }
 
@@ -145,7 +246,7 @@ function regularXhrForm(form, callback) {
         resetForm(form);
         xhrForm(form, function (result) {
             processFormResult(form, result);
-            if (typeof(callback) === "function") {
+            if (typeof (callback) === "function") {
                 callback(result);
             }
         });

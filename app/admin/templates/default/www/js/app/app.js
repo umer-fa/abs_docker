@@ -8,13 +8,12 @@ $(document).ready(function () {
 let root = window.location.protocol + "//" + window.location.hostname +
     (window.location.port ? ":" + window.location.port : "");
 
-let authToken   =   window.location.pathname;
-authToken   =   authToken[0]    === "/" ? authToken.substr(1) : authToken;
-authToken   =   authToken.split("/");
-authToken   =   authToken[0];
+let authToken = window.location.pathname;
+authToken = authToken[0] === "/" ? authToken.substr(1) : authToken;
+authToken = authToken.split("/");
+authToken = authToken[0];
 
-let rootPath    =   root + "/" + authToken;
-let totpModal = $("div#totpModal");
+let rootPath = root + "/" + authToken;
 
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
@@ -30,26 +29,6 @@ $(function () {
                     if (result["status"] === true) {
                         $(form).find(':input[data-success-reset]').val("");
                     }
-                }
-
-                if (result.hasOwnProperty("totpAuth")) {
-                    if ($(totpModal).length) {
-                        $(totpModal).modal('show');
-                    }
-                } else if (result.hasOwnProperty("totpModalClose")) {
-                    if ($(totpModal).length) {
-                        $(totpModal).modal('hide');
-                    }
-                }
-
-                if (result.hasOwnProperty("redirect")) {
-                    setTimeout(function () {
-                        document.location.replace(result["redirect"]);
-                    }, 1500);
-                } else if (result.hasOwnProperty("refresh")) {
-                    setTimeout(function () {
-                        document.location.reload();
-                    }, 1500);
                 }
 
                 if (result.hasOwnProperty("reset")) {
@@ -88,7 +67,7 @@ $(function () {
 
         // Should round?
         if (current.match(/^[0-9]+\.[1-9]+[0-9]*$/)) {
-            var rounded = round(current, scale);
+            let rounded = round(current, scale);
             if (isNaN(rounded)) {
                 rounded = current.split(".")[0];
             }

@@ -246,7 +246,7 @@ abstract class GenericHttpController extends AbstractAppController
      * @return ObfuscatedForm
      * @throws ObfuscatedFormsException
      */
-    public function getObfuscatedForm(string $name, ?string $hashFieldName = "hash"): ObfuscatedForm
+    public function getObfuscatedForm(string $name, ?string $hashFieldName = "form"): ObfuscatedForm
     {
         $form = $this->obfuscatedForms()->retrieve($name);
         if (!$form) {

@@ -51,6 +51,16 @@ class Administrator extends AbstractAppModel
         $this->_privileges = null;
     }
 
+    public function validate(): void
+    {
+
+    }
+
+    public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): void
+    {
+
+    }
+
     /**
      * @return Cipher
      * @throws AppException

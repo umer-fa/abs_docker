@@ -23,21 +23,21 @@
             <div class="card">
                 <h4 class="card-header"><i class="icon ion-lock-combination"></i> Authenticate</h4>
                 <div class="card-body">
-                    {foreach $errors as $error}
-                        <div class="alert alert-{if $error.type|strtolower === 'notice'}info{elseif $error.type|strtolower === 'warning'}warning{else}danger{/if}">
-                            [{$error.type}] {$error.message} in file “<u>{$error.file}</u>” on line #
-                            <u>{$error.line}</u>
+                    <div id="errors-reporter" style="">
+                        <div id="errors-list">
+                            %[%errors%]%
+                            {if $errors|count || $flashMessages|count}
+                                {foreach $flashMessages as $message}
+                                    <div class="alert alert-{$message.type}">
+                                        {$message.message}
+                                    </div>
+                                {/foreach}
+                            {/if}
                         </div>
-                    {/foreach}
-                    {foreach $flashMessages as $flashMessage}
-                        <div class="alert alert-{$flashMessage.type}">
-                            {$flashMessage.message}
-                        </div>
-                    {/foreach}
-
-                    <form class="xhr-form backend-signin-form" method="post" action="{$page.root}signin">
-                        <input type="hidden" name="{$form.fields.token}" value="{$page.token}">
-                        <input type="hidden" name="{$form.fields.hash}" value="{$form.hash}">
+                    </div>
+                    <form class="xhr-form" method="post" action="{$page.root}login">
+                        <input type="hidden" name="{$form.fields.xsrf}" value="{$page.token}">
+                        <input type="hidden" name="{$form.fields.form}" value="{$form.hash}">
 
                         <div class="form-group">
                             <label class="sr-only" for="{$form.fields.email}">E-mail address</label>
@@ -55,7 +55,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="sr-only" for="{$form.fields.totp}">TOTP Code</label>
-                            <input type="text" maxlength="6" name="{$form.fields.code}" id="{$form.fields.totp}"
+                            <input type="text" maxlength="6" name="{$form.fields.totp}" id="{$form.fields.totp}"
                                    autocomplete="off"
                                    data-onload-value="" placeholder="2FA Code" class="input-int form-control">
                         </div>

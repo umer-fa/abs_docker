@@ -1,0 +1,5 @@
+{foreach $errors as $error}
+    <div class="alert alert-{if $error.type|strtolower === 'notice'}info{elseif $error.type|strtolower === 'warning'}warning{else}danger{/if}">
+        {$error.message}
+    </div>
+{/foreach}

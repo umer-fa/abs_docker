@@ -11,5 +11,11 @@ class Dashboard extends AbstractAdminController
 {
     public function adminCallback(): void
     {
+
+    }
+
+    public function get(): void
+    {
+        $this->flash()->info('Sign in first?');
     }
 }

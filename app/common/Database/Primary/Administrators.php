@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Common\Database\Primary;
 
+use App\Common\Admin\Administrator;
 use App\Common\Database\AbstractAppTable;
+use App\Common\Exception\AppException;
 use Comely\Database\Schema\Table\Columns;
 use Comely\Database\Schema\Table\Constraints;
 
@@ -34,5 +36,10 @@ class Administrators extends AbstractAppTable
         $cols->binary("auth_token")->fixed(10)->nullable();
         $cols->int("time_stamp")->bytes(4)->unSigned();
         $cols->primaryKey("id");
+    }
+
+    public static function get(int $adminId): Administrator
+    {
+        throw new AppException('Failed to get admin account');
     }
 }
