@@ -143,8 +143,14 @@ class Administrator extends AbstractAppModel
             return $this->_privileges;
         }
 
+        $encrypted = $this->private("privileges");
+        if (!is_string($encrypted) || !$encrypted) {
+            $this->_privileges = new Privileges($this);
+            return $this->_privileges;
+        }
+
         try {
-            $encrypted = new Binary(strval($this->private("privileges")));
+            $encrypted = new Binary($encrypted);
             $privileges = $this->cipher()->decrypt($encrypted);
             if (!$privileges instanceof Privileges) {
                 throw new AppException('Unexpected result after decrypting admin privileges');
