@@ -235,4 +235,13 @@ class Kernel
 
         $this->config = $appConfig;
     }
+
+    /**
+     * @param string $const
+     * @return mixed
+     */
+    final public function constant(string $const)
+    {
+        return @constant('static::' . strtoupper($const));
+    }
 }
