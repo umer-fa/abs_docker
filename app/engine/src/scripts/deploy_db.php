@@ -59,9 +59,9 @@ class deploy_db extends AbstractCLIScript
 
 
         $this->print("");
-        $this->print("Building database tables...");
+        $this->print("{grey}Building database tables...{/}");
         foreach ($loaded as $table) {
-            $this->inline(sprintf('CREATE' . ' TABLE `{cyan}%s{/}` ... ', $table));
+            $this->inline(sprintf('CREATE' . ' TABLE IF NOT EXISTS `{cyan}%s{/}` ... ', $table));
             $migration = Schema::Migration($table)->createIfNotExists()->createTable();
 
             $db->exec($migration);
