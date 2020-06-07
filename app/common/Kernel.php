@@ -84,14 +84,14 @@ class Kernel
      */
     protected function __construct()
     {
-        $this->debug = Validator::getBool(trim(getenv("COMELY_APP_DEBUG")));
+        $this->debug = Validator::getBool(trim(strval(getenv("COMELY_APP_DEBUG"))));
         $this->dirs = new Directories();
         $this->dbs = new Databases();
         $this->errHandler = new StdErrorHandler($this);
         $this->errs = new Errors($this);
         $this->ciphers = new Ciphers($this);
 
-        $this->initConfig(Validator::getBool(trim(getenv("COMELY_APP_CACHED_CONFIG"))));
+        $this->initConfig(Validator::getBool(trim(strval(getenv("COMELY_APP_CACHED_CONFIG")))));
     }
 
     /**
