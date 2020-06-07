@@ -65,7 +65,7 @@ class CLI extends \Comely\CLI\CLI
                     var_dump($errors);
                     /** @var Kernel\ErrorHandler\ErrorMsg $error */
                     foreach ($errors as $error) {
-                        $this->print(sprintf('{grey}│  ┌ {/}{yellow}Type:{/} {magenta}%s{/}', strtoupper($error->type)));
+                        $this->print(sprintf('{grey}│  ┌ {/}{yellow}Type:{/} {magenta}%s{/}', strtoupper($error->typeStr)));
                         $this->print(sprintf('{grey}├──┼ {/}{yellow}Message:{/} %s', $error->message));
                         $this->print(sprintf("{grey}│  ├ {/}{yellow}File:{/} {cyan}%s{/}", $error->file));
                         $this->print(sprintf("{grey}│  └ {/}{yellow}Line:{/} %d", $error->line ?? -1));

@@ -8,7 +8,6 @@ use App\Common\Admin\Credentials;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\AbstractCLIScript;
 use Comely\Database\Schema;
-use Comely\Utils\OOP\OOP;
 use Comely\Utils\Security\Passwords;
 
 /**
