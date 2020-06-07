@@ -6,6 +6,8 @@ namespace App\Common\Database\Primary;
 use App\Common\Admin\Administrator;
 use App\Common\Database\AbstractAppTable;
 use App\Common\Exception\AppException;
+use App\Common\Kernel;
+use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema\Table\Columns;
 use Comely\Database\Schema\Table\Constraints;
 
@@ -38,13 +40,47 @@ class Administrators extends AbstractAppTable
         $cols->primaryKey("id");
     }
 
-    public static function get(int $adminId): Administrator
+    /**
+     * @param int $id
+     * @return Administrator
+     * @throws AppException
+     */
+    public static function get(int $id): Administrator
     {
-        throw new AppException('Failed to get admin account');
+        $k = Kernel::getInstance();
+        try {
+            return $k->memory()->query(sprintf('admin_%d', $id), self::MODEL)
+                ->fetch(function () use ($id) {
+                    return self::Find()->col("id", $id)->limit(1)->first();
+                });
+        } catch (\Exception $e) {
+            if (!$e instanceof ORM_ModelNotFoundException) {
+                $k->errors()->triggerIfDebug($e, E_USER_WARNING);
+            }
+
+            throw new AppException('Failed to retrieve Administrator account');
+        }
     }
 
-    public static function email(string $emId): Administrator
+    /**
+     * @param string $em
+     * @return Administrator
+     * @throws AppException
+     */
+    public static function email(string $em): Administrator
     {
+        $k = Kernel::getInstance();
+        try {
+            return $k->memory()->query(sprintf('admin_%s', $em), self::MODEL)
+                ->fetch(function () use ($em) {
+                    return self::Find()->col("email", $em)->limit(1)->first();
+                });
+        } catch (\Exception $e) {
+            if (!$e instanceof ORM_ModelNotFoundException) {
+                $k->errors()->triggerIfDebug($e, E_USER_WARNING);
+            }
 
+            throw new AppException('No such administrator account with this e-mail');
+        }
     }
 }
