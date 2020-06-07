@@ -33,12 +33,29 @@ class XSRF
     }
 
     /**
+     * @return ComelySession\Bag
+     */
+    public function bag(): ComelySession\Bag
+    {
+        return $this->sess->meta()->bag("xsrf");
+    }
+
+    /**
+     * @param bool $checkExpired
      * @return string|null
      */
-    public function token(): ?string
+    public function token(bool $checkExpired = true): ?string
     {
-        $xsrfBag = $this->sess->meta()->bag("xsrf");
-        return $xsrfBag->get("entropy");
+        $entropy = $this->bag()->get("entropy");
+        if (is_string($entropy) && !$checkExpired) {
+            return $entropy;
+        }
+
+        if ($this->isExpired()) {
+            return null;
+        }
+
+        return $entropy;
     }
 
     /**
@@ -66,6 +83,37 @@ class XSRF
     }
 
     /**
+     * @return int|null
+     */
+    public function age(): ?int
+    {
+        $timeStamp = $this->bag()->get("timeStamp");
+        if (!is_int($timeStamp)) {
+            return null;
+        }
+
+        return Time::difference($timeStamp);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        $age = $this->age();
+        if ($age) {
+            $ttl = $this->bag()->get("ttl");
+            if (is_int($ttl) && $ttl > 0) {
+                if ($age >= $ttl) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param Base16 $token
      * @throws XSRF_Exception
      */
@@ -81,17 +129,11 @@ class XSRF
             throw new XSRF_Exception('XSRF token does not match; Possible breach attempt', XSRF_Exception::TOKEN_MISMATCH);
         }
 
-        $xsrfTimeStamp = $xsrfBag->get("timeStamp");
-        $xsrfTTL = $xsrfBag->get("ttl");
-        if (is_int($xsrfTTL) && $xsrfTTL > 0) {
-            if (is_int($xsrfTimeStamp)) {
-                if (Time::difference($xsrfTimeStamp) >= $xsrfTTL) {
-                    throw new XSRF_Exception('XSRF token has expired; Try refreshing the page', XSRF_Exception::TOKEN_EXPIRED);
-                }
-            }
+        if ($this->isExpired()) {
+            throw new XSRF_Exception('XSRF token has expired; Try refreshing the page', XSRF_Exception::TOKEN_EXPIRED);
         }
 
-        // IP sensitive?
+        // IP sensitive?c
         $xsrfIP_Address = $xsrfBag->get("ip_addr");
         if ($xsrfIP_Address && $xsrfIP_Address !== $this->kernel->http()->remote()->ipAddress) {
             throw new XSRF_Exception(

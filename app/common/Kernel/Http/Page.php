@@ -45,7 +45,7 @@ class Page
     public function set_XSRF_Token(?int $ttl = null, bool $ipSensitive = true): self
     {
         $xsrf = $this->cont->xsrf();
-        $token = $xsrf->token() ?? $xsrf->generate($ttl, $ipSensitive);
+        $token = $xsrf->token(true) ?? $xsrf->generate($ttl, $ipSensitive);
         $this->props["token"] = bin2hex($token);
         return $this;
     }
