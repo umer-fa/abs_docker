@@ -80,9 +80,7 @@ class Administrator extends AbstractAppModel
      * @param array|null $flag
      * @return Log
      * @throws AppException
-     * @throws \Comely\Database\Exception\DbConnectionException
-     * @throws \Comely\Database\Exception\ORM_ModelQueryException
-     * @throws \Comely\Database\Exception\PDO_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
      */
     public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): Log
     {

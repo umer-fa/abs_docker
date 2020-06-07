@@ -8,6 +8,7 @@ use App\Common\Admin\Log;
 use App\Common\Database\AbstractAppTable;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppException;
+use Comely\Database\Exception\DatabaseException;
 use Comely\Database\Schema\Table\Columns;
 use Comely\Database\Schema\Table\Constraints;
 
@@ -50,9 +51,7 @@ class Logs extends AbstractAppTable
      * @param int|null $flagId
      * @return Log
      * @throws AppException
-     * @throws \Comely\Database\Exception\DbConnectionException
-     * @throws \Comely\Database\Exception\ORM_ModelQueryException
-     * @throws \Comely\Database\Exception\PDO_Exception
+     * @throws DatabaseException
      */
     public static function insert(int $adminId, string $message, ?string $controller = null, ?int $line = null, ?string $flag = null, ?int $flagId = null): Log
     {
