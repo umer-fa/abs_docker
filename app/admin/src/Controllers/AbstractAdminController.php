@@ -305,10 +305,6 @@ abstract class AbstractAdminController extends GenericHttpController
             });
 
             if ($this->authAdmin) {
-                var_dump($this->authAdmin);
-                var_dump(json_encode($this->authAdmin));
-                var_dump(json_last_error_msg());
-                exit;
                 $template->assign("authAdmin", $this->authAdmin);
                 $template->assign("authToken", $this->authToken);
             }
