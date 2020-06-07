@@ -54,7 +54,7 @@ class admin_credentials extends AbstractCLIScript
 
         // DB
         $db = $this->app->db()->primary();
-        Schema::Bind($db, 'App\Database\Administrators');
+        Schema::Bind($db, 'App\Common\Database\Primary\Administrators');
 
         // Create Administrator Object
         $admin = new Administrator();
