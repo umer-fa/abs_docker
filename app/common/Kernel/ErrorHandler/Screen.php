@@ -299,7 +299,7 @@ class Screen
                                         <i class="icon ion-social-github"></i>
                                         Comely App Kernel
                                     </a>
-                                    <strong class="text-muted float-right"><?php print AppKernel::VERSION; ?></strong>
+                                    <strong class="text-muted float-right"><?php print Kernel::VERSION; ?></strong>
                                 </li>
                                 <?php foreach ($package as $lib => $component) {
                                     list($repo, $version) = $component;
