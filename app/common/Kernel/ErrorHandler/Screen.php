@@ -10,6 +10,7 @@ use Comely\DataTypes\DataTypes;
 use Comely\Filesystem\Filesystem;
 use Comely\Http\Http;
 use Comely\Sessions\Sessions;
+use Comely\Utils\OOP\OOP;
 use Comely\Utils\Utils;
 use Comely\Yaml\Yaml;
 
