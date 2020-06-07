@@ -62,6 +62,7 @@ class CLI extends \Comely\CLI\CLI
                     $this->repeat(".", 10, 50, true);
                     $this->print("");
                     $this->print(sprintf("{red}{invert} %d {/}{red}{b} triggered errors!{/}", $errorsCount));
+                    var_dump($errors);
                     /** @var Kernel\ErrorHandler\ErrorMsg $error */
                     foreach ($errors as $error) {
                         $this->print(sprintf('{grey}│  ┌ {/}{yellow}Type:{/} {magenta}%s{/}', strtoupper($error->type)));
