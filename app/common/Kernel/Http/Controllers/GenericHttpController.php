@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Common\Kernel\Http\Controllers;
 
 use App\Common\Exception\AppControllerException;
+use App\Common\Exception\AppException;
 use App\Common\Exception\ObfuscatedFormsException;
 use App\Common\Exception\XSRF_Exception;
 use App\Common\Kernel\AbstractHttpApp;
@@ -88,7 +89,7 @@ abstract class GenericHttpController extends AbstractAppController
                 throw $e; // Throw caught exception so it may be picked by Exception Handler (screen)
             }
 
-            $param = $e instanceof AppControllerException ? $e->getParam() : null;
+            $param = $e instanceof AppException ? $e->getParam() : null;
             $this->messages->danger($e->getMessage(), $param);
             if ($this->app->isDebug()) {
                 $this->response()->set("caught", get_class($e));
