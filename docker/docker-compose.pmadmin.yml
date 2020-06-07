@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  db:
+    image: phpmyadmin:latest
+    restart: no
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    ports:
+      - "${PMA_LISTEN:-36001}:80"
+    networks:
+      comely-app-net:
+        ipv4_address: 10.0.20.9

@@ -10,5 +10,5 @@ if [ "$HOST_UID" -eq 0 ]; then
 fi
 
 cd $SCRIPT_PATH/docker
-docker-compose -f docker-compose.yml -f docker-compose.full.yml $@
+docker-compose -f docker-compose.yml -f docker-compose.full.yml -f docker-compose.pmadmin.yml $@
 cd ../
