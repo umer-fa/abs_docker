@@ -55,10 +55,6 @@ class admin_credentials extends AbstractCLIScript
 
         // DB
         $db = $this->app->db()->primary();
-        $adminsTable = 'App\Common\Database\Primary\Administrators';
-        var_dump(OOP::isValidClassName($adminsTable));
-        var_dump(class_exists($adminsTable));
-        var_dump(OOP::isValidClass($adminsTable));
         Schema::Bind($db, 'App\Common\Database\Primary\Administrators');
 
         // Create Administrator Object
