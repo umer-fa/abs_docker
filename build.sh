@@ -51,5 +51,5 @@ fi
 docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} build --build-arg HOST_UID=${HOST_UID} --build-arg HOST_GID=${HOST_GID}
 
 cd ../
-./services.sh up -d
+docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} up -d
 ./services.sh ps
