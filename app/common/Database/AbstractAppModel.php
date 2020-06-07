@@ -20,7 +20,7 @@ abstract class AbstractAppModel extends Abstract_ORM_Model
      */
     public function onConstruct()
     {
-        $this->app = \App::getInstance();
+        $this->app = Kernel::getInstance();
     }
 
     /**
@@ -28,7 +28,7 @@ abstract class AbstractAppModel extends Abstract_ORM_Model
      */
     public function onLoad()
     {
-        $this->app = \App::getInstance();
+        $this->app = Kernel::getInstance();
     }
 
     /**
@@ -44,6 +44,6 @@ abstract class AbstractAppModel extends Abstract_ORM_Model
      */
     public function onUnserialize()
     {
-        $this->app = \App::getInstance();
+        $this->app = Kernel::getInstance();
     }
 }
