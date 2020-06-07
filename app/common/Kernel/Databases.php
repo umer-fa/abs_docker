@@ -23,7 +23,6 @@ class Databases
 
     /**
      * @return Database
-     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function primary(): Database
@@ -33,7 +32,6 @@ class Databases
 
     /**
      * @return Database
-     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function apiLogs(): Database
@@ -44,7 +42,6 @@ class Databases
     /**
      * @param string $label
      * @return Database
-     * @throws AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function get(string $label = "primary"): Database
@@ -57,7 +54,7 @@ class Databases
         $appConfig = Kernel::getInstance()->config();
         $dbConfig = $appConfig->db($label);
         if (!$dbConfig) {
-            throw new AppConfigException(sprintf('Database "%s" is not configured', $label));
+            throw new \UnexpectedValueException(sprintf('Database "%s" is not configured', $label));
         }
 
         $dbCredentials = (new DbCredentials($dbConfig->driver))
