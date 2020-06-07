@@ -104,7 +104,7 @@ class Login extends AbstractAdminController
             // Set session bag
             $this->session()->bags()->bag("App")->bag("Administration")
                 ->set("id", $admin->id)
-                ->set("checksum", md5($admin->checksum()))
+                ->set("checksum", md5($admin->checksum()->raw()))
                 ->set("timeStamp", time());
 
             $db->commit();
