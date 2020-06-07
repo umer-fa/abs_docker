@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Admin\Controllers;
 
 use App\Common\Database\Primary\Administrators;
-use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
 use Comely\Utils\Security\PRNG;
 
@@ -27,7 +26,6 @@ class Login extends AbstractAdminController
     }
 
     /**
-     * @throws AppControllerException
      * @throws AppException
      * @throws \App\Common\Exception\ObfuscatedFormsException
      * @throws \App\Common\Exception\XSRF_Exception
@@ -43,20 +41,20 @@ class Login extends AbstractAdminController
         try {
             $email = $form->value("email");
             if (!$email) {
-                throw new AppControllerException('Enter your e-mail address');
+                throw new AppException('Enter your e-mail address');
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                throw new AppControllerException('Invalid e-mail address');
+                throw new AppException('Invalid e-mail address');
             }
 
             $admin = Administrators::email($email);
             if ($admin->status !== 1) {
-                throw new AppControllerException('This account has been disabled!');
+                throw new AppException('This account has been disabled!');
             }
 
             $admin->validate(); // Verify row checksum, etc..
             $admin->credentials(); // Load credentials object
             $admin->privileges(); // Load privileges object
-        } catch (AppException|AppControllerException $e) {
+        } catch (AppException $e) {
             $e->setParam($form->key("email"));
             throw $e;
         }
@@ -65,11 +63,11 @@ class Login extends AbstractAdminController
         try {
             $password = $form->value("password");
             if (!$password) {
-                throw new AppControllerException('Enter a password');
+                throw new AppException('Enter a password');
             } elseif (!$admin->credentials()->verifyPassword($password)) {
-                throw new AppControllerException('Incorrect password');
+                throw new AppException('Incorrect password');
             }
-        } catch (AppControllerException $e) {
+        } catch (AppException $e) {
             $e->setParam($form->key("password"));
             throw $e;
         }
@@ -79,12 +77,12 @@ class Login extends AbstractAdminController
             $totp = $form->value("totp");
             if ($admin->credentials()->getGoogleAuthSeed()) {
                 if (!$totp || !preg_match('/^[0-9]{6}$/', $totp)) {
-                    throw new AppControllerException('Invalid TOTP code');
+                    throw new AppException('Invalid TOTP code');
                 } elseif (!$admin->credentials()->verifyTotp($totp)) {
-                    throw new AppControllerException('Incorrect TOTP code');
+                    throw new AppException('Incorrect TOTP code');
                 }
             }
-        } catch (AppControllerException $e) {
+        } catch (AppException $e) {
             $e->setParam($form->key("totp"));
             throw $e;
         }
@@ -98,7 +96,7 @@ class Login extends AbstractAdminController
             $admin->set("authToken", $authToken->raw());
             $admin->timeStamp = time();
             $admin->query()->update(function () {
-                throw new AppControllerException('Failed to save new authentication token');
+                throw new AppException('Failed to save new authentication token');
             });
 
             $admin->log('Logged in', __CLASS__, null, ["auth"]);

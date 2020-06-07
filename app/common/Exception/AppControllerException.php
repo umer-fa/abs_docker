@@ -9,24 +9,4 @@ namespace App\Common\Exception;
  */
 class AppControllerException extends AppException
 {
-    /** @var string|null */
-    private ?string $param = null;
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setParam(string $name): self
-    {
-        $this->param = $name;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getParam(): ?string
-    {
-        return $this->param;
-    }
 }
