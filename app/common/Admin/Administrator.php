@@ -73,9 +73,26 @@ class Administrator extends AbstractAppModel
         return $this->cipher()->pbkdf2("sha1", $raw, 1000);
     }
 
-    public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): void
+    /**
+     * @param string $msg
+     * @param string|null $cont
+     * @param int|null $line
+     * @param array|null $flag
+     * @return Log
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
+     * @throws \Comely\Database\Exception\ORM_ModelQueryException
+     * @throws \Comely\Database\Exception\PDO_Exception
+     */
+    public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): Log
     {
+        $flagId = null;
+        if ($flag) {
+            $flag = isset($flag[0]) ? strval($flag[0]) : null;
+            $flagId = isset($flag[1]) ? intval($flag[1]) : null;
+        }
 
+        return Administrators\Logs::insert($this->id, $msg, $cont, $line, $flag, $flagId);
     }
 
     /**
