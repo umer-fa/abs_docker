@@ -2,7 +2,6 @@ version: "3.7"
 services:
   phpmyadmin:
     image: phpmyadmin:latest
-    restart: no
     environment:
       - PMA_HOST=db
       - PMA_PORT=3306
