@@ -13,3 +13,11 @@ input, select, option, textarea {
 textarea.no-resize {
     resize: none;
 }
+
+input, button, select, option, label, th, textarea,
+.dropdown-menu, .dropdown-menu > li > a, .panel-title,
+.noty_message, .noty_text,
+.input-group-addon, .input-group-addon * {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}

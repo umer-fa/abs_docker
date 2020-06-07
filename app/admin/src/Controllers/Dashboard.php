@@ -11,11 +11,17 @@ class Dashboard extends AbstractAdminController
 {
     public function adminCallback(): void
     {
-
     }
 
+    /**
+     * @throws \Comely\Knit\Exception\KnitException
+     * @throws \Comely\Knit\Exception\TemplateException
+     */
     public function get(): void
     {
-        $this->flash()->info('Sign in first?');
+        $this->page()->title('Dashboard')->index(100);
+
+        $template = $this->template("dashboard.knit");
+        $this->body($template);
     }
 }

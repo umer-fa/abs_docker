@@ -56,7 +56,7 @@ class Login extends AbstractAdminController
             $admin->validate(); // Verify row checksum, etc..
             $admin->credentials(); // Load credentials object
             $admin->privileges(); // Load privileges object
-        } catch (AppControllerException $e) {
+        } catch (AppException|AppControllerException $e) {
             $e->setParam($form->key("email"));
             throw $e;
         }

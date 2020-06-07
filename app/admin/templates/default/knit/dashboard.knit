@@ -1,0 +1,3 @@
+{knit "header"}
+{$page|var_dump}
+{knit "footer"}
