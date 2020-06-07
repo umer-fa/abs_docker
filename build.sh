@@ -49,7 +49,7 @@ if [[ ! -f "$DOCKER_COMPOSE_FILE" ]]; then
 fi
 
 docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} build --build-arg HOST_UID=${HOST_UID} --build-arg HOST_GID=${HOST_GID}
+docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} up -d
 
 cd ../
-docker-compose -f docker-compose.yml -f ${DOCKER_COMPOSE_FILE} up -d
 ./services.sh ps
