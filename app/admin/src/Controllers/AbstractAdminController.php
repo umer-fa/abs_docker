@@ -112,7 +112,7 @@ abstract class AbstractAdminController extends GenericHttpController
             $admin->validate(); // Verify checksum
 
             // Session Checksum
-            if (!hash_equals(md5($admin->checksum), $sessionBag->get("checksum"))) {
+            if (!hash_equals(md5($admin->private("checksum")), $sessionBag->get("checksum"))) {
                 throw new AppControllerException('Administrator session checksum fail');
             }
 
@@ -254,6 +254,7 @@ abstract class AbstractAdminController extends GenericHttpController
      * @param string|null $code
      * @param string|null $param
      * @throws AppControllerException
+     * @throws AppException
      */
     public function verifyTotp(?string $code = null, ?string $param = "totp"): void
     {
@@ -304,6 +305,10 @@ abstract class AbstractAdminController extends GenericHttpController
             });
 
             if ($this->authAdmin) {
+                var_dump($this->authAdmin);
+                var_dump(json_encode($this->authAdmin));
+                var_dump(json_last_error_msg());
+                exit;
                 $template->assign("authAdmin", $this->authAdmin);
                 $template->assign("authToken", $this->authToken);
             }
