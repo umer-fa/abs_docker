@@ -45,8 +45,7 @@ abstract class AbstractAdminController extends GenericHttpController
     }
 
     /**
-     * @throws \App\Common\Exception\AppConfigException
-     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws XSRF_Exception
      * @throws \Comely\Database\Exception\DbConnectionException
      * @throws \Comely\Sessions\Exception\ComelySessionException
      * @throws \Comely\Utils\Security\Exception\PRNG_Exception

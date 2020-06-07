@@ -39,6 +39,8 @@ class Administrator extends AbstractAppModel
     private ?Credentials $_cred = null;
     /** @var Privileges|null */
     private ?Privileges $_privileges = null;
+    /** @var bool|null */
+    private ?bool $_checksumVerified = null;
 
     /**
      * @return void
@@ -49,11 +51,30 @@ class Administrator extends AbstractAppModel
         $this->_cipher = null;
         $this->_cred = null;
         $this->_privileges = null;
+        $this->_checksumVerified = null;
     }
 
+    /**
+     * @throws AppException
+     */
     public function validate(): void
     {
+        // Verify checksum
+        if ($this->checksum()->raw() !== $this->checksum) {
+            throw new AppException('Administrator checksum verification fail');
+        }
 
+        $this->_checksumVerified = true;
+    }
+
+    /**
+     * @return Binary
+     * @throws AppException
+     */
+    public function checksum(): Binary
+    {
+        $raw = sprintf('%d:%d:%s:%s', $this->id, $this->status, trim($this->email), trim($this->phone ?? ""));
+        return $this->cipher()->pbkdf2("sha1", $raw, 1000);
     }
 
     public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): void
@@ -81,6 +102,7 @@ class Administrator extends AbstractAppModel
 
     /**
      * @return Credentials
+     * @throws AppException
      */
     public function credentials(): Credentials
     {
@@ -92,20 +114,20 @@ class Administrator extends AbstractAppModel
             $encrypted = new Binary(strval($this->private("credentials")));
             $credentials = $this->cipher()->decrypt($encrypted);
             if (!$credentials instanceof Credentials) {
-                throw new \AppException('Unexpected result after decrypting admin credentials');
+                throw new AppException('Unexpected result after decrypting admin credentials');
             }
 
             if ($credentials->adminId() !== $this->id) {
-                throw new \AppException('Administrator and credentials ID mismatch');
+                throw new AppException('Administrator and credentials ID mismatch');
             }
 
             $this->_cred = $credentials;
             return $this->_cred;
-        } catch (\AppException $e) {
+        } catch (AppException $e) {
             throw $e;
         } catch (\Exception $e) {
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
-            throw new \AppException(
+            throw new AppException(
                 sprintf('Failed to decrypt administrator %d credentials', $this->id)
             );
         }
@@ -113,6 +135,7 @@ class Administrator extends AbstractAppModel
 
     /**
      * @return Privileges
+     * @throws AppException
      */
     public function privileges(): Privileges
     {
@@ -124,20 +147,20 @@ class Administrator extends AbstractAppModel
             $encrypted = new Binary(strval($this->private("privileges")));
             $privileges = $this->cipher()->decrypt($encrypted);
             if (!$privileges instanceof Privileges) {
-                throw new \AppException('Unexpected result after decrypting admin privileges');
+                throw new AppException('Unexpected result after decrypting admin privileges');
             }
 
             if ($privileges->adminId() !== $this->id) {
-                throw new \AppException('Administrator and privileges ID mismatch');
+                throw new AppException('Administrator and privileges ID mismatch');
             }
 
             $this->_privileges = $privileges;
             return $this->_privileges;
-        } catch (\AppException $e) {
+        } catch (AppException $e) {
             throw $e;
         } catch (\Exception $e) {
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
-            throw new \AppException(
+            throw new AppException(
                 sprintf('Failed to decrypt administrator %d privileges', $this->id)
             );
         }

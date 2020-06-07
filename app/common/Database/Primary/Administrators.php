@@ -42,4 +42,9 @@ class Administrators extends AbstractAppTable
     {
         throw new AppException('Failed to get admin account');
     }
+
+    public static function email(string $emId): Administrator
+    {
+
+    }
 }

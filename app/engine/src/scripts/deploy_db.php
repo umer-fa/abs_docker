@@ -17,7 +17,6 @@ class deploy_db extends AbstractCLIScript
     public const DISPLAY_LOADED_NAME = true;
 
     /**
-     * @throws \App\Common\Exception\AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      * @throws \Comely\Database\Exception\QueryBuildException
      * @throws \Comely\Database\Exception\QueryExecuteException
@@ -32,6 +31,7 @@ class deploy_db extends AbstractCLIScript
 
         $this->createDbTables($primary, [
             'Database\Primary\Administrators',
+            'Database\Primary\Administrators\Logs',
         ]);
     }
 
