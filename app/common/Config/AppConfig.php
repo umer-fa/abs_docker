@@ -6,6 +6,7 @@ namespace App\Common\Config;
 use App\Common\Config\AppConfig\CacheConfig;
 use App\Common\Config\AppConfig\CipherKeys;
 use App\Common\Config\AppConfig\DbCred;
+use App\Common\Config\AppConfig\PublicConfig;
 use App\Common\Exception\AppConfigException;
 use App\Common\Exception\AppDirException;
 use App\Common\Kernel;
@@ -40,6 +41,8 @@ class AppConfig
     private CacheConfig $cache;
     /** @var CipherKeys */
     private CipherKeys $cipher;
+    /** @var PublicConfig */
+    private PublicConfig $public;
     /** @var int */
     private int $timeStamp;
 
@@ -154,6 +157,7 @@ class AppConfig
 
         $this->cache = new CacheConfig(Yaml::Parse($configPath . "/cache.yml")->generate());
         $this->cipher = new CipherKeys(Yaml::Parse($configPath . "/cipher.yml")->generate());
+        $this->public = new PublicConfig(Yaml::Parse($configPath . "/public.yml")->generate());
 
         // Timestamp
         $this->timeStamp = time();
@@ -207,6 +211,14 @@ class AppConfig
     public function cipher(): CipherKeys
     {
         return $this->cipher;
+    }
+
+    /**
+     * @return PublicConfig
+     */
+    public function public(): PublicConfig
+    {
+        return $this->public;
     }
 
     /**

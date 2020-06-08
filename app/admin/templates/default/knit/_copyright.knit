@@ -1,0 +1,7 @@
+<div class="text-muted">Copyright &copy; {$config.public.title} {$knit.now|date:'Y'}</div>
+<div>
+    <a href="//github.com/comely-io">
+        <i class="ion ion-social-github"></i>
+        GitHub
+    </a>
+</div>

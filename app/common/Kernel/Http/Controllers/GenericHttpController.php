@@ -343,6 +343,10 @@ abstract class GenericHttpController extends AbstractAppController
                 $template->assign("page", $this->page->array());
             }
 
+            $template->assign("config", [
+                "public" => $this->app->config()->public()->array(),
+            ]);
+
             // Default response type (despite of ACCEPT header)
             $this->response()->header("content-type", "text/html");
 
