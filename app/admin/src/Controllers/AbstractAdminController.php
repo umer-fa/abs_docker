@@ -63,6 +63,7 @@ abstract class AbstractAdminController extends GenericHttpController
         // ORM Tables
         $db = $this->app->db()->primary();
         Schema::Bind($db, 'App\Common\Database\Primary\Administrators');
+        Schema::Bind($db, 'App\Common\Database\Primary\Administrators\Logs');
 
         // Schema Events
         Schema::Events()->on_ORM_ModelQueryFail()->listen(function (Query $query) {
@@ -316,6 +317,8 @@ abstract class AbstractAdminController extends GenericHttpController
             if ($this->authAdmin) {
                 $template->assign("authAdmin", $this->authAdmin);
                 $template->assign("authToken", $this->authToken);
+
+                $this->page()->prop("authRoot", $this->authRoot);
             }
 
             if ($this->breadcrumbs) {

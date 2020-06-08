@@ -166,7 +166,7 @@ function xhrResult(result, form) {
                     $(errors).each(function (i, error) {
                         if (typeof error === "object") {
                             let thisError = $("<div></div>");
-                            $(thisError).addClass("alert alert-dismissible fade show alert-" + xhrMessageNotyType(error["type"]));
+                            $(thisError).addClass("alert alert-dismissible fade show alert-" + xhrMessageNotyType(error["typeStr"]));
                             $(thisError).text(error["message"]);
                             $(thisError).append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>');
                             $(errorsContainerList).append(thisError);
