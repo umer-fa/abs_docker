@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Admin\Controllers;
 
 use App\Admin\AppAdmin;
+use App\Admin\Exception\TOTPAuthException;
 use App\Common\Admin\Administrator;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppControllerException;
@@ -218,7 +219,15 @@ abstract class AbstractAdminController extends GenericHttpController
             throw new XSRF_Exception('Invalid XSRF token');
         }
 
-        $this->xsrf()->verify(new Base16($userSpecifiedToken));
+        try {
+            $this->xsrf()->verify(new Base16($userSpecifiedToken));
+        } catch (XSRF_Exception $e) {
+            if ($e->getCode() === XSRF_Exception::TOKEN_IP_MISMATCH) {
+                $this->xsrf()->purge();
+            }
+
+            throw $e;
+        }
     }
 
     /**
@@ -230,16 +239,16 @@ abstract class AbstractAdminController extends GenericHttpController
             $totpBag = $this->session()->bags()->bag("App")->bag("Administration")->bag("totp");
             $lastCheckedOn = $totpBag->get("lastCheckedOn");
             if (!is_int($lastCheckedOn)) {
-                throw new AuthenticationException('TOTP authentication is required');
+                throw new TOTPAuthException('TOTP authentication is required');
             }
 
             if (Time::difference($lastCheckedOn) >= $time) {
                 $diff = time() - $lastCheckedOn;
-                throw new AuthenticationException(
+                throw new TOTPAuthException(
                     sprintf('Last TOTP check was %s min(s) ago; Need re-authentication', round($diff / 60, 1))
                 );
             }
-        } catch (AuthenticationException $e) {
+        } catch (TOTPAuthException $e) {
             $this->messages()->danger($e->getMessage());
 
             $this->response()->set("status", false);

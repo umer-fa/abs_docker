@@ -41,17 +41,25 @@ class XSRF
     }
 
     /**
+     * @return void
+     */
+    public function purge(): void
+    {
+        $this->sess->meta()->delete("xsrf");
+    }
+
+    /**
      * @param bool $checkExpired
      * @return string|null
      */
     public function token(bool $checkExpired = true): ?string
     {
         $entropy = $this->bag()->get("entropy");
-        if (is_string($entropy) && !$checkExpired) {
-            return $entropy;
+        if (!is_string($entropy) || !$entropy) {
+            return null;
         }
 
-        if ($this->isExpired()) {
+        if ($checkExpired && $this->isExpired()) {
             return null;
         }
 
