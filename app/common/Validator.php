@@ -38,6 +38,27 @@ class Validator
     }
 
     /**
+     * @param $value
+     * @param int|null $min
+     * @param int|null $max
+     * @return int|null
+     */
+    public static function UInt($value, ?int $min = null, ?int $max = null): ?int
+    {
+        try {
+            $validator = \Comely\Utils\Validator\Validator::Integer($value)->unSigned();
+            if ($min && $max) {
+                $validator->range($min, $max);
+            }
+
+            return $validator->validate();
+        } catch (\Comely\Utils\Validator\Exception\ValidationException $e) {
+        }
+
+        return null;
+    }
+
+    /**
      * @param $val
      * @return bool
      */
