@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Common\Kernel;
 
-use App\Common\Exception\AppConfigException;
 use App\Common\Kernel;
 use Comely\Database\Database;
+use Comely\Database\Queries\Query;
 use Comely\Database\Server\DbCredentials;
 
 /**
@@ -97,5 +97,28 @@ class Databases
     public function append(string $name, Database $db): void
     {
         $this->dbs[strtolower($name)] = $db;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllQueries(): array
+    {
+        $queries = [];
+
+        /**
+         * @var string $dbName
+         * @var Database $dbInstance
+         */
+        foreach ($this->dbs as $dbName => $dbInstance) {
+            foreach ($dbInstance->queries() as $query) {
+                $queries[] = [
+                    "db" => $dbName,
+                    "query" => $query
+                ];
+            }
+        }
+
+        return $queries;
     }
 }
