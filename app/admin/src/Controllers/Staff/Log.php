@@ -81,7 +81,7 @@ class Log extends AbstractAdminController
      */
     private function adminIdToEmail($id): ?string
     {
-        $id = \App::UnsignedInteger($id);
+        $id = Validator::UInt($id);
         if (is_int($id)) {
             foreach ($this->adminsList as $admin) {
                 if ($admin["id"] === $id) {
