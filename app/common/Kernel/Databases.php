@@ -14,6 +14,11 @@ use Comely\Database\Server\DbCredentials;
  */
 class Databases
 {
+    /** @var string */
+    public const PRIMARY = "primary";
+    /** @var string */
+    public const API_LOGS = "api_logs";
+
     use Kernel\Traits\NoDumpTrait;
     use Kernel\Traits\NotCloneableTrait;
     use Kernel\Traits\NotSerializableTrait;
@@ -22,12 +27,27 @@ class Databases
     private array $dbs = [];
 
     /**
+     * @param string $which
+     * @return string|null
+     */
+    public function getDbName(string $which): ?string
+    {
+        $appConfig = Kernel::getInstance()->config();
+        $dbConfig = $appConfig->db($which);
+        if ($dbConfig) {
+            return $dbConfig->name;
+        }
+
+        return null;
+    }
+
+    /**
      * @return Database
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function primary(): Database
     {
-        return $this->get("primary");
+        return $this->get(self::PRIMARY);
     }
 
     /**
@@ -36,7 +56,7 @@ class Databases
      */
     public function apiLogs(): Database
     {
-        return $this->get("api_logs");
+        return $this->get(self::API_LOGS);
     }
 
     /**
@@ -44,7 +64,7 @@ class Databases
      * @return Database
      * @throws \Comely\Database\Exception\DbConnectionException
      */
-    public function get(string $label = "primary"): Database
+    public function get(string $label = self::PRIMARY): Database
     {
         $label = strtolower($label);
         if (isset($this->dbs[$label])) {
