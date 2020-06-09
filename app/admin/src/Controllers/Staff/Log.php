@@ -103,7 +103,7 @@ class Log extends AbstractAdminController
         $this->page()->title('Audit Log')->index(7, 20)
             ->prop("icon", "mdi mdi-book-open");
 
-        $this->breadcrumbs("Management", null, "mdi mdi-account-star");
+        $this->breadcrumbs("Staff Management", null, "ion ion-ios-people-outline");
 
         $result = [
             "status" => false,
@@ -235,7 +235,7 @@ class Log extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'management/log?admin=%d&match=%s&sort=%s&perPage=%s',
+                'staff/log?admin=%d&match=%s&sort=%s&perPage=%s',
                 $search["admin"],
                 $search["match"],
                 $search["sort"],
