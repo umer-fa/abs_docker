@@ -28,7 +28,7 @@ class Queries extends AbstractAdminController
     public function adminCallback(): void
     {
         $db = $this->app->db()->primary();
-        Schema::Bind($db, 'App\Common\Database\Users');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users');
     }
 
     /**
