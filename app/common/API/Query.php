@@ -42,7 +42,7 @@ class Query extends AbstractAppModel
     /** @var string */
     public string $_hexId;
     /** @var null|QueryPayload */
-    private ?QueryPayload $_payload;
+    private ?QueryPayload $_payload = null;
     /** @var null|bool */
     public ?bool $_checksumVerified = null;
     /** @var int */
