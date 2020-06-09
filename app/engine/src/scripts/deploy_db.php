@@ -43,7 +43,7 @@ class deploy_db extends AbstractCLIScript
 
         // API Logs Database
         $this->inline("Getting {invert}{yellow} API Logs {/} database ... ");
-        $apiLogs = $this->app->db()->primary();
+        $apiLogs = $this->app->db()->apiLogs();
         $this->print("{green}OK{/}");
 
         $this->createDbTables($apiLogs, [
