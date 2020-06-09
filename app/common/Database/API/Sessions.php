@@ -27,7 +27,7 @@ class Sessions extends AbstractAppTable
     public const REQUEST_TOKEN_TIMEOUT_PER_IP = 60;
 
     public const NAME = 'api_sess';
-    public const MODEL = 'App\API\API_Session';
+    public const MODEL = 'App\Common\API\API_Session';
 
     /**
      * @param Columns $cols

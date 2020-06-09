@@ -39,6 +39,8 @@ class deploy_db extends AbstractCLIScript
             'Database\Primary\Users\Tally',
         ]);
 
+        $this->print("");
+
         // API Logs Database
         $this->inline("Getting {invert}{yellow} API Logs {/} database ... ");
         $apiLogs = $this->app->db()->primary();

@@ -14,6 +14,7 @@ use Comely\Database\Schema\Table\Constraints;
 class Baggage extends AbstractAppTable
 {
     public const NAME = 'api_baggage';
+    public const MODEL = null;
 
     /**
      * @param Columns $cols
