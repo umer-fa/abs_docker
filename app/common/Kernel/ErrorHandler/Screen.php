@@ -9,7 +9,6 @@ use Comely\Database\Database;
 use Comely\DataTypes\DataTypes;
 use Comely\Filesystem\Filesystem;
 use Comely\Http\Http;
-use Comely\Sessions\Sessions;
 use Comely\Utils\OOP\OOP;
 use Comely\Utils\Utils;
 use Comely\Yaml\Yaml;
@@ -93,7 +92,6 @@ class Screen
             "Database & ORM" => ["db-orm", Database::VERSION],
             "Filesystem" => ["filesystem", Filesystem::VERSION],
             "Http" => ["http", Http::VERSION],
-            "Sessions" => ["sessions", Sessions::VERSION],
             "Utils" => ["utils", Utils::VERSION],
             "YAML" => ["yaml", Yaml::VERSION],
         ];
@@ -108,6 +106,10 @@ class Screen
 
         if (class_exists('Comely\Translator\Translator')) {
             $package["Translator"] = ["translator", @constant('Comely\Translator\Translator::VERSION')];
+        }
+
+        if (class_exists('Comely\Sessions\Sessions')) {
+            $package["Knit"] = ["Sessions", @constant('Comely\Sessions\Sessions::VERSION')];
         }
 
         if (class_exists('Comely\Knit\Knit')) {
