@@ -50,8 +50,10 @@ class User extends AbstractAppModel
     private ?Cipher $_cipher = null;
     /** @var bool|null */
     public ?bool $_checksumVerified = null;
-    private $_credentials = null;
-    private $_params = null;
+    /** @var Credentials|null */
+    private ?Credentials $_credentials = null;
+    /** @var Params|null */
+    private ?Params $_params = null;
     /** @var Tally|null */
     private ?Tally $_tally = null;
 
@@ -138,9 +140,71 @@ class User extends AbstractAppModel
         $this->_checksumVerified = true;
     }
 
-    public function credentials()
+    /**
+     * @return Credentials
+     * @throws AppException
+     */
+    public function credentials(): Credentials
     {
+        if ($this->_credentials) {
+            return $this->_credentials;
+        }
 
+        try {
+            $encrypted = new Binary(strval($this->private("credentials")));
+            $credentials = $this->cipher()->decrypt($encrypted);
+            if (!$credentials instanceof Credentials) {
+                throw new AppException('Unexpected result after decrypting user credentials');
+            }
+
+            if ($credentials->user !== $this->id) {
+                throw new AppException('Credentials and user IDs mismatch');
+            }
+
+            $this->_credentials = $credentials;
+            return $this->_credentials;
+        } catch (AppException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw new AppException(
+                sprintf('Failed to decrypt user %d credentials', $this->id)
+            );
+        }
+
+    }
+
+    /**
+     * @return Params
+     * @throws AppException
+     */
+    public function params(): Params
+    {
+        if ($this->_params) {
+            return $this->_params;
+        }
+
+        try {
+            $encrypted = new Binary(strval($this->private("params")));
+            $params = $this->cipher()->decrypt($encrypted);
+            if (!$params instanceof Params) {
+                throw new AppException('Unexpected result after decrypting user params');
+            }
+
+            if ($params->user !== $this->id) {
+                throw new AppException('Params and user IDs mismatch');
+            }
+
+            $this->_params = $params;
+            return $this->_params;
+        } catch (AppException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw new AppException(
+                sprintf('Failed to decrypt user %d params', $this->id)
+            );
+        }
     }
 
     /**
