@@ -213,7 +213,7 @@ abstract class AbstractAdminController extends GenericHttpController
      * @param string|null $inputParam
      * @throws \App\Common\Exception\XSRF_Exception
      */
-    public function verifyXSRF(?string $inputParam = "token"): void
+    public function verifyXSRF(?string $inputParam = "xsrf"): void
     {
         $userSpecifiedToken = $this->input()->get($inputParam);
         if (!is_string($userSpecifiedToken) || !preg_match('/^[a-f0-9]+$/i', $userSpecifiedToken)) {

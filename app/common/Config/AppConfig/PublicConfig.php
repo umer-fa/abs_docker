@@ -53,6 +53,22 @@ class PublicConfig
     }
 
     /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function domain(): string
+    {
+        return $this->domain;
+    }
+
+    /**
      * @return array
      */
     public function array(): array

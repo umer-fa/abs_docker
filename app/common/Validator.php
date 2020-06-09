@@ -29,6 +29,15 @@ class Validator
     }
 
     /**
+     * @param $phone
+     * @return bool
+     */
+    public static function isValidPhone($phone): bool
+    {
+        return is_string($phone) && preg_match('/^\+[0-9]+\.[0-9]{5,20}$/', $phone);
+    }
+
+    /**
      * @param $val
      * @return bool
      */

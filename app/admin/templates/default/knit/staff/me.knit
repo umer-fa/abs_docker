@@ -1,0 +1,101 @@
+{knit "header"}
+<div class="row">
+    <div class="col-lg-9">
+        <form method="post" action="{$page.authRoot}staff/me?profile" class="xhr-form">
+            <input type="hidden" name="xsrf" value="{$page.token}">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title"><a id="profile"></a><i class="ion ion-ios-person-outline mr-2"></i>Edit
+                        Account Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="phone">Phone Number</label>
+                        <div class="col-md-9">
+                            <input type="text" id="phone" name="phone" data-onload-value="{$authAdmin.phone}"
+                                   placeholder="+1.23456789" maxlength="32" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-outline-primary">Save Changes</button>
+                </div>
+            </div>
+        </form>
+        <form method="post" action="{$page.authRoot}staff/me?password" class="xhr-form">
+            <input type="hidden" name="xsrf" value="{$page.token}">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title"><a id="password"></a><i class="ion ion-lock-combination mr-2"></i>Change Password
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="new_password">New Password</label>
+                        <div class="col-md-9">
+                            <input type="password" id="new_password" name="new_password" data-onload-value=""
+                                   placeholder="some secret" maxlength="32" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="confirm_new_password">Retype Password</label>
+                        <div class="col-md-9">
+                            <input type="password" id="confirm_new_password" name="confirm_new_password"
+                                   data-onload-value=""
+                                   placeholder="some secret" maxlength="32" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-outline-danger">Change Password</button>
+                </div>
+            </div>
+        </form>
+        <form method="post" action="{$page.authRoot}staff/me?totp" class="xhr-form">
+            <input type="hidden" name="xsrf" value="{$page.token}">
+            <div class="card mt-3 mb-3">
+                <div class="card-header">
+                    <h5 class="card-title"><a id="totp"></a><i class="ion ion-social-google-outline mr-2"></i>Google
+                        Authenticator</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group bg-light border rounded shadow-sm p-3">
+                        <div class="col-12 text-center">
+                            <img src="{$suggestedSeedQR}" width="150" height="150" alt="Google2FA QR code" class="">
+                            <p class="mt-2 mb-0">
+                                <mark>{$suggestedSeed}</mark>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="new_totp">New TOTP Code</label>
+                        <div class="col-md-9">
+                            <input type="text" id="new_totp" name="new_totp" data-onload-value=""
+                                   placeholder="000000" maxlength="6" class="input-int form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-outline-secondary">Change Seed</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3">
+        <div class="bg-white rounded">
+            <div class="list-group page-sub-nav">
+                <a href="#profile" class="list-group-item list-group-item-action">
+                    <i class="ion ion-ios-person-outline mr-2"></i>Account Info
+                </a>
+                <a href="#password" class="list-group-item list-group-item-action">
+                    <i class="ion ion-lock-combination mr-2"></i>Change Password
+                </a>
+                <a href="#totp" class="list-group-item list-group-item-action">
+                    <i class="ion ion-social-google-outline mr-2"></i>Google Auth
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{knit "footer"}

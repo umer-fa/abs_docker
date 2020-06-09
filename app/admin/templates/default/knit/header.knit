@@ -80,10 +80,18 @@
     </div>
     <div id="layoutSidenav_content">
         <main>
-            <div class="container-fluid">
-                <h1 class="mt-4">{$page.title}</h1>
+            <div class="container-fluid pb-3">
+                <h1 class="mt-4">{if $page.icon|isset}<i class="{$page.icon} mr-2"></i>{/if}{$page.title}</h1>
                 <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
+                    <li class="breadcrumb-item">
+                        <a href="{$page.authRoot}dashboard"><i class="ion ion-ios-home-outline"></i></a>
+                    </li>
+                    {foreach $breadcrumbs as $bc}
+                        <li class="breadcrumb-item"><a
+                                    href="{if $bc.href}{$bc.href}{else}javascript:void(0);{/if}">{if $bc.icon}<i
+                                    class="{$bc.icon} mr-2"></i>{/if}{$bc.name}</a></li>
+                    {/foreach}
+                    <li class="breadcrumb-item active">{$page.title}</li>
                 </ol>
                 <div id="errors-reporter" class="col-12 p-0">
                     <div id="errors-list">
