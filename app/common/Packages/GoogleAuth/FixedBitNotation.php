@@ -25,7 +25,7 @@ class FixedBitNotation
     protected bool $_rightPadFinalBits;
     protected bool $_padFinalGroup;
     protected string $_padCharacter;
-    protected array $_charmap;
+    protected ?array $_charmap = null;
 
     /**
      * Constructor
