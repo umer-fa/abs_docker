@@ -12,6 +12,7 @@ use App\Common\Kernel\Directories;
 use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
 use App\Common\Kernel\Memory;
+use Comely\Cache\Cache;
 use Comely\Filesystem\Exception\PathNotExistException;
 use Comely\Filesystem\Filesystem;
 
@@ -71,6 +72,8 @@ class Kernel
     private Errors $errs;
     /** @var Ciphers */
     private Ciphers $ciphers;
+    /** @var Cache */
+    private Cache $cache;
     /** @var bool */
     private bool $debug;
     /** @var Memory|null */
@@ -178,6 +181,30 @@ class Kernel
     public function ciphers(): Ciphers
     {
         return $this->ciphers;
+    }
+
+    /**
+     * @return Cache
+     * @throws \Comely\Cache\Exception\ConnectionException
+     */
+    public function cache(): Cache
+    {
+        if (!$this->cache) {
+            $this->cache = new Cache();
+            $cacheConfig = $this->config->cache();
+            if ($cacheConfig->engine()) {
+                $this->cache->servers()->add(
+                    $cacheConfig->engine(),
+                    $cacheConfig->host(),
+                    $cacheConfig->port(),
+                    $cacheConfig->timeOut()
+                );
+            }
+
+            $this->cache->connect();
+        }
+
+        return $this->cache;
     }
 
     /**
