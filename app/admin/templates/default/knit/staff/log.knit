@@ -1,0 +1,156 @@
+{knit "header"}
+<div class="row">
+    <div class="col-12">
+        {if !$listingAllAdmins}
+            <div class="alert alert-warning">
+                <i class="mdi mdi-information-outline mr-2"></i>You can only view your own logs; Not privileged to
+                check other admins
+            </div>
+        {else}
+            <div class="alert alert-success">
+                <i class="mdi mdi-check-circle-outline mr-2"></i>You have privilege to view entire administration log
+            </div>
+        {/if}
+        <form method="get" action="{$page.authRoot}management/log">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title"><i class="mdi mdi-database-search mr-2"></i>Log Filters</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-3" for="adminId">Administrator</label>
+                        <div class="col-sm-9">
+                            <select name="admin" id="adminId" class="form-control mr-2">
+                                {if $listingAllAdmins   === true}
+                                <option value=""{if !$search.admin} selected=""{/if}>(any)</option>{/if}
+                                {foreach $adminsList as $admin}
+                                    <option value="{$admin.id}"{if $search.admin === $admin.id} selected=""{/if}>{$admin.email}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <p class="text-right mb-2">
+                        <a href="#logFilterAdvanced" data-toggle="collapse" class="text-info">
+                            Advanced Filters
+                            <i class="mdi mdi-arrow-collapse-down ml-2"></i>
+                        </a>
+                    </p>
+                    <div id="logFilterAdvanced" class="collapse">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-3" for="searchQuery">Search Matching</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="match" id="searchQuery" data-onload-value="{$search.match}"
+                                       placeholder="Matching Pattern" maxlength="64" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-3" for="searchSort">Sort By</label>
+                            <div class="col-sm-3">
+                                <select name="sort" id="searchSort" class="form-control">
+                                    <option value="desc"{if $search.sort !== 'asc'} selected=""{/if}>Timestamp DESC</option>
+                                    <option value="asc"{if $search.sort === 'asc'} selected=""{/if}>Timestamp ASC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-3" for="searchPagination">Pagination</label>
+                            <div class="col-sm-3">
+                                <select name="perPage" id="searchPagination" class="form-control">
+                                    {foreach $perPageOpts as $perPageOpt}
+                                        <option value="{$perPageOpt}"{if $search.perPage === $perPageOpt} selected=""{/if}>{$perPageOpt}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="mdi mdi-magnify mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        {if $errorMessage}
+            <div class="alert alert-danger my-2">
+                <i class="mdi mdi-exclamation mr-2"></i>{$errorMessage}
+            </div>
+        {/if}
+        {if $result.status === true}
+            {if $result.count > 0 && $result.nav.pages}
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item{if !$result.nav.first} disabled{/if}">
+                            <a href="{if $result.nav.first}{$search.link}&page={$result.nav.first}{else}#{/if}"
+                               class="page-link">&laquo;</a>
+                        </li>
+                        <li class="page-item{if !$result.nav.prev} disabled{/if}">
+                            <a href="{if $result.nav.prev}{$search.link}&page={$result.nav.prev}{else}#{/if}"
+                               class="page-link">&lsaquo;</a>
+                        </li>
+                        {foreach $result.nav.pages as $page}
+                            {if $page.index|isset && $page.start|isset}
+                                <li class="page-item{if $page.index === $result.page} active{/if}">
+                                    <a href="{if $page.index === $result.page}#{else}{$search.link}&page={$page.index}{/if}"
+                                       class="page-link">{$page.index}</a>
+                                </li>
+                            {/if}
+                        {/foreach}
+                        <li class="page-item{if !$result.nav.next} disabled{/if}">
+                            <a href="{if $result.nav.next}{$search.link}&page={$result.nav.next}{else}#{/if}"
+                               class="page-link">&rsaquo;</a>
+                        </li>
+                        <li class="page-item{if !$result.nav.last} disabled{/if}">
+                            <a href="{if $result.nav.last}{$search.link}&page={$result.nav.last}{else}#{/if}"
+                               class="page-link">&raquo;</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            {/if}
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title">Total Results: <span class="badge badge-primary font-weight-light px-1">{$result.count}</span></h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped no-wrap-table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" class="text-center">Admin</th>
+                            <th scope="col" class="text-center">Flag</th>
+                            <th scope="col" class="text-center">Log</th>
+                            <th scope="col" class="text-center">IP Address</th>
+                            <th scope="col" class="text-center">Time</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {if $result.rows|is_array}
+                            {foreach $result.rows as $log}
+                                <tr>
+                                    <td class="text-center">{if $log.adminEmail|isset}{$log.adminEmail}{else}{$log.admin}{/if}</td>
+                                    <td class="text-center">
+                                        {if $log.flag}
+                                            <i class="mdi mdi-flag" data-toggle="tooltip"
+                                               title="{$log.flag} {if $log.flag_id > 0}[#{$log.flag_id}]{/if}"></i>
+                                        {else}
+                                            <i class="mdi mdi-flag-outline text-muted"></i>
+                                        {/if}
+                                    </td>
+                                    <td class="text-left">{$log.log}</td>
+                                    <td class="text-right">{$log.ip_address}</td>
+                                    <td class="text-right">{$log.time_stamp|dated}</td>
+                                </tr>
+                                {foreachelse}
+                                <tr>
+                                    <td colspan="5" class="text-muted">There are no results to show</td>
+                                </tr>
+                            {/foreach}
+                        {/if}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {/if}
+    </div>
+</div>
+{knit "footer"}
