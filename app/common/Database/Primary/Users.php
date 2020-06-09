@@ -18,7 +18,7 @@ use Comely\Database\Schema\Table\Constraints;
 class Users extends AbstractAppTable
 {
     public const NAME = 'users';
-    public const MODEL = 'App\Users\User';
+    public const MODEL = 'App\Common\Users\User';
     public const BINARY_OBJ_SIZE = 4096;
 
     /**
