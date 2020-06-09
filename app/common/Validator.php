@@ -59,6 +59,27 @@ class Validator
     }
 
     /**
+     * @param string $amount
+     * @param int $retain
+     * @return string
+     */
+    public static function cleanDecimalDigits(string $amount, int $retain = 0): string
+    {
+        $clean = strpos($amount, ".") !== false ? rtrim(rtrim($amount, "0"), ".") : $amount;
+        if ($retain) {
+            $amount = explode(".", $clean);
+            $decimals = $amount[1] ?? "";
+            $has = strlen($decimals);
+            $needed = $retain - $has;
+            if ($needed > 0) {
+                $clean = $amount[0] . "." . $decimals . str_repeat("0", $needed);
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
      * @param $val
      * @return bool
      */
