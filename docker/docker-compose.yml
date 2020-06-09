@@ -28,6 +28,7 @@ services:
     environment:
       COMELY_APP_DEBUG: 1
       COMELY_APP_CACHED_CONFIG: "true"
+      ADMIN_TEMPLATE: "default"
     env_file:
       - ../config.env
     ports:

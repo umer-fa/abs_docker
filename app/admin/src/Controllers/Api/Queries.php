@@ -96,7 +96,7 @@ class Queries extends AbstractAdminController
         $this->page()->title('API Queries')->index(210, 30)
             ->prop("icon", "ion ion-ios-cloud-download-outline");
 
-        $this->page()->js($this->request()->url()->root('js/app/api_queries.min.js'));
+        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/api_queries.min.js'));
         $this->breadcrumbs("API Server", null, "ion ion-ios-cloud");
 
         $result = [

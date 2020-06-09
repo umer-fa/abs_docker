@@ -18,7 +18,7 @@ function resetApiQueryModal() {
 
 function loadQueryRay(id, xsrf) {
     resetApiQueryModal();
-    xhrCall(rootPath + '/api/queries?query', {token: xsrf, id: id}, {type: "get"}, function (result) {
+    xhrCall(rootPath + '/api/queries?query', {xsrf: xsrf, id: id}, {type: "get"}, function (result) {
         xhrResult(result);
         if (result.hasOwnProperty("status") && result["status"] === true) {
             if (result.hasOwnProperty("query") && typeof result["query"] === "object") {
