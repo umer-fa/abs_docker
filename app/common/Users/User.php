@@ -52,7 +52,8 @@ class User extends AbstractAppModel
     public ?bool $_checksumVerified = null;
     private $_credentials = null;
     private $_params = null;
-    private $_tally = null;
+    /** @var Tally|null */
+    private ?Tally $_tally = null;
 
     /**
      * @throws AppException
@@ -142,9 +143,38 @@ class User extends AbstractAppModel
 
     }
 
-    public function log(string $msg, ?array $data = null, ?string $cnt = null, ?int $line = null, ?array $flag = null)
+    /**
+     * @return Tally
+     * @throws AppException
+     */
+    public function tally(): Tally
     {
+        if (!$this->_tally) {
+            $this->_tally = Users\Tally::User($this);
+        }
 
+        return $this->_tally;
+    }
+
+    /**
+     * @param string $msg
+     * @param array|null $data
+     * @param string|null $cnt
+     * @param int|null $line
+     * @param array|null $flag
+     * @return Log
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    public function log(string $msg, ?array $data = null, ?string $cnt = null, ?int $line = null, ?array $flag = null): Log
+    {
+        $flagId = null;
+        if ($flag) {
+            $flag = isset($flag[0]) ? strval($flag[0]) : null;
+            $flagId = isset($flag[1]) ? intval($flag[1]) : null;
+        }
+
+        return Users\Logs::insert($this->id, $msg, $data, $cnt, $line, $flag, $flagId);
     }
 
     /**
