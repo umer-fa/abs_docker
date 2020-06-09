@@ -7,6 +7,8 @@
     "ext-gmp": "*",
     "ext-openssl": "*",
     "comely-io/data-types": "1.0.34",
+    "comely-io/filesystem": "1.0.13",
+    "comely-io/yaml": "1.0.10",
     "comely-io/http": "1.0.45",
     "comely-io/db-orm": "1.2.10",
     "comely-io/cache": "1.0.24"
