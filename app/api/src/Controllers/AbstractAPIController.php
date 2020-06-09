@@ -26,6 +26,15 @@ abstract class AbstractAPIController extends API_Controller
     protected ?Query $queryLog = null;
 
     /**
+     * @return void
+     */
+    public function callback(): void
+    {
+        $this->app = APIService::getInstance();
+        parent::callback();
+    }
+
+    /**
      * @throws API_Exception
      */
     public function onLoad(): void
