@@ -9,8 +9,19 @@ namespace App\Common\Exception;
  */
 class AppException extends \Exception
 {
+    public const MODEL_NOT_FOUND = 0x2710;
+
     /** @var string|null */
     private ?string $param = null;
+
+    /**
+     * @param string $message
+     * @return AppException
+     */
+    public static function ModelNotFound(string $message): AppException
+    {
+        return new self($message, self::MODEL_NOT_FOUND);
+    }
 
     /**
      * @param string $name
