@@ -1,0 +1,79 @@
+{knit "header"}
+{$apiServerAccess|var_dump}
+<form class="col-12 xhr-form" method="post" action="{$page.authRoot}api/access">
+    <input type="hidden" name="xsrf" value="{$page.token}">
+    <div class="row">
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-body">
+                <span class="text-muted"><i class="ion ion-alert-circled mr-2"></i>Last cached on:
+                    {if $lastCachedOn|isset}
+                    <span class="text-warning">{$lastCachedOn}</span>
+                    {else}
+                    <span class="text-info">Not Cached<span>{/if}
+                </span>
+                <button type="submit" class="btn btn-lg btn-outline-secondary float-right">Save Changes</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mt-0 mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Global Status</h5>
+                    <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-outline-danger{if $apiServerAccess.globalStatus} active{/if}">
+                            <input type="radio" name="globalStatus"
+                                   value="on"{if $apiServerAccess.globalStatus} checked=""{/if}> On
+                        </label>
+                        <label class="btn btn-outline-danger{if !$apiServerAccess.globalStatus} active{/if}">
+                            <input type="radio" name="globalStatus"
+                                   value="off"{if !$apiServerAccess.globalStatus} checked=""{/if}> Off
+                        </label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="" for="walletAPI">New Registrations</label>
+                        <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                            <label class="btn btn-outline-info{if $apiServerAccess.signUp} active{/if}">
+                                <input type="radio" name="signUp"
+                                       value="on"{if $apiServerAccess.signUp} checked=""{/if}> On
+                            </label>
+                            <label class="btn btn-outline-info{if !$apiServerAccess.signUp} active{/if}">
+                                <input type="radio" name="signUp"
+                                       value="off"{if !$apiServerAccess.signUp} checked=""{/if}> Off
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="" for="walletAPI">Accounts Login</label>
+                        <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                            <label class="btn btn-outline-info{if $apiServerAccess.signIn} active{/if}">
+                                <input type="radio" name="signIn"
+                                       value="on"{if $apiServerAccess.signIn} checked=""{/if}> On
+                            </label>
+                            <label class="btn btn-outline-info{if !$apiServerAccess.signIn} active{/if}">
+                                <input type="radio" name="signIn"
+                                       value="off"{if !$apiServerAccess.signIn} checked=""{/if}> Off
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="" for="walletAPI">Password Recovery</label>
+                        <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                            <label class="btn btn-outline-info{if $apiServerAccess.recoverPassword} active{/if}">
+                                <input type="radio" name="recoverPassword"
+                                       value="on"{if $apiServerAccess.recoverPassword} checked=""{/if}> On
+                            </label>
+                            <label class="btn btn-outline-info{if !$apiServerAccess.recoverPassword} active{/if}">
+                                <input type="radio" name="signUp"
+                                       value="off"{if !$apiServerAccess.recoverPassword} checked=""{/if}> Off
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{knit "footer"}

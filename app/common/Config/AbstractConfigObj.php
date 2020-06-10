@@ -13,6 +13,7 @@ use Comely\Utils\Security\Exception\SecurityUtilException;
 /**
  * Class AbstractConfigObj
  * @package App\Common\Config
+ * @property int $cachedOn
  */
 abstract class AbstractConfigObj
 {
@@ -87,7 +88,9 @@ abstract class AbstractConfigObj
         // Store in cache?
         if (isset($cache)) {
             try {
-                $cache->set(self::CACHE_KEY, clone $configObject, self::CACHE_TTL);
+                $cloneConfig = clone $configObject;
+                $cloneConfig->cachedOn = time();
+                $cache->set(self::CACHE_KEY, $cloneConfig, self::CACHE_TTL);
             } catch (\Exception $e) {
                 $k->errors()->triggerIfDebug($e, E_USER_WARNING);
                 trigger_error(sprintf('Failed to store "%s" configuration object in cache', static::DB_KEY), E_USER_WARNING);
