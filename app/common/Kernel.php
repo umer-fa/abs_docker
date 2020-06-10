@@ -13,6 +13,7 @@ use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
 use App\Common\Kernel\Memory;
 use Comely\Cache\Cache;
+use Comely\Cache\Exception\CacheException;
 use Comely\Filesystem\Exception\PathNotExistException;
 use Comely\Filesystem\Filesystem;
 
@@ -95,6 +96,23 @@ class Kernel
         $this->ciphers = new Ciphers($this);
 
         $this->initConfig(Validator::getBool(trim(strval(getenv("COMELY_APP_CACHED_CONFIG")))));
+
+        $this->cache = new Cache();
+        $cacheConfig = $this->config->cache();
+        if ($cacheConfig->engine()) {
+            try {
+                $this->cache->servers()->add(
+                    $cacheConfig->engine(),
+                    $cacheConfig->host(),
+                    $cacheConfig->port(),
+                    $cacheConfig->timeOut()
+                );
+
+                $this->cache->connect();
+            } catch (CacheException $e) {
+                $this->errors()->trigger($e, E_USER_WARNING);
+            }
+        }
     }
 
     /**
@@ -185,25 +203,9 @@ class Kernel
 
     /**
      * @return Cache
-     * @throws \Comely\Cache\Exception\ConnectionException
      */
     public function cache(): Cache
     {
-        if (!$this->cache) {
-            $this->cache = new Cache();
-            $cacheConfig = $this->config->cache();
-            if ($cacheConfig->engine()) {
-                $this->cache->servers()->add(
-                    $cacheConfig->engine(),
-                    $cacheConfig->host(),
-                    $cacheConfig->port(),
-                    $cacheConfig->timeOut()
-                );
-            }
-
-            $this->cache->connect();
-        }
-
         return $this->cache;
     }
 
