@@ -124,10 +124,10 @@
                             <a class="nav-link" href="{$page.authRoot}app/docker">
                                 <i class="mdi mdi-docker mr-2"></i>Docker
                             </a>
-                            <a class="nav-link" href="{$page.authRoot}app/cache">
-                                <i class="mdi mdi-cached mr-2"></i>Cache Engine
+                            <a class="nav-link" href="{$page.authRoot}app/caching">
+                                <i class="mdi mdi-memory mr-2"></i>Cache Engine
                             </a>
-                            <a class="nav-link" href="{$page.authRoot}app/db">
+                            <a class="nav-link" href="{$page.authRoot}app/dbs">
                                 <i class="mdi mdi-database mr-2"></i>Databases
                             </a>
                         </nav>
