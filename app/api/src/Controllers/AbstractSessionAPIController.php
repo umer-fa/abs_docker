@@ -63,7 +63,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
 
         // Validate API Session
         $validateAPISession = true;
-        if (get_called_class() === 'App\Controllers\API\Client\Session' && $this->request()->method() === "POST") {
+        if (get_called_class() === 'App\API\Controllers\Session' && $this->request()->method() === "POST") {
             $validateAPISession = false;
         }
 
