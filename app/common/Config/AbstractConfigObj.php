@@ -90,7 +90,7 @@ abstract class AbstractConfigObj
             try {
                 $cloneConfig = clone $configObject;
                 $cloneConfig->cachedOn = time();
-                $cache->set(self::CACHE_KEY, $cloneConfig, self::CACHE_TTL);
+                $cache->set(static::CACHE_KEY, $cloneConfig, static::CACHE_TTL);
             } catch (\Exception $e) {
                 $k->errors()->triggerIfDebug($e, E_USER_WARNING);
                 trigger_error(sprintf('Failed to store "%s" configuration object in cache', static::DB_KEY), E_USER_WARNING);
