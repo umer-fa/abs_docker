@@ -1,0 +1,81 @@
+{knit "header"}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="list-group page-sub-nav">
+                            <a href="#status" data-toggle="tab" class="list-group-item list-group-item-action active">
+                                <i class="mdi mdi-database-search mr-2"></i>Status
+                            </a>
+                            <a href="#migrations" data-toggle="tab" class="list-group-item list-group-item-action">
+                                <i class="mdi mdi-database-plus mr-2"></i>Migrations
+                            </a>
+                            <a href="#backups" data-toggle="tab" class="list-group-item list-group-item-action">
+                                <i class="mdi mdi-database-export mr-2"></i>Backups
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="status">
+                                <div class="card-deck">
+                                    {foreach $dbStatuses as $dbStatus}
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><i
+                                                            class="mdi mdi-database mr-2"></i>{$dbStatus.name}
+                                                </h5>
+                                                <p class="card-text"><span class="text-muted">Status:</span>
+                                                    <span class="float-right text-{if $dbStatus.status === true}success{else}danger{/if}">{if $dbStatus.status === true}Online{else}Error{/if}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {/foreach}
+                                </div>
+                                <div class="mt-4">
+                                    {foreach $dbStatuses as $dbStatus}
+                                        {if $dbStatus.status !==  true && $dbStatus.error}
+                                            <div class="alert alert-danger">
+                                                <h5 class="alert-heading"><i class="mdi mdi-database-minus mr-2"></i>Database:
+                                                    <small>{$dbStatus.name}</small>
+                                                </h5>
+                                                <p>{$dbStatus.error}</p>
+                                            </div>
+                                        {/if}
+                                    {/foreach}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="migrations">
+                                <div class="bg-light rounded p-3 mb-4">
+                                    <form class="form-inline" id="dbMigrationGenerator">
+                                        <label class="sr-only" for="dbTableName">Database Table</label>
+                                        <select name="table" id="dbTableName" class="form-control mr-2">
+                                            <option selected="" disabled="">(select)</option>
+                                            {foreach $dbTables as $dbTable}
+                                                <option>{$dbTable}</option>
+                                            {/foreach}
+                                        </select>
+                                        <button type="submit" class="btn btn-lg btn-outline-secondary">Generate</button>
+                                    </form>
+                                </div>
+                                <div id="dbMigrationContainer" class="bg-light mt-4 p-3 rounded" style="display: none;">
+                                    <p class="text-muted">Migration for DB table: <span
+                                                class="text-info dbMigrationTableName"></span></p>
+                                    <div class="bg-white rounder p-4">
+                                        <small class="text-pink" id="dbMigration"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="backups">
+                                [backups]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{knit "footer"}

@@ -31,8 +31,8 @@
                                                 class="text-muted">( {$cacheConfig.host}:{$cacheConfig.port} )</span>
                                     </h5>
                                 {/if}
-                                <div class="table-responsive rounded mt-5">
-                                    <table class="table table-striped table-borderless table-hover">
+                                <div class="table-responsive mt-5">
+                                    <table class="table table-sm table-striped table-borderless table-hover">
                                         <thead class="thead-dark">
                                         <tr>
                                             <th scope="col" class="text-center">Object</th>
