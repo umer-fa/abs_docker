@@ -45,8 +45,8 @@ class DataStore extends AbstractAppTable
     {
         $k = Kernel::getInstance();
 
-        if (!preg_match('/^\w{8,40}$/', $key)) {
-            throw new \InvalidArgumentException('Invalid DataBank object key');
+        if (!preg_match('/^\w-\.{8,40}$/', $key)) {
+            throw new \InvalidArgumentException('Invalid DataStore object key');
         } elseif (!Integers::Range($data->size()->bytes(), 1, self::DATA_MAX_BYTES)) {
             throw new \RangeException(sprintf('Size for object "%s" cannot exceed %d bytes', $key, self::DATA_MAX_BYTES));
         }
