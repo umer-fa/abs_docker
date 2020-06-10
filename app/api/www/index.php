@@ -10,7 +10,6 @@ try {
     $router = $kernel->router();
 
     $defaultRoute = $router->route('/*', 'App\API\Controllers\*')
-        ->ignorePathIndexes(0)
         ->fallbackController('App\API\Controllers\Hello');
 
     \Comely\Http\RESTful::Request($router, function (\Comely\Http\Router\AbstractController $page) {
