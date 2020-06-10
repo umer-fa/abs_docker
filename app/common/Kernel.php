@@ -5,6 +5,8 @@ namespace App\Common;
 
 use App\Common\Config\AppConfig;
 use App\Common\Exception\AppBootstrapException;
+use App\Common\Exception\AppDirException;
+use App\Common\Exception\AppException;
 use App\Common\Kernel\AbstractErrorHandler;
 use App\Common\Kernel\Ciphers;
 use App\Common\Kernel\Databases;
@@ -16,6 +18,8 @@ use Comely\Cache\Cache;
 use Comely\Cache\Exception\CacheException;
 use Comely\Filesystem\Exception\PathNotExistException;
 use Comely\Filesystem\Filesystem;
+use FurqanSiddiqui\SemaphoreEmulator\Exception\SemaphoreEmulatorException;
+use FurqanSiddiqui\SemaphoreEmulator\SemaphoreEmulator;
 
 /**
  * Class Kernel
@@ -29,9 +33,10 @@ class Kernel
     public const VERSION = "2020.155";
     /** int Comely App Kernel Version (Major . Minor . Release) */
     public const VERSION_ID = 202015500;
-
     /** @var int[] */
     public const ROOT_ADMINISTRATORS = [1];
+    /** @var string */
+    public const API_SESS_AUTH_NAME = "api-token";
 
     /** @var Kernel|null */
     protected static ?Kernel $instance = null;
@@ -79,6 +84,8 @@ class Kernel
     private bool $debug;
     /** @var Memory|null */
     private ?Memory $mem = null;
+    /** @var SemaphoreEmulator|null */
+    private ?SemaphoreEmulator $semaphore = null;
 
     /**
      * Kernel constructor.
@@ -207,6 +214,24 @@ class Kernel
     public function cache(): Cache
     {
         return $this->cache;
+    }
+
+    /**
+     * @return SemaphoreEmulator
+     * @throws AppException
+     */
+    public function semaphoreEmulator(): SemaphoreEmulator
+    {
+        if (!$this->semaphore) {
+            try {
+                $this->semaphore = new SemaphoreEmulator($this->dirs->sempahore());
+            } catch (AppDirException|SemaphoreEmulatorException $e) {
+                $this->errs->trigger($e, E_USER_WARNING);
+                throw new AppException('Failed to get SemaphoreEmulator');
+            }
+        }
+
+        return $this->semaphore;
     }
 
     /**

@@ -13,7 +13,8 @@
     "comely-io/db-orm": "1.2.10",
     "comely-io/sessions": "1.0.12",
     "comely-io/knit": "2.2.11",
-    "comely-io/cache": "1.0.24"
+    "comely-io/cache": "1.0.24",
+    "furqansiddiqui/semaphore-emulator-php": "0.1.2"
   },
   "autoload": {
     "psr-4": {

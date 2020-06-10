@@ -31,6 +31,8 @@ class Directories
     private ?Directory $sess = null;
     /** @var Directory|null */
     private ?Directory $knit = null;
+    /** @var Directory|null */
+    private ?Directory $semaphore = null;
 
     use NoDumpTrait;
     use NotCloneableTrait;
@@ -91,6 +93,19 @@ class Directories
         }
 
         return $this->tmp;
+    }
+
+    /**
+     * @return Directory
+     * @throws AppDirException
+     */
+    public function sempahore(): Directory
+    {
+        if (!$this->semaphore) {
+            $this->semaphore = $this->dir("semaphore", "/tmp/semaphore", true);
+        }
+
+        return $this->semaphore;
     }
 
     /**

@@ -74,7 +74,6 @@ class API_Session extends AbstractAppModel
     /**
      * @return Binary
      * @throws \App\Common\Exception\AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function checksum(): Binary
     {
@@ -99,7 +98,6 @@ class API_Session extends AbstractAppModel
     /**
      * @throws AppException
      * @throws \App\Common\Exception\AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function validate(): void
     {

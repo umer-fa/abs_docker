@@ -7,6 +7,7 @@ use App\Common\Exception\AppConfigException;
 use App\Common\Kernel;
 use Comely\DataTypes\Buffer\Binary;
 use Comely\Utils\Security\Cipher;
+use Comely\Utils\Security\Exception\CipherException;
 
 /**
  * Class Ciphers
@@ -37,7 +38,6 @@ class Ciphers
     /**
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function primary(): Cipher
     {
@@ -47,7 +47,6 @@ class Ciphers
     /**
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function secondary(): Cipher
     {
@@ -57,7 +56,6 @@ class Ciphers
     /**
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function users(): Cipher
     {
@@ -67,7 +65,6 @@ class Ciphers
     /**
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function project(): Cipher
     {
@@ -77,7 +74,6 @@ class Ciphers
     /**
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function misc(): Cipher
     {
@@ -88,7 +84,6 @@ class Ciphers
      * @param string $key
      * @return Cipher
      * @throws AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function get(string $key): Cipher
     {
@@ -108,7 +103,13 @@ class Ciphers
             throw new AppConfigException(sprintf('Cipher key "%s" entropy is set to default; It must be changed', $key));
         }
 
-        $cipher = new Cipher(new Binary($entropy));
+        try {
+            $cipher = new Cipher(new Binary($entropy));
+        } catch (CipherException $e) {
+            $this->kernel->errors()->trigger($e, E_USER_WARNING);
+            throw new AppConfigException(sprintf('Failed to instantiate "%s" cipher', $key));
+        }
+
         $this->ciphers[$key] = $cipher;
         return $cipher;
     }

@@ -11,7 +11,8 @@
     "comely-io/yaml": "1.0.10",
     "comely-io/http": "1.0.45",
     "comely-io/db-orm": "1.2.10",
-    "comely-io/cache": "1.0.24"
+    "comely-io/cache": "1.0.24",
+    "furqansiddiqui/semaphore-emulator-php": "0.1.2"
   },
   "autoload": {
     "psr-4": {
