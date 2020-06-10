@@ -19,7 +19,7 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <a class="navbar-brand" href="{$page.authRoot}dashboard">{$config.public.title}</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle">
-        <i class="mdi mdi-navigation"></i>
+        <i class="ion ion-android-apps"></i>
     </button>
     <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
         <div class="input-group">
@@ -51,22 +51,62 @@
                     <a class="nav-link mt-4" href="{$page.authRoot}dashboard">
                         <div class="sb-nav-link-icon"><i class="ion ion-android-apps"></i></div>
                         Dashboard</a>
-                    <a class="nav-link" href="{$page.authRoot}configure">
-                        <div class="sb-nav-link-icon"><i class="ion ion-ios-settings-strong"></i></div>
-                        Configuration</a>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navUsers"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="ion ion-ios-people mr-2"></i></div>
+                        Users
+                        <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
+                    </a>
+                    <div class="collapse" id="navUsers" aria-labelledby="headingOne"
+                         data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{$page.authRoot}users/search">
+                                <i class="mdi mdi-account-search mr-2"></i>Search Users
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}users/create">
+                                <i class="mdi mdi-account-plus-outline mr-2"></i>Create User
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}users/logs">
+                                <i class="mdi mdi-table mr-2"></i>Activity Log
+                            </a>
+                        </nav>
+                    </div>
                     <div class="sb-sidenav-menu-heading">Platform</div>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navMail"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="ion ion-email mr-2"></i></div>
+                        Mailer
+                        <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
+                    </a>
+                    <div class="collapse" id="navMail" aria-labelledby="headingOne"
+                         data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{$page.authRoot}mails/queue">
+                                <i class="mdi mdi-email-newsletter mr-2"></i>Send Emails
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}mails/send_emails">
+                                <i class="mdi mdi-mailbox-open-outline mr-2"></i>Queue
+                            </a>
+                        </nav>
+                    </div>
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navAPIService"
                        aria-expanded="false" aria-controls="collapseLayouts">
-                        <div class="sb-nav-link-icon"><i class="ion ion-ios-cloud"></i></div>
+                        <div class="sb-nav-link-icon"><i class="mdi mdi-api"></i></div>
                         API Service
                         <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
                     </a>
                     <div class="collapse" id="navAPIService" aria-labelledby="headingOne"
                          data-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{$page.authRoot}api/access">Configuration</a>
-                            <a class="nav-link" href="{$page.authRoot}api/sessions">Sessions</a>
-                            <a class="nav-link" href="{$page.authRoot}api/queries">Log Explorer</a>
+                            <a class="nav-link" href="{$page.authRoot}api/access">
+                                <i class="mdi mdi-access-point-network mr-2"></i>Manage Access
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}api/sessions">
+                                <i class="mdi mdi-cookie mr-2"></i>Sessions
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}api/queries">
+                                <i class="mdi mdi-table mr-2"></i>Log Explorer
+                            </a>
                         </nav>
                     </div>
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navApp"
@@ -78,14 +118,17 @@
                     <div class="collapse" id="navApp" aria-labelledby="headingOne"
                          data-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{$page.authRoot}app/config">
+                                <i class="ion ion-ios-settings-strong mr-2"></i>Configuration
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}app/docker">
+                                <i class="mdi mdi-docker mr-2"></i>Docker
+                            </a>
                             <a class="nav-link" href="{$page.authRoot}app/cache">
                                 <i class="mdi mdi-cached mr-2"></i>Cache Engine
                             </a>
                             <a class="nav-link" href="{$page.authRoot}app/db">
-                                <i class="mdi mdi-database-check mr-2"></i>Database
-                            </a>
-                            <a class="nav-link" href="{$page.authRoot}app/docker">
-                                <i class="mdi mdi-docker mr-2"></i>Docker
+                                <i class="mdi mdi-database mr-2"></i>Databases
                             </a>
                         </nav>
                     </div>
