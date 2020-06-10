@@ -1,9 +1,8 @@
 {knit "header"}
-{$apiServerAccess|var_dump}
-<form class="col-12 xhr-form" method="post" action="{$page.authRoot}api/access">
+<form class="xhr-form" method="post" action="{$page.authRoot}api/access">
     <input type="hidden" name="xsrf" value="{$page.token}">
     <div class="row">
-        <div class="col-12 mb-2">
+        <div class="col-12 mb-3">
             <div class="card">
                 <div class="card-body">
                 <span class="text-muted"><i class="ion ion-alert-circled mr-2"></i>Last cached on:
@@ -19,7 +18,7 @@
         <div class="col-md-6">
             <div class="card mt-0 mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Global Status</h5>
+                    <h5 class="card-title float-left mt-2 mb-0">Global Status</h5>
                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
                         <label class="btn btn-outline-danger{if $apiServerAccess.globalStatus} active{/if}">
                             <input type="radio" name="globalStatus"
