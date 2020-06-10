@@ -131,7 +131,7 @@ class Caching extends AbstractAdminController
             ];
         }
 
-        $template = $this->template("app/cache.knit")
+        $template = $this->template("app/caching.knit")
             ->assign("cacheStatus", $this->cache ? true : false)
             ->assign("cacheConfig", is_array($cacheConfig) ? $cacheConfig : null)
             ->assign("cachedItems", $this->cachedObjects());
