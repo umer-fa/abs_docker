@@ -131,5 +131,4 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
     }
 
     abstract public function sessionAPICallback(): void;
-
 }
