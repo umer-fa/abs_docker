@@ -57,7 +57,7 @@ class Dbs extends AbstractAdminController
      * @param string $prefix
      * @return array
      */
-    private function scanDirForTables(string $dirPath, string $prefix = 'App\Database'): array
+    private function scanDirForTables(string $dirPath, string $prefix = 'App\Common\Database'): array
     {
         $tables = [];
 
