@@ -112,7 +112,7 @@ abstract class AbstractConfigObj
                 throw new AppException('Failed to encrypt API accessibility configuration');
             }
         } else {
-            $bytes = serialize($this);
+            $bytes = new Binary(serialize($this));
         }
 
         DataStore::Save(static::DB_KEY, $bytes);
