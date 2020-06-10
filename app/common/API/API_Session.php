@@ -119,6 +119,7 @@ class API_Session extends AbstractAppModel
      * @return User
      * @throws APIAuthException
      * @throws AppException
+     * @throws \App\Common\Exception\AppConfigException
      */
     public function authenticate(bool $forceRecheck = false): User
     {

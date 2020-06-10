@@ -171,7 +171,6 @@ class User extends AbstractAppModel
                 sprintf('Failed to decrypt user %d credentials', $this->id)
             );
         }
-
     }
 
     /**
