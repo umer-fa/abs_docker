@@ -119,7 +119,7 @@ class Caching extends AbstractAdminController
 
         $this->breadcrumbs("Application", null, "mdi mdi-server-network");
 
-        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . 'js/app/caching.min.js'));
+        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/caching.min.js'));
 
         $cacheConfig = $this->app->config()->cache();
         if ($cacheConfig) {
