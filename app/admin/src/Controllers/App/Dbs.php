@@ -147,7 +147,7 @@ class Dbs extends AbstractAdminController
         $this->page()->title('Db Schematics')->index(6, 10)
             ->prop("icon", "mdi mdi-database");
 
-        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . 'js/app/dbs.min.js'));
+        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/dbs.min.js'));
 
         $this->breadcrumbs("Application", null, "mdi mdi-server-network");
 
