@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-form-label col-md-4" for="addCountry">Country</label>
+                        <label class="col-form-label col-md-3" for="addCountry">Country</label>
                         <div class="col-md-6">
                             <select name="country" id="addCountry" class="form-control">
                                 <option value="" selected="" disabled="">(select)</option>

@@ -228,8 +228,6 @@ class Search extends AbstractAdminController
             $users = $usersQuery->paginate();
 
             $result["page"] = $page;
-            $result["count"] = $users->totalRows();
-            $result["rows"] = $users->rows();
             $result["nav"] = $users->compactNav();
             $result["status"] = true;
         } catch (AppException $e) {
@@ -237,6 +235,23 @@ class Search extends AbstractAdminController
         } catch (\Exception $e) {
             $this->app->errors()->trigger($e, E_USER_WARNING);
             $errorMessage = "An error occurred while searching users";
+        }
+
+        if (isset($users) && $users->count()) {
+            foreach ($users as $userRow) {
+                try {
+                    $user = new User($userRow);
+                    try {
+                        $user->validate();
+                    } catch (AppException $e) {
+                    }
+
+                    $result["count"]++;
+                    $result["rows"][] = $user;
+                } catch (\Exception $e) {
+                    $this->app->errors()->trigger($e, E_USER_WARNING);
+                }
+            }
         }
 
         // Search Link

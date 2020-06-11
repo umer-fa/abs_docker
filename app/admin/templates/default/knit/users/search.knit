@@ -102,7 +102,7 @@
             </div>
         </form>
         {if $errorMessage}
-            <div class="alert alert-danger my-2">
+            <div class="alert alert-danger mt-3">
                 <i class="ion ion-information-circled mr-2"></i>{$errorMessage}
             </div>
         {/if}
@@ -149,6 +149,7 @@
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="text-center"><i class="mdi mdi-check-all"></i></th>
                             <th scope="col" class="text-center">Status</th>
                             <th scope="col" class="text-center">E-mail Address</th>
                             <th scope="col" class="text-center">Username</th>
@@ -162,6 +163,11 @@
                         {foreach $result.rows as $user}
                             <tr>
                                 <td class="text-right">{$user.id}</td>
+                                <td class="text-center">{if $user._checksumVerified === true}
+                                        <span class="text-muted"><i class="mdi mdi-check-circle-outline"></i></span>
+                                    {else}
+                                        <span class="text-warning"><i class="mdi mdi-alert-circle-outline"></i></span>
+                                    {/if}</td>
                                 <td class="text-right text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
                                 <td class="text-left">{$user.email}{if $user.isEmailVerified === true}
                                         <span class="text-success ml-2" data-toggle="tooltip" title="Verified"><i

@@ -65,12 +65,15 @@ class Countries extends AbstractAppTable
      */
     public static function List(?int $status = null): array
     {
-        if (is_int($status)) {
-            $status = ["status" => $status];
+        $query = 'WHERE 1 ORDER BY `name` ASC';
+        $queryData = null;
+        if (is_int($status) && $status > 0) {
+            $query = 'WHERE `status`=? ORDER BY `name` ASC';
+            $queryData = [$status];
         }
 
         try {
-            return Countries::Find($status)->asc("name")->all();
+            return Countries::Find()->query($query, $queryData)->all();
         } catch (\Exception $e) {
             Kernel::getInstance()->errors()->trigger($e, E_USER_WARNING);
         }

@@ -40,7 +40,7 @@ class Add extends AbstractAdminController
     public function post(): void
     {
         $this->verifyXSRF();
-        $this->verifyTotp();
+        $this->totpSessionCheck();
 
         if (!$this->authAdmin->privileges()->root()) {
             if (!$this->authAdmin->privileges()->manageUsers) {
@@ -157,7 +157,7 @@ class Add extends AbstractAdminController
                 throw new AppControllerException('Password is too short');
             } elseif ($passwordLen > 32) {
                 throw new AppControllerException('Password is too long');
-            } elseif (!Passwords::Strength($password) < 4) {
+            } elseif (Passwords::Strength($password) < 4) {
                 throw new AppControllerException('Password is too weak!');
             }
         } catch (AppControllerException $e) {
@@ -239,7 +239,6 @@ class Add extends AbstractAdminController
             ->prop("icon", "mdi mdi-account-plus-outline");
 
         $this->breadcrumbs("Users Control", null, "ion ion-ios-people");
-
 
         $template = $this->template("users/add.knit")
             ->assign("countries", Countries::List());

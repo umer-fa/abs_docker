@@ -147,7 +147,7 @@ class Validator
             $error = json_last_error_msg();
             $exception = sprintf('Failed to JSON encode "%s" object', $label);
             if ($error) {
-                $exception .= ";" . $error;
+                $exception .= "; " . $error;
             }
 
             throw new AppException($exception);
@@ -158,7 +158,7 @@ class Validator
             $error = json_last_error_msg();
             $exception = sprintf('Failed to apply JSON filter on "%s" object', $label);
             if ($error) {
-                $exception .= ";" . $error;
+                $exception .= "; " . $error;
             }
 
             throw new AppException($exception);
@@ -177,7 +177,7 @@ class Validator
             return false;
         }
 
-        return (filter_var($email, FILTER_VALIDATE_EMAIL) && Validator::isASCII($email));
+        return (filter_var($email, FILTER_VALIDATE_EMAIL) && Validator::isASCII($email, "@-._"));
     }
 
     /**
