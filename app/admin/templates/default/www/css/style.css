@@ -28,3 +28,13 @@ h1, h2, h3, h4, h5 {
 .sb-sidenav-menu-nested > a.nav-link {
     font-size: 1rem;
 }
+
+.btn, button {
+    font-size: 1rem !important; }
+
+.no-wrap-table td, .no-wrap-table td *, .no-wrap-table th, .no-wrap-table th * {
+    white-space: nowrap;
+    word-break: keep-all; }
+
+.text-pink {
+    color: #e83e8c; }

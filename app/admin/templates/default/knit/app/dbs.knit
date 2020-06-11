@@ -64,7 +64,7 @@
                                     <p class="text-muted">Migration for DB table: <span
                                                 class="text-info dbMigrationTableName"></span></p>
                                     <div class="bg-white rounder p-4">
-                                        <small class="text-pink" id="dbMigration"></small>
+                                        <small class="text-p" id="dbMigration"></small>
                                     </div>
                                 </div>
                             </div>

@@ -121,6 +121,9 @@
                             <a class="nav-link" href="{$page.authRoot}app/config">
                                 <i class="ion ion-ios-settings-strong mr-2"></i>Configuration
                             </a>
+                            <a class="nav-link" href="{$page.authRoot}app/countries">
+                                <i class="mdi mdi-map mr-2"></i>Countries
+                            </a>
                             <a class="nav-link" href="{$page.authRoot}app/docker">
                                 <i class="mdi mdi-docker mr-2"></i>Docker
                             </a>
