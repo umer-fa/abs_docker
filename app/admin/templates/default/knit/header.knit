@@ -63,7 +63,7 @@
                             <a class="nav-link" href="{$page.authRoot}users/search">
                                 <i class="mdi mdi-account-search mr-2"></i>Search Users
                             </a>
-                            <a class="nav-link" href="{$page.authRoot}users/create">
+                            <a class="nav-link" href="{$page.authRoot}users/add">
                                 <i class="mdi mdi-account-plus-outline mr-2"></i>Create User
                             </a>
                             <a class="nav-link" href="{$page.authRoot}users/logs">
