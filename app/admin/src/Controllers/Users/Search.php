@@ -29,6 +29,7 @@ class Search extends AbstractAdminController
     public function adminCallback(): void
     {
         $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
     }
 
@@ -214,11 +215,13 @@ class Search extends AbstractAdminController
             if (isset($search["status"])) {
                 $whereQuery .= ' AND `status`=?';
                 $whereData[] = $search["status"];
+                $search["advanced"] = true;
             }
 
             if (isset($search["country"])) {
                 $whereQuery .= ' AND `country`=?';
                 $whereData[] = $search["country"];
+                $search["advanced"] = true;
             }
 
             $usersQuery->where($whereQuery, $whereData);
@@ -253,7 +256,7 @@ class Search extends AbstractAdminController
 
         // Countries
         try {
-            $countries = Countries::Find()->asc("name")->all();
+            $countries = Countries::Find()->query('WHERE 1 ORDER BY `name` ASC')->all();
         } catch (\Exception $e) {
             $this->app->errors()->trigger($e);
         }

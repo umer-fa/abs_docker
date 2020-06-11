@@ -50,13 +50,13 @@
                         <div class="form-group row">
                             <label class="col-form-label col-sm-3" for="searchUserStatus">Status</label>
                             <div class="col-sm-3">
-                                <select name="method" id="searchUserStatus" class="form-control">
-                                    <option value=""{if !$search.method} selected=""{/if}>(any)</option>
-                                    <option value="active"{if $search.method === 'active'} selected=""{/if}>Active
+                                <select name="status" id="searchUserStatus" class="form-control">
+                                    <option value=""{if !$search.status} selected=""{/if}>(any)</option>
+                                    <option value="active"{if $search.status === 'active'} selected=""{/if}>Active
                                     </option>
-                                    <option value="frozen"{if $search.method === 'frozen'} selected=""{/if}>Frozen
+                                    <option value="frozen"{if $search.status === 'frozen'} selected=""{/if}>Frozen
                                     </option>
-                                    <option value="disabled"{if $search.method === 'disabled'} selected=""{/if}>
+                                    <option value="disabled"{if $search.status === 'disabled'} selected=""{/if}>
                                         Disabled / Suspended
                                     </option>
                                 </select>
@@ -137,7 +137,7 @@
                     </ul>
                 </nav>
             {/if}
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0">
                         Total Results:
@@ -149,6 +149,7 @@
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="text-center">Status</th>
                             <th scope="col" class="text-center">E-mail Address</th>
                             <th scope="col" class="text-center">Username</th>
                             <th scope="col" class="text-center">Name</th>
@@ -161,6 +162,7 @@
                         {foreach $result.rows as $user}
                             <tr>
                                 <td class="text-right">{$user.id}</td>
+                                <td class="text-right text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
                                 <td class="text-left">{$user.email}{if $user.isEmailVerified === true}
                                         <span class="text-success ml-2" data-toggle="tooltip" title="Verified"><i
                                                     class="mdi mdi-email-check-outline-outline"></i></span>
