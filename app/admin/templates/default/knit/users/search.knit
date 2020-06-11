@@ -145,12 +145,13 @@
                     </h5>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover table-striped no-wrap-table">
+                    <table class="table table-sm table-bordered table-hover table-striped no-wrap-table">
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center"><i class="mdi mdi-check-all" data-toggle="tooltip"
-                                                                   title="Checksum"></i></th>
+                            <th scope="col" class="text-center">
+                                <i class="mdi mdi-check-all" data-toggle="tooltip" title="Checksum"></i>
+                            </th>
                             <th scope="col" class="text-center">Status</th>
                             <th scope="col" class="text-center">E-mail Address</th>
                             <th scope="col" class="text-center">Username</th>
@@ -158,44 +159,63 @@
                             <th scope="col" class="text-center">Country</th>
                             <th scope="col" class="text-center">Phone</th>
                             <th scope="col" class="text-center">Member Since</th>
+                            <th scope="col" class="text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {foreach $result.rows as $user}
                             <tr>
-                                <td class="text-right">{$user.id}</td>
+                                <td class="text-right"><a href="{$page.authRoot}users/edit?{$user.id}">{$user.id}</a>
+                                </td>
                                 <td class="text-center">{if $user._checksumVerified === true}
-                                        <span class="text-muted" data-toggle="tooltip" title="OK"><i class="mdi mdi-check-circle-outline"></i></span>
+                                        <span class="text-success" data-toggle="tooltip" title="OK"
+                                              data-placement="bottom"><i
+                                                    class="mdi mdi-check-circle-outline"></i></span>
                                     {else}
-                                        <span class="text-warning" data-toggle="tooltip" title="Error"><i class="mdi mdi-alert-circle-outline"></i></span>
+                                        <span class="text-warning" data-toggle="tooltip" title="Error"
+                                              data-placement="bottom"><i
+                                                    class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}</td>
-                                <td class="text-right text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
-                                <td class="text-left">{$user.email}{if $user.isEmailVerified === true}
-                                        <span class="text-success ml-2" data-toggle="tooltip" title="Verified"><i
-                                                    class="mdi mdi-email-check-outline-outline"></i></span>
-                                    {else}
-                                        <span class="text-muted ml-2" data-toggle="tooltip" title="Not Verified"><i
-                                                    class="mdi mdi-email-alert-outline"></i></span>
-                                    {/if}</td>
-                                <td class="text-left">{if $user.username|is_string}{$user.username}{else}
+                                <td class="text-center text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
+                                <td class="text-left">{if $user.isEmailVerified === true}<span class="text-success mr-2"
+                                                                                               data-toggle="tooltip"
+                                                                                               title="Verified"
+                                                                                               data-placement="bottom"><i
+                                            class="mdi mdi-email-check-outline-outline"></i></span>{else}<span
+                                        class="text-warning mx-2" data-toggle="tooltip" title="Not Verified"
+                                        data-placement="bottom"><i
+                                            class="mdi mdi-email-alert"></i></span>{/if}<a
+                                            href="{$page.authRoot}users/edit?{$user.id}">{$user.email}</a></td>
+                                <td class="text-center">{if $user.username|is_string}{$user.username}{else}
                                         <span class="text-muted">n/a</span>
                                     {/if}</td>
-                                <td class="text-left">
-                                    {if $user.firstName}
-                                        {$user.firstName}{if $user.lastName} {$user.lastName}{/if}
+                                <td class="text-left">{if $user.firstName}{$user.firstName}{if $user.lastName} {$user.lastName}{/if}
                                     {else}
                                         {if $user.lastName}{$user.lastName}{else}
                                             <span class="text-muted">n/a</span>
                                         {/if}
-                                    {/if}
-                                </td>
+                                    {/if}</td>
                                 <td class="text-right">{$user.country|strtoupper}</td>
-                                <td class="text-right">{if $user.phoneSms}{$user.phoneSms}{else}n/a{/if}</td>
+                                <td class="text-right">{if $user.phoneSms}{$user.phoneSms}{else}
+                                        <span class="text-muted">n/a</span>
+                                    {/if}</td>
                                 <td class="text-right">{$user.joinStamp|dated}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{$page.authRoot}users/edit?{$user.id}" target="_blank"
+                                           class="btn btn-sm btn-outline-dark" data-toggle="tooltip"
+                                           data-placement="bottom" title="Edit account"><i
+                                                    class="mdi mdi-account-edit"></i></a>
+                                        <a href="{$page.authRoot}users/logs?{$user.id}" target="_blank"
+                                           class="btn btn-sm btn-outline-dark" data-toggle="tooltip"
+                                           data-placement="bottom" title="Activity Log"><i
+                                                    class="mdi mdi-table"></i></a>
+                                    </div>
+                                </td>
                             </tr>
                             {foreachelse}
                             <tr>
-                                <td colspan="9" class="text-muted">There are no results to show</td>
+                                <td colspan="10" class="text-muted">There are no results to show</td>
                             </tr>
                         {/foreach}
                         </tbody>

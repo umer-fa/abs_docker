@@ -205,7 +205,7 @@ class Search extends AbstractAdminController
                         }
 
                         var_dump($logsUsersId);
-                        $whereQuery .= sprintf('AND `id` IN (%s)', implode(",", $logsUsersId));
+                        $whereQuery .= sprintf(' AND `id` IN (%s)', implode(",", $logsUsersId));
                         var_dump($whereQuery);
                         break;
                 }
