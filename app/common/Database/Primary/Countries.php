@@ -58,4 +58,23 @@ class Countries extends AbstractAppTable
             throw new AppException('No such country is available');
         }
     }
+
+    /**
+     * @param int|null $status
+     * @return array
+     */
+    public static function List(?int $status = null): array
+    {
+        if (is_int($status)) {
+            $status = ["status" => $status];
+        }
+
+        try {
+            return Countries::Find($status)->asc("name")->all();
+        } catch (\Exception $e) {
+            Kernel::getInstance()->errors()->trigger($e, E_USER_WARNING);
+        }
+
+        return [];
+    }
 }

@@ -35,8 +35,8 @@ class User extends AbstractAppModel
     public string $firstName;
     /** @var string */
     public string $lastName;
-    /** @var string */
-    public string $username;
+    /** @var string|null */
+    public ?string $username = null;
     /** @var string */
     public string $email;
     /** @var int */

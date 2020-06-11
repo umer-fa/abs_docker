@@ -254,18 +254,11 @@ class Search extends AbstractAdminController
         KnitModifiers::Dated($this->knit());
         KnitModifiers::Hex($this->knit());
 
-        // Countries
-        try {
-            $countries = Countries::Find()->query('WHERE 1 ORDER BY `name` ASC')->all();
-        } catch (\Exception $e) {
-            $this->app->errors()->trigger($e);
-        }
-
         $template = $this->template("users/search.knit")
             ->assign("errorMessage", $errorMessage)
             ->assign("search", $search)
             ->assign("result", $result)
-            ->assign("countries", isset($countries) && is_array($countries) ? $countries : [])
+            ->assign("countries", Countries::List())
             ->assign("perPageOpts", self::PER_PAGE_OPTIONS);
         $this->body($template);
     }

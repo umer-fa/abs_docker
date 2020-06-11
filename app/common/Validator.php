@@ -12,6 +12,15 @@ use App\Common\Exception\AppException;
 class Validator
 {
     /**
+     * @param $username
+     * @return bool
+     */
+    public static function isValidUsername($username): bool
+    {
+        return is_string($username) && preg_match('/^[a-z0-9]+[a-z0-9_\-.]{1,19}$/i', $username);
+    }
+
+    /**
      * @param $hostname
      * @return string|null
      */
@@ -156,5 +165,48 @@ class Validator
         }
 
         return $filtered;
+    }
+
+    /**
+     * @param $email
+     * @return bool
+     */
+    public static function isValidEmailAddress($email): bool
+    {
+        if (!is_string($email) || !$email) {
+            return false;
+        }
+
+        return (filter_var($email, FILTER_VALIDATE_EMAIL) && Validator::isASCII($email));
+    }
+
+    /**
+     * @param $value
+     * @param string|null $allow
+     * @return bool
+     */
+    public static function isASCII($value, ?string $allow = null): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $allowed = $allow ? preg_quote($allow, "/") : "";
+        $match = '/^[\w\s' . $allowed . ']*$/';
+
+        return preg_match($match, $value) ? true : false;
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public static function isUTF8($value): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        return strlen($value) !== mb_strlen($value);
     }
 }

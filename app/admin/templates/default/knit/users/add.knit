@@ -5,47 +5,59 @@
             <input type="hidden" name="xsrf" value="{$page.token}">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="mdi mdi-account-plus-outline mr-2"></i> Create User Account</h5>
+                    <h5 class="card-title mb-0"><i class="mdi mdi-account-plus-outline mr-2"></i> Create User Account
+                    </h5>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
+                    <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addFullName">Name</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="text" name="first_name" id="addFullName" data-onload-value=""
-                                       placeholder="John" maxlength="32" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <!--suppress HtmlFormInputWithoutLabel -->
-                                <input type="text" name="last_name" data-onload-value=""
-                                       placeholder="Doe" maxlength="32" class="form-control">
-                            </div>
+                        <div class="col-md-6">
+                            <input type="text" name="first_name" id="addFullName" data-onload-value=""
+                                   placeholder="John" maxlength="32" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6 offset-md-3">
+                            <!--suppress HtmlFormInputWithoutLabel -->
+                            <input type="text" name="last_name" id="addLastName" data-onload-value=""
+                                   placeholder="Last Name" maxlength="32" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-4" for="addCountry">Country</label>
+                        <div class="col-md-6">
+                            <select name="country" id="addCountry" class="form-control">
+                                <option value="" selected="" disabled="">(select)</option>
+                                {foreach $countries as $country}
+                                    <option value="{$country.code}">{$country.name}</option>
+                                {/foreach}
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUserEmail">E-mail address</label>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             <input type="text" name="email" id="addUserEmail" data-onload-value=""
                                    placeholder="john@doe.com" maxlength="64" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUsername">Username</label>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             <input type="text" name="username" id="addUsername" data-onload-value=""
                                    placeholder="(optional)" maxlength="20" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUserPass">Password</label>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             <input type="text" name="password" id="addUserPass" data-onload-value=""
                                    placeholder="(secret)" maxlength="32" class="form-control">
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-outline-primary">
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-outline-danger">
                         <i class="mdi mdi-plus-circle-outline mr-2"></i>Insert User
                     </button>
                 </div>

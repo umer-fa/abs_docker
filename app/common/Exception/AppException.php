@@ -24,6 +24,17 @@ class AppException extends \Exception
     }
 
     /**
+     * @param string $param
+     * @param string $message
+     * @param int|null $code
+     * @return static
+     */
+    public static function Param(string $param, string $message, ?int $code = null): self
+    {
+        return (new self($message, $code))->setParam($param);
+    }
+
+    /**
      * @param string $name
      * @return $this
      */
