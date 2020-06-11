@@ -30,7 +30,7 @@ class Users extends AbstractAppTable
         $cols->defaults("ascii", "ascii_general_ci");
 
         $cols->int("id")->bytes(4)->unSigned()->autoIncrement();
-        $cols->int("referrer")->bytes(4)->nullable();
+        $cols->int("referrer")->bytes(4)->unSigned()->nullable();
         $cols->binary("checksum")->fixed(20);
         $cols->enum("status")->options("active", "frozen", "disabled")->default("active");
         $cols->string("first_name")->length(32)
