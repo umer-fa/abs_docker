@@ -238,7 +238,7 @@ class Search extends AbstractAdminController
         }
 
         if (isset($users) && $users->count()) {
-            foreach ($users as $userRow) {
+            foreach ($users->rows() as $userRow) {
                 try {
                     $user = new User($userRow);
                     try {

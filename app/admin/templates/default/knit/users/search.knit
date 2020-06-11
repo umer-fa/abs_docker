@@ -149,7 +149,8 @@
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center">ID</th>
-                            <th scope="col" class="text-center"><i class="mdi mdi-check-all"></i></th>
+                            <th scope="col" class="text-center"><i class="mdi mdi-check-all" data-toggle="tooltip"
+                                                                   title="Checksum"></i></th>
                             <th scope="col" class="text-center">Status</th>
                             <th scope="col" class="text-center">E-mail Address</th>
                             <th scope="col" class="text-center">Username</th>
@@ -164,9 +165,9 @@
                             <tr>
                                 <td class="text-right">{$user.id}</td>
                                 <td class="text-center">{if $user._checksumVerified === true}
-                                        <span class="text-muted"><i class="mdi mdi-check-circle-outline"></i></span>
+                                        <span class="text-muted" data-toggle="tooltip" title="OK"><i class="mdi mdi-check-circle-outline"></i></span>
                                     {else}
-                                        <span class="text-warning"><i class="mdi mdi-alert-circle-outline"></i></span>
+                                        <span class="text-warning" data-toggle="tooltip" title="Error"><i class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}</td>
                                 <td class="text-right text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
                                 <td class="text-left">{$user.email}{if $user.isEmailVerified === true}
