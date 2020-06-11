@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Common;
 
+use App\Common\Exception\AppException;
+
 /**
  * Class Validator
  * @package App\Common
@@ -117,5 +119,42 @@ class Validator
         }
 
         return false;
+    }
+
+    /**
+     * @param $obj
+     * @param string $label
+     * @return array
+     * @throws AppException
+     */
+    public static function JSON_Filter($obj, string $label): array
+    {
+        if (!is_array($obj) && !is_object($obj)) {
+            throw new \InvalidArgumentException('JSON filter may only be applied to Array or Objects');
+        }
+
+        $json = json_encode($obj);
+        if (!$json) {
+            $error = json_last_error_msg();
+            $exception = sprintf('Failed to JSON encode "%s" object', $label);
+            if ($error) {
+                $exception .= ";" . $error;
+            }
+
+            throw new AppException($exception);
+        }
+
+        $filtered = json_decode($json, true);
+        if (!is_array($filtered)) {
+            $error = json_last_error_msg();
+            $exception = sprintf('Failed to apply JSON filter on "%s" object', $label);
+            if ($error) {
+                $exception .= ";" . $error;
+            }
+
+            throw new AppException($exception);
+        }
+
+        return $filtered;
     }
 }

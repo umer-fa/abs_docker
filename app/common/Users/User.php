@@ -27,12 +27,16 @@ class User extends AbstractAppModel
 
     /** @var int */
     public int $id;
+    /** @var int|null */
+    public ?int $referrer = null;
     /** @var string */
     public string $status;
     /** @var string */
     public string $firstName;
     /** @var string */
     public string $lastName;
+    /** @var string */
+    public string $username;
     /** @var string */
     public string $email;
     /** @var int */
@@ -113,10 +117,12 @@ class User extends AbstractAppModel
     public function checksum(): Binary
     {
         $raw = sprintf(
-            '%d:%s:%s:%d:%s:%s:%d',
+            '%d:%d:%s:%s:%s:%d:%s:%s:%d',
+            is_int($this->referrer) && $this->referrer > 0 ? $this->referrer : 0,
             $this->id,
             $this->status,
             $this->email,
+            $this->username,
             $this->isEmailVerified === 1 ? 1 : 0,
             $this->country,
             $this->phoneSms,

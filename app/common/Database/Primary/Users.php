@@ -29,13 +29,15 @@ class Users extends AbstractAppTable
     {
         $cols->defaults("ascii", "ascii_general_ci");
 
-        $cols->int("id")->size(4)->unSigned()->autoIncrement();
+        $cols->int("id")->bytes(4)->unSigned()->autoIncrement();
+        $cols->int("referrer")->bytes(4)->nullable();
         $cols->binary("checksum")->fixed(20);
         $cols->enum("status")->options("active", "frozen", "disabled")->default("active");
         $cols->string("first_name")->length(32)
             ->charset("utf8mb4")->collation("utf8mb4_general_ci");
         $cols->string("last_name")->length(32)
             ->charset("utf8mb4")->collation("utf8mb4_general_ci");
+        $cols->string("username")->length(20)->nullable()->unique();
         $cols->string("email")->length(64)->unique();
         $cols->int("is_email_verified")->bytes(1)->default(0);
         $cols->string("country")->fixed(3);
@@ -47,6 +49,7 @@ class Users extends AbstractAppTable
         $cols->int("time_stamp")->bytes(4)->unSigned();
         $cols->primaryKey("id");
 
+        $constraints->foreignKey("referrer")->table(self::NAME, "id");
         $constraints->foreignKey("country")->table(Countries::NAME, "code");
     }
 
