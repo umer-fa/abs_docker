@@ -16,7 +16,63 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title float-left">SMTP Status</h5>
+                    <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                        <label class="btn btn-outline-danger{if $smtpConfig.status} active{/if}">
+                            <input type="radio" name="status"
+                                   value="on"{if $smtpConfig.status} checked=""{/if}> On
+                        </label>
+                        <label class="btn btn-outline-danger{if !$smtpConfig.status} active{/if}">
+                            <input type="radio" name="status"
+                                   value="off"{if !$smtpConfig.status} checked=""{/if}> Off
+                        </label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpHost">Hostname</label>
+                        <div class="col-md-6">
+                            <input type="text" id="smtpHost" name="hostname"
+                                   data-onload-value="{$smtpConfig.hostname|null}"
+                                   placeholder="smtp.server.tld" maxlength="128" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpPort">Port</label>
+                        <div class="col-md-2">
+                            <input type="number" id="smtpPort" name="port" data-onload-value="{$smtpConfig.port}"
+                                   placeholder="587" maxlength="5" min="25" max="65535" class="input-int form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpTimeout">Time Out</label>
+                        <div class="col-md-2">
+                            <input type="number" id="smtpTimeout" name="time_out"
+                                   data-onload-value="{$smtpConfig.timeOut}"
+                                   placeholder="1" maxlength="2" min="1" max="30" class="input-int form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpTLS">TLS Encryption</label>
+                        <div class="col-md-2">
+                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                <label class="btn btn-outline-success{if $smtpConfig.useTLS} active{/if}">
+                                    <input type="radio" name="status"
+                                           value="on"{if $smtpConfig.useTLS} checked=""{/if}> Yes
+                                </label>
+                                <label class="btn btn-outline-danger{if !$smtpConfig.useTLS} active{/if}">
+                                    <input type="radio" name="status"
+                                           value="off"{if !$smtpConfig.useTLS} checked=""{/if}> No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 {knit "footer"}

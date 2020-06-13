@@ -6,6 +6,7 @@ namespace App\Admin\Controllers\App\Config;
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Config\SMTPConfig;
 use App\Common\Exception\AppException;
+use App\Common\Kernel\KnitModifiers;
 use Comely\Utils\Time\Time;
 use Comely\Utils\Time\TimeUnits;
 
@@ -61,6 +62,8 @@ class Smtp extends AbstractAdminConfigController
                 $lastCachedOn = $timeUnits->timeToString($lastCachedTimeDiff);
             }
         }
+
+        KnitModifiers::Null($this->knit());
 
         $template = $this->template("app/config/smtp.knit")
             ->assign("lastCachedOn", $lastCachedOn)

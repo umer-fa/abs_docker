@@ -14,6 +14,8 @@ class SMTPConfig extends AbstractConfigObj
     public const CACHE_TTL = 86400;
     public const IS_ENCRYPTED = false;
 
+    /** @var bool */
+    public bool $status;
     /** @var string */
     public string $senderName;
     /** @var string */
@@ -38,6 +40,7 @@ class SMTPConfig extends AbstractConfigObj
      */
     public function __construct()
     {
+        $this->status = false;
         $this->port = 587;
         $this->timeOut = 1;
         $this->useTLS = true;
