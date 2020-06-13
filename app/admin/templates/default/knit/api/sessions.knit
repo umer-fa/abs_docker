@@ -174,7 +174,7 @@
                                                     class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}
                                 </td>
-                                <td class="text-left">{$sess.token}</td>
+                                <td class="text-left"><a href="{$page.authRoot}api/queries?key=flag_api_sess&value={$sess.token}">{$sess.token}</a></td>
                                 <td class="text-center">
                                     {if $sess.type === 'web'}
                                         <i class="mdi mdi-web-box" data-toggle="tooltip" title="Web"></i>

@@ -46,7 +46,8 @@
                                     <option value="get"{if $search.method === 'get'} selected=""{/if}>GET</option>
                                     <option value="post"{if $search.method === 'post'} selected=""{/if}>POST</option>
                                     <option value="put"{if $search.method === 'put'} selected=""{/if}>PUT</option>
-                                    <option value="delete"{if $search.method === 'delete'} selected=""{/if}>DELETE</option>
+                                    <option value="delete"{if $search.method === 'delete'} selected=""{/if}>DELETE
+                                    </option>
                                     <option value="options"{if $search.method === 'options'} selected=""{/if}>OPTIONS
                                     </option>
                                 </select>
@@ -180,14 +181,15 @@
                                 </td>
                                 <td class="text-right">
                                     {if $query.flag_api_sess}
-                                        <span class="">{$query.flag_api_sess}</span>
+                                        <a href="{$page.authRoot}api/sessions?key=token&value={$query.flag_api_sess}">{$query.flag_api_sess}</a>
                                     {else}
                                         <span class="text-muted">n/a</span>
                                     {/if}
                                 </td>
                                 <td class="text-right">
                                     {if $query.flag_user_id}
-                                        <a href="{$page.authRoot}users/view?{$query.flag_user_id|dechex}" target="_blank">
+                                        <a href="{$page.authRoot}users/view?{$query.flag_user_id|dechex}"
+                                           target="_blank">
                                             {$query.flag_user_em}
                                         </a>
                                     {else}

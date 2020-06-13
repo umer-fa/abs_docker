@@ -57,7 +57,7 @@
                         Users
                         <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
                     </a>
-                    <div class="collapse" id="navUsers" aria-labelledby="headingOne"
+                    <div class="collapse{if $page.index.a === 1100} show{/if}" id="navUsers" aria-labelledby="headingOne"
                          data-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{$page.authRoot}users/search">
@@ -71,7 +71,6 @@
                             </a>
                         </nav>
                     </div>
-                    <div class="sb-sidenav-menu-heading">Platform</div>
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navMail"
                        aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="ion ion-email mr-2"></i></div>
@@ -89,13 +88,14 @@
                             </a>
                         </nav>
                     </div>
+                    <div class="sb-sidenav-menu-heading">Platform</div>
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navAPIService"
                        aria-expanded="false" aria-controls="collapseLayouts">
                         <div class="sb-nav-link-icon"><i class="mdi mdi-api"></i></div>
                         API Service
                         <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
                     </a>
-                    <div class="collapse" id="navAPIService" aria-labelledby="headingOne"
+                    <div class="collapse{if $page.index.a === 210} show{/if}" id="navAPIService" aria-labelledby="headingOne"
                          data-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{$page.authRoot}api/access">
@@ -115,7 +115,7 @@
                         Application
                         <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
                     </a>
-                    <div class="collapse" id="navApp" aria-labelledby="headingOne"
+                    <div class="collapse{if $page.index.a === 310} show{/if}" id="navApp" aria-labelledby="headingOne"
                          data-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
                             <a class="nav-link" href="{$page.authRoot}app/config/program">
