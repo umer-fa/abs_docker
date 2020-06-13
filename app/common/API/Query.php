@@ -7,6 +7,7 @@ use App\Common\Database\AbstractAppModel;
 use App\Common\Database\API\Queries;
 use App\Common\Database\API\QueriesPayload;
 use App\Common\Exception\AppException;
+use App\Common\Validator;
 use Comely\DataTypes\Buffer\Binary;
 
 /**
@@ -34,8 +35,6 @@ class Query extends AbstractAppModel
     public ?int $resCode = null;
     /** @var null|int */
     public ?int $resLen = null;
-    /** @var null|string */
-    public ?string $flagApiSess = null;
     /** @var null|int */
     public ?int $flagUserId = null;
 
@@ -64,7 +63,6 @@ class Query extends AbstractAppModel
     /**
      * @throws AppException
      * @throws \App\Common\Exception\AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function validateChecksum(): void
     {
@@ -78,7 +76,6 @@ class Query extends AbstractAppModel
     /**
      * @return Binary
      * @throws \App\Common\Exception\AppConfigException
-     * @throws \Comely\Utils\Security\Exception\CipherException
      */
     public function checksum(): Binary
     {
@@ -92,7 +89,7 @@ class Query extends AbstractAppModel
             $this->endOn,
             $this->resCode ?? 0,
             $this->resLen ?? 0,
-            $this->flagApiSess ?? "",
+            $this->private("flagApiSess") ?? "",
             $this->flagUserId ?? 0
         );
 
@@ -140,10 +137,11 @@ class Query extends AbstractAppModel
 
     /**
      * @return array
+     * @throws AppException
      */
     public function array(): array
     {
-        $jsonFiltered = json_decode(json_encode($this), true);
+        $jsonFiltered = Validator::JSON_Filter($this, sprintf("api.Query[%d]", $this->id));
         $jsonFiltered["payload"] = null;
         if ($this->_payload) {
             $jsonFiltered["payload"] = $this->_payload->array();

@@ -261,6 +261,9 @@ class Queries extends AbstractAdminController
                 for ($i = 0; $i < count($result["rows"]); $i++) {
                     // Remove binary checksum value
                     $result["rows"][$i]["checksum"] = null;
+                    if ($result["rows"][$i]["flag_api_sess"]) {
+                        $result["rows"][$i]["flag_api_sess"] = bin2hex($result["rows"][$i]["flag_api_sess"]);
+                    }
 
                     // Endpoint Short
                     $shortEndpoint = substr($result["rows"][$i]["endpoint"], 0, 45);

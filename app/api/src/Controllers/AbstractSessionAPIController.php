@@ -104,7 +104,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
 
             // Log the API token
             if ($this->queryLog) {
-                $this->queryLog->flagApiSess = $this->apiSession->token()->hexits(false);
+                $this->queryLog->set("flagApiSess", $this->apiSession->private("token"));
                 if (is_int($this->apiSession->authUserId) && $this->apiSession->authUserId > 0) {
                     $this->queryLog->flagUserId = $this->apiSession->authUserId;
                 }
