@@ -71,7 +71,7 @@ class Sessions extends AbstractAppTable
         $k = Kernel::getInstance();
 
         if ($token) {
-            if ($token->len() !== 32) {
+            if ($token->sizeInBytes !== 32) {
                 throw new \InvalidArgumentException('Invalid token length; Expecting 32 bytes');
             }
 
