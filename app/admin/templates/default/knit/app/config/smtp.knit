@@ -1,0 +1,22 @@
+{knit "header"}
+{knit "app/config/_nav_tabs"}
+<form class="xhr-form" method="post" action="{$page.authRoot}app/config/smtp">
+    <input type="hidden" name="xsrf" value="{$page.token}">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                <span class="text-muted"><i class="ion ion-alert-circled mr-2"></i>Last cached on:
+                    {if $lastCachedOn|isset}
+                    <span class="text-warning">{$lastCachedOn}</span>
+                    {else}
+                    <span class="text-info">Not Cached<span>{/if}
+                </span>
+                <button type="submit" class="btn btn-lg btn-outline-secondary float-right">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+{knit "footer"}

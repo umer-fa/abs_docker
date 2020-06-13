@@ -144,7 +144,7 @@ class Dbs extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title('Db Schematics')->index(6, 20)
+        $this->page()->title('Db Schematics')->index(310, 20)
             ->prop("icon", "mdi mdi-database");
 
         $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/dbs.min.js'));
