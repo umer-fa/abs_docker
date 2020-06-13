@@ -37,22 +37,37 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUserEmail">E-mail address</label>
                         <div class="col-md-6">
-                            <input type="text" name="email" id="addUserEmail" data-onload-value=""
-                                   placeholder="john@doe.com" maxlength="64" class="form-control">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-email"></i></span>
+                                </div>
+                                <input type="text" name="email" id="addUserEmail" data-onload-value=""
+                                       placeholder="john@doe.com" maxlength="64" class="form-control">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUsername">Username</label>
                         <div class="col-md-6">
-                            <input type="text" name="username" id="addUsername" data-onload-value=""
-                                   placeholder="(optional)" maxlength="20" class="form-control">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-login"></i></span>
+                                </div>
+                                <input type="text" name="username" id="addUsername" data-onload-value=""
+                                       placeholder="(optional)" maxlength="20" class="form-control">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="addUserPass">Password</label>
                         <div class="col-md-6">
-                            <input type="text" name="password" id="addUserPass" data-onload-value=""
-                                   placeholder="(secret)" maxlength="32" class="form-control">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-form-textbox-password"></i></span>
+                                </div>
+                                <input type="text" name="password" id="addUserPass" data-onload-value=""
+                                       placeholder="(secret)" maxlength="32" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>

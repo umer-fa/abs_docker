@@ -4,20 +4,18 @@ declare(strict_types=1);
 namespace App\Admin\Controllers\Api;
 
 use App\Admin\Controllers\AbstractAdminController;
-use App\Common\API\Query;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Validator;
-use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
 use Comely\DataTypes\Integers;
 
 /**
- * Class Queries
+ * Class Sessions
  * @package App\Admin\Controllers\Api
  */
-class Queries extends AbstractAdminController
+class Sessions extends AbstractAdminController
 {
     private const PER_PAGE_OPTIONS = [50, 100, 250, 500];
     private const PER_PAGE_DEFAULT = self::PER_PAGE_OPTIONS[1];
@@ -27,63 +25,13 @@ class Queries extends AbstractAdminController
      */
     public function adminCallback(): void
     {
-        $db = $this->app->db()->primary();
-        Schema::Bind($db, 'App\Common\Database\Primary\Users');
+        $apiDb = $this->app->db()->apiLogs();
+        Schema::Bind($apiDb, 'App\Common\Database\API\Sessions');
     }
 
-    /**
-     * @throws AppException
-     * @throws \App\Common\Exception\XSRF_Exception
-     * @throws \Comely\Database\Exception\DbConnectionException
-     */
-    public function getQuery(): void
+    public function postArchiveSession(): void
     {
-        $this->verifyXSRF();
 
-        $apiLogsDb = $this->app->db()->apiLogs();
-        Schema::Bind($apiLogsDb, 'App\Common\Database\API\Queries');
-
-        // Check admin privileges
-        if (!$this->authAdmin->privileges()->root()) {
-            if (!$this->authAdmin->privileges()->viewAPIQueriesPayload) {
-                throw new AppException('You are not authorized to decrypt API queries');
-            }
-        }
-
-        // Query hexId
-        $queryId = $this->input()->get("id");
-        if (!is_string($queryId) || !preg_match('/^[a-f0-9]{1,32}$/i', $queryId)) {
-            throw new AppException('Invalid API query rayId');
-        }
-
-        // Load query
-        try {
-            /** @var Query $query */
-            $query = \App\Common\Database\API\Queries::Find(["id" => hexdec($queryId)])->first();
-
-            try {
-                $query->validateChecksum();
-            } catch (AppException $e) {
-            }
-        } catch (ORM_ModelNotFoundException $e) {
-            throw new AppException(sprintf('No API query with Ray Id "%s" was found', $queryId));
-        } catch (\Exception $e) {
-            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
-            throw new AppException('Failed to retrieve API query');
-        }
-
-        // Payload
-        try {
-            $query->payload();
-        } catch (AppException $e) {
-            trigger_error($e->getMessage(), E_USER_NOTICE);
-        }
-
-        // Final touches
-        $query->method = strtoupper($query->method);
-
-        $this->response()->set("status", true);
-        $this->response()->set("query", $query->array());
     }
 
     /**
@@ -93,12 +41,11 @@ class Queries extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title('API Queries')->index(210, 30)
+        $this->page()->title('API Sessions')->index(210, 20)
             ->prop("containerIsFluid", true)
-            ->prop("icon", "ion ion-ios-cloud-download-outline");
+            ->prop("icon", "mdi-cookie");
 
-        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/api_queries.min.js'));
-        $this->breadcrumbs("API Server", null, "ion ion-ios-cloud");
+        $this->breadcrumbs("API Server", null, "mdi mdi-api");
 
         $result = [
             "status" => false,
@@ -111,8 +58,8 @@ class Queries extends AbstractAdminController
         $search = [
             "key" => null,
             "value" => null,
-            "method" => null,
-            "endpoint" => null,
+            "archived" => null,
+            "type" => null,
             "sort" => "desc",
             "perPage" => self::PER_PAGE_DEFAULT,
             "advanced" => false,
@@ -127,7 +74,7 @@ class Queries extends AbstractAdminController
             $key = $this->input()->get("key");
             if ($key && is_string($key)) {
                 $key = strtolower(trim($key));
-                if (!in_array($key, ["ip_address", "flag_api_sess", "flag_user_id"])) {
+                if (!in_array($key, ["token", "ip_address", "auth_user"])) {
                     throw new AppException('Invalid search column name');
                 }
 
@@ -148,28 +95,26 @@ class Queries extends AbstractAdminController
                 $search["value"] = $value;
             }
 
-            // Method and Endpoint
-            $httpMethod = $this->input()->get("method");
-            if ($httpMethod && is_string($httpMethod)) {
-                $httpMethod = strtolower($httpMethod);
-                if (!in_array($httpMethod, ["get", "post", "put", "delete", "options"])) {
-                    throw new AppException('Invalid HTTP method to search for');
+            // Device type & Is archived
+            $tokenType = $this->input()->get("type");
+            if ($tokenType && is_string($tokenType)) {
+                $tokenType = strtolower($tokenType);
+                if (!in_array($tokenType, ["web", "mobile", "desktop"])) {
+                    throw new AppException('Invalid token device type to search for');
                 }
 
-                $search["method"] = $httpMethod;
+                $search["type"] = $tokenType;
                 $search["advanced"] = true;
             }
 
-            $endpoint = $this->input()->get("endpoint");
-            if ($endpoint && is_string($endpoint)) {
-                $endpointLen = strlen($endpoint);
-                if (!preg_match('/^[\w\/\-?@#:]+$/', $endpoint)) {
-                    throw new AppException('Invalid HTTP endpoint URL');
-                } elseif (!Integers::Range($endpointLen, 1, 64)) {
-                    throw new AppException('Search for API endpoint exceeds min/max length');
+            $isArchived = $this->input()->get("archived");
+            if ($isArchived && is_string($isArchived)) {
+                $isArchived = strtolower($isArchived);
+                if (!in_array($isArchived, ["yes", "no"])) {
+                    throw new AppException('Invalid token device type to search for');
                 }
 
-                $search["endpoint"] = $endpoint;
+                $search["archived"] = $isArchived;
                 $search["advanced"] = true;
             }
 
@@ -199,7 +144,7 @@ class Queries extends AbstractAdminController
             $start = ($page * $perPage) - $perPage;
 
             $apiLogsDb = $this->app->db()->apiLogs();
-            $logsQuery = $apiLogsDb->query()->table(\App\Common\Database\API\Queries::NAME)
+            $logsQuery = $apiLogsDb->query()->table(\App\Common\Database\API\Sessions::NAME)
                 ->limit($search["perPage"])
                 ->start($start);
 
@@ -215,12 +160,12 @@ class Queries extends AbstractAdminController
             // Search key/value
             if (isset($search["key"], $search["value"])) {
                 $searchValue = $search["value"];
-                if ($search["key"] === "flag_user_id") {
+                if ($search["key"] === "auth_user") {
                     $user = Users::Email($searchValue);
-                    $whereQuery .= ' AND `flag_user_id`=?';
+                    $whereQuery .= ' AND `auth_user_id`=?';
                     $whereData[] = $user->id;
                 } else {
-                    if ($search["key"] === "flag_api_sess") {
+                    if ($search["key"] === "token") {
                         $searchValue = hex2bin($searchValue);
                     }
 
@@ -229,15 +174,15 @@ class Queries extends AbstractAdminController
                 }
             }
 
-            // Search Method & Endpoint
-            if (isset($search["method"])) {
-                $whereQuery .= ' AND `method`=?';
-                $whereData[] = $search["method"];
+            // Device type & Is archived
+            if (isset($search["type"])) {
+                $whereQuery .= ' AND `type`=?';
+                $whereData[] = $search["type"];
             }
 
-            if (isset($search["endpoint"])) {
-                $whereQuery .= ' AND `endpoint` LIKE ?';
-                $whereData[] = sprintf('%%%s%%', $search["endpoint"]);
+            if (isset($search["archived"])) {
+                $whereQuery .= ' AND `archived`=?';
+                $whereData[] = $search["archived"] === "yes" ? 1 : 0;
             }
 
             $logsQuery->where($whereQuery, $whereData);
@@ -261,37 +206,27 @@ class Queries extends AbstractAdminController
                 for ($i = 0; $i < count($result["rows"]); $i++) {
                     // Remove binary checksum value
                     $result["rows"][$i]["checksum"] = null;
-
-                    // Endpoint Short
-                    $shortEndpoint = substr($result["rows"][$i]["endpoint"], 0, 45);
-                    if (strlen($result["rows"][$i]["endpoint"]) > 45) {
-                        $shortEndpoint .= "...";
-                    }
-
-                    $result["rows"][$i]["endpoint_short"] = $shortEndpoint;
-
-                    // Timestamp
-                    $result["rows"][$i]["time_stamp"] = intval(explode(".", strval($result["rows"][$i]["start_on"]))[0]);
+                    $result["rows"][$i]["token"] = bin2hex($result["rows"][$i]["token"]);
 
                     // User registered e-mail
-                    $rowFlagUserId = intval($result["rows"][$i]["flag_user_id"]);
-                    if (is_int($rowFlagUserId) && $rowFlagUserId > 0) {
-                        $rowFlagUser = Users::get($rowFlagUserId);
-                        $result["rows"][$i]["flag_user_em"] = $rowFlagUser->email;
+                    $rowAuthUserId = intval($result["rows"][$i]["auth_user_id"]);
+                    if (is_int($rowAuthUserId) && $rowAuthUserId > 0) {
+                        $rowAuthUser = Users::get($rowAuthUserId);
+                        $result["rows"][$i]["auth_user_em"] = $rowAuthUser->email;
                     }
 
-                    unset($shortEndpoint, $rowFlagUser, $rowFlagUserId);
+                    unset($rowAuthUser, $rowAuthUserId);
                 }
             }
         }
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'api/queries?key=%s&value=%s&method=%s&endpoint=%s&sort=%d&perPage=%d',
+                'api/sessions?key=%s&value=%s&type=%s&archived=%s&sort=%d&perPage=%d',
                 $search["key"],
                 $search["value"],
-                $search["method"],
-                $search["endpoint"],
+                $search["type"],
+                $search["archived"],
                 $search["sort"],
                 $search["perPage"]
             );
@@ -300,7 +235,7 @@ class Queries extends AbstractAdminController
         KnitModifiers::Dated($this->knit());
         KnitModifiers::Hex($this->knit());
 
-        $template = $this->template("api/queries.knit")
+        $template = $this->template("api/sessions.knit")
             ->assign("errorMessage", $errorMessage)
             ->assign("search", $search)
             ->assign("result", $result)

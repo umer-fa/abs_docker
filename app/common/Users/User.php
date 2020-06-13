@@ -23,6 +23,7 @@ class User extends AbstractAppModel
 
     public const CACHE_KEY = 'user_%d';
     public const CACHE_KEY_EMAIL = 'user_em_%s';
+    public const CACHE_KEY_USERNAME = 'username_%s';
     public const CACHE_TTL = 3600;
 
     /** @var int */

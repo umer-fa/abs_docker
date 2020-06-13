@@ -64,17 +64,7 @@ class Users extends AbstractAppTable
         $k = Kernel::getInstance();
 
         try {
-            $query = $k->memory()->query(sprintf(User::CACHE_KEY, $id), self::MODEL);
-            if ($cache) {
-                $query->cache(User::CACHE_TTL);
-            }
-
-            /** @var User $user */
-            $user = $query->fetch(function () use ($id) {
-                return self::Find()->col("id", $id)->limit(1)->first();
-            });
-
-            return $user;
+            return self::CachedSearch(User::CACHE_KEY, "id", $id, $cache);
         } catch (\Exception $e) {
             if ($e instanceof ORM_ModelNotFoundException) {
                 throw AppException::ModelNotFound(sprintf('No such user with id #%d exists', $id));
@@ -96,17 +86,7 @@ class Users extends AbstractAppTable
         $k = Kernel::getInstance();
 
         try {
-            $query = $k->memory()->query(sprintf(User::CACHE_KEY_EMAIL, $email), self::MODEL);
-            if ($cache) {
-                $query->cache(User::CACHE_TTL);
-            }
-
-            /** @var User $user */
-            $user = $query->fetch(function () use ($email) {
-                return self::Find()->col("email", $email)->limit(1)->first();
-            });
-
-            return $user;
+            return self::CachedSearch(User::CACHE_KEY_EMAIL, "email", $email, $cache);
         } catch (\Exception $e) {
             if ($e instanceof ORM_ModelNotFoundException) {
                 throw AppException::ModelNotFound('E-mail address is not registered');
@@ -115,5 +95,50 @@ class Users extends AbstractAppTable
             $k->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw new AppException('Failed to retrieve user by E-mail address');
         }
+    }
+
+    /**
+     * @param string $username
+     * @param bool $cache
+     * @return User
+     * @throws AppException
+     */
+    public static function Username(string $username, bool $cache = true): User
+    {
+        $k = Kernel::getInstance();
+
+        try {
+            return self::CachedSearch(User::CACHE_KEY_USERNAME, "username", $username, $cache);
+        } catch (\Exception $e) {
+            if ($e instanceof ORM_ModelNotFoundException) {
+                throw AppException::ModelNotFound('Username is not registered');
+            }
+
+            $k->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw new AppException('Failed to retrieve user by Username');
+        }
+    }
+
+    /**
+     * @param string $cacheId
+     * @param string $colName
+     * @param $arg
+     * @param bool $cache
+     * @return User
+     */
+    private static function CachedSearch(string $cacheId, string $colName, $arg, bool $cache = true): User
+    {
+        $k = Kernel::getInstance();
+        $query = $k->memory()->query(sprintf($cacheId, $arg), self::MODEL);
+        if ($cache) {
+            $query->cache(User::CACHE_TTL);
+        }
+
+        /** @var User $user */
+        $user = $query->fetch(function () use ($colName, $arg) {
+            return self::Find()->col($colName, $arg)->limit(1)->first();
+        });
+
+        return $user;
     }
 }
