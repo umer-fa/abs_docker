@@ -43,7 +43,7 @@ class Sessions extends AbstractAdminController
     {
         $this->page()->title('API Sessions')->index(210, 20)
             ->prop("containerIsFluid", true)
-            ->prop("icon", "mdi-cookie");
+            ->prop("icon", "mdi mdi-cookie");
 
         $this->breadcrumbs("API Server", null, "mdi mdi-api");
 

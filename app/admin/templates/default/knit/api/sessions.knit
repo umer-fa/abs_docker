@@ -130,7 +130,7 @@
                     </ul>
                 </nav>
             {/if}
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0">
                         Total Results:
