@@ -12,7 +12,7 @@ class SMTPConfig extends AbstractConfigObj
     public const DB_KEY = "app.smtpConfig";
     public const CACHE_KEY = "app.smtpConfig";
     public const CACHE_TTL = 86400;
-    public const IS_ENCRYPTED = false;
+    public const IS_ENCRYPTED = true;
 
     /** @var bool */
     public bool $status;

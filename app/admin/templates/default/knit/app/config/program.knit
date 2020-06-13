@@ -1,0 +1,213 @@
+{knit "header"}
+{knit "app/config/_nav_tabs"}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+            <span class="text-muted"><i class="mdi mdi-clock-alert-outline mr-2"></i>Last cached on:
+                <a href="{$page.authRoot}app/cache">
+                    {if $lastCachedOn|isset}<span class="text-warning">{$lastCachedOn}</span>{else}<span
+                            class="text-info">Not Cached<span>{/if}
+                </a>
+            </span>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header pb-0">
+                <ul class="nav nav-tabs card-header-tabs mb-0">
+                    <li class="nav-item">
+                        <a href="#reCaptcha" data-toggle="tab" class="nav-link active"><i class="mdi mdi-robot mr-2"></i>ReCaptcha</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#oAuth" data-toggle="tab" class="nav-link"><i class="mdi mdi-lock-open-outline mr-2"></i>OAuth
+                            2.0</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="reCaptcha">
+                        <form method="post" action="{$page.authRoot}platform/config?recaptcha_config" class="xhr-form">
+                            <input type="hidden" name="xsrf" value="{$page.token}">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3">ReCaptcha <strong>Global Status</strong></label>
+                                <div class="col-md-9">
+                                    <div class="btn-group btn-group-toggle mx-0" data-toggle="buttons">
+                                        <label class="btn btn-outline-danger{if $programConfig.reCaptcha} active{/if}">
+                                            <input type="radio" name="reCaptcha"
+                                                   value="on"{if $programConfig.reCaptcha} checked=""{/if}> On
+                                        </label>
+                                        <label class="btn btn-outline-danger{if !$programConfig.reCaptcha} active{/if}">
+                                            <input type="radio" name="reCaptcha"
+                                                   value="off"{if !$programConfig.reCaptcha} checked=""{/if}> Off
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="reCaptchaPublic">Public Key</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="reCaptchaPublic" name="reCaptchaPublic"
+                                           data-onload-value="{$programConfig.reCaptchaPub}"
+                                           placeholder="ReCaptcha PUBLIC Key" maxlength="128" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="reCaptchaPrivate">Private Key (<span
+                                            class="text-danger"><i
+                                                class="mdi mdi-exclamation"></i>Secret</span>)</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="reCaptchaPrivate" name="reCaptchaPrivate"
+                                           data-onload-value="{$programConfig.reCaptchaPrv}"
+                                           placeholder="ReCaptcha SECRET Key" maxlength="128" class="form-control">
+                                </div>
+                            </div>
+                            <div class="bg-light border-top">
+                                <div class="form-group row">
+                                    <div class="col-12 text-right">
+                                        <button type="submit" class="btn btn-outline-primary m-3">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="oAuth">
+                        <form method="post" action="{$page.authRoot}platform/config?oauth" class="xhr-form">
+                            <input type="hidden" name="xsrf" value="{$page.token}">
+                            <div class="row">
+                                <div class="col-md-6 mb-2 px-2">
+                                    <div class="card border">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title text-danger"><i class="mdi mdi-google-plus mr-2"></i>Google
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label class="" for="oAuthGoogle">Status</label>
+                                                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                                    <label class="btn btn-outline-info{if $programConfig.oAuthGoogle} active{/if}">
+                                                        <input type="radio" name="oAuthGoogle"
+                                                               value="on"{if $programConfig.oAuthGoogle} checked=""{/if}> On
+                                                    </label>
+                                                    <label class="btn btn-outline-info{if !$programConfig.oAuthGoogle} active{/if}">
+                                                        <input type="radio" name="oAuthGoogle"
+                                                               value="off"{if !$programConfig.oAuthGoogle} checked=""{/if}>
+                                                        Off
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthGoogleAppId">App Identifier</label>
+                                                <input type="text" id="oAuthGoogleAppId" name="oAuthGoogleAppId"
+                                                       placeholder="App Identifier Key"
+                                                       data-onload-value="{$programConfig.oAuthGoogleAppId}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthGoogleAppKey"><i
+                                                            class="mdi mdi-exclamation text-danger mr-1"></i>App
+                                                    Secret</label>
+                                                <input type="text" id="oAuthGoogleAppKey" name="oAuthGoogleAppKey"
+                                                       placeholder="App SECRET Key"
+                                                       data-onload-value="{$programConfig.oAuthGoogleAppKey}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2 px-2">
+                                    <div class="card border">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title text-secondary"><i class="mdi mdi-facebook-box mr-2"></i>Facebook
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label class="" for="oAuthFacebook">Status</label>
+                                                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                                    <label class="btn btn-outline-info{if $programConfig.oAuthFacebook} active{/if}">
+                                                        <input type="radio" name="oAuthFacebook"
+                                                               value="on"{if $programConfig.oAuthFacebook} checked=""{/if}> On
+                                                    </label>
+                                                    <label class="btn btn-outline-info{if !$programConfig.oAuthFacebook} active{/if}">
+                                                        <input type="radio" name="oAuthFacebook"
+                                                               value="off"{if !$programConfig.oAuthFacebook} checked=""{/if}>
+                                                        Off
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthFacebookAppId">App Identifier</label>
+                                                <input type="text" id="oAuthFacebookAppId" name="oAuthFacebookAppId"
+                                                       placeholder="App Identifier Key"
+                                                       data-onload-value="{$programConfig.oAuthFacebookAppId}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthFacebookAppKey"><i
+                                                            class="mdi mdi-exclamation text-danger mr-1"></i>App
+                                                    Secret</label>
+                                                <input type="text" id="oAuthFacebookAppKey" name="oAuthFacebookAppKey"
+                                                       placeholder="App SECRET Key"
+                                                       data-onload-value="{$programConfig.oAuthFacebookAppKey}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2 px-2">
+                                    <div class="card border">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title text-info"><i class="mdi mdi-linkedin-box mr-2"></i>Linked
+                                                In</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label class="" for="oAuthLinkedIn">Status</label>
+                                                <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                                    <label class="btn btn-outline-info{if $programConfig.oAuthLinkedIn} active{/if}">
+                                                        <input type="radio" name="oAuthLinkedIn"
+                                                               value="on"{if $programConfig.oAuthLinkedIn} checked=""{/if}> On
+                                                    </label>
+                                                    <label class="btn btn-outline-info{if !$programConfig.oAuthLinkedIn} active{/if}">
+                                                        <input type="radio" name="oAuthLinkedIn"
+                                                               value="off"{if !$programConfig.oAuthLinkedIn} checked=""{/if}>
+                                                        Off
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthLinkedInAppId">App Identifier</label>
+                                                <input type="text" id="oAuthLinkedInAppId" name="oAuthLinkedInAppId"
+                                                       placeholder="App Identifier Key"
+                                                       data-onload-value="{$programConfig.oAuthLinkedInAppId}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="" for="oAuthLinkedInAppKey"><i
+                                                            class="mdi mdi-exclamation text-danger mr-1"></i>App
+                                                    Secret</label>
+                                                <input type="text" id="oAuthLinkedInAppKey" name="oAuthLinkedInAppKey"
+                                                       placeholder="App SECRET Key"
+                                                       data-onload-value="{$programConfig.oAuthLinkedInAppKey}" maxlength="128"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-light border-top">
+                                <div class="form-group row">
+                                    <div class="col-12 text-right">
+                                        <button type="submit" class="btn btn-outline-primary m-3">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{knit "footer"}

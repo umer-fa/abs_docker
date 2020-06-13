@@ -3,21 +3,20 @@ declare(strict_types=1);
 
 namespace App\Admin\Controllers\App\Config;
 
-use App\Admin\Controllers\AbstractAdminController;
-use App\Common\Config\SMTPConfig;
+use App\Common\Config\ProgramConfig;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
 use Comely\Utils\Time\Time;
 use Comely\Utils\Time\TimeUnits;
 
 /**
- * Class Smtp
+ * Class Program
  * @package App\Admin\Controllers\App\Config
  */
-class Smtp extends AbstractAdminConfigController
+class Program extends AbstractAdminConfigController
 {
-    /** @var SMTPConfig */
-    private SMTPConfig $smtpConfig;
+    /** @var ProgramConfig */
+    private ProgramConfig $programConfig;
 
     /**
      * @return void
@@ -25,11 +24,10 @@ class Smtp extends AbstractAdminConfigController
     public function configCallback(): void
     {
         try {
-            $this->smtpConfig = SMTPConfig::getInstance(true);
+            $this->programConfig = ProgramConfig::getInstance(true);
         } catch (AppException $e) {
-
             $this->app->errors()->trigger($e, E_USER_WARNING);
-            $this->smtpConfig = new SMTPConfig();
+            $this->programConfig = new ProgramConfig();
         }
     }
 
@@ -48,16 +46,16 @@ class Smtp extends AbstractAdminConfigController
      */
     public function get(): void
     {
-        $this->page()->title('SMTP Configuration')->index(310, 0, 2)
-            ->prop("icon", "mdi mdi-email-edit-outline");
+        $this->page()->title('Program Config')->index(310, 0, 1)
+            ->prop("icon", "mdi mdi-cog-box");
 
         $this->breadcrumbs("Application", null, "mdi mdi-server-network");
         $this->breadcrumbs("Configuration", null, "ion ion-ios-settings-strong");
 
         // Last Cached On
         $lastCachedOn = null;
-        if (isset($this->smtpConfig->cachedOn)) {
-            $lastCachedTimeDiff = Time::difference($this->smtpConfig->cachedOn);
+        if (isset($this->programConfig->cachedOn)) {
+            $lastCachedTimeDiff = Time::difference($this->programConfig->cachedOn);
             if ($lastCachedTimeDiff) {
                 $timeUnits = new TimeUnits();
                 $lastCachedOn = $timeUnits->timeToString($lastCachedTimeDiff);
@@ -66,9 +64,9 @@ class Smtp extends AbstractAdminConfigController
 
         KnitModifiers::Null($this->knit());
 
-        $template = $this->template("app/config/smtp.knit")
+        $template = $this->template("app/config/program.knit")
             ->assign("lastCachedOn", $lastCachedOn)
-            ->assign("smtpConfig", $this->smtpConfig);
+            ->assign("programConfig", $this->programConfig);
         $this->body($template);
     }
 }

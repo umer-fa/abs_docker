@@ -17,7 +17,43 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="card">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="mdi mdi-email-plus-outline mr-2"></i>
+                        Postmaster
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="defSenderName">Sender Name</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-post"></i></span>
+                                </div>
+                                <input type="text" id="defSenderName" name="sender"
+                                       data-onload-value="{if $smtpConfig.senderName|isset}{$smtpConfig.senderName}{else}{$config.public.title}{/if}"
+                                       placeholder="Default Sender" maxlength="32" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <label class="col-form-label col-md-3" for="defSenderEmail">E-mail</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-email"></i></span>
+                                </div>
+                                <input type="text" id="defSenderEmail" name="sender_email"
+                                       data-onload-value="{if $smtpConfig.senderEmail|isset}{$smtpConfig.senderEmail}{else}noreply@{$config.public.domain}{/if}"
+                                       placeholder="Default E-mail" maxlength="64" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3 mb-4">
                 <div class="card-header">
                     <h5 class="card-title float-left">SMTP Status</h5>
                     <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
@@ -32,12 +68,32 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-3" for="smtpHost">Hostname</label>
+                    <div class="form-group row mb-0">
+                        <label class="col-form-label col-md-3" for="smtpLocal">Local Hostname</label>
                         <div class="col-md-6">
-                            <input type="text" id="smtpHost" name="hostname"
-                                   data-onload-value="{$smtpConfig.hostname|null}"
-                                   placeholder="smtp.server.tld" maxlength="128" class="form-control">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-domain"></i></span>
+                                </div>
+                                <input type="text" id="smtpLocal" name="serverName"
+                                       data-onload-value="{if $smtpConfig.serverName|isset}{$smtpConfig.serverName}{else}{$config.public.domain}{/if}"
+                                       placeholder="localhost.localdomain" maxlength="128" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpHost">SMTP Server</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-server-plus"></i></span>
+                                </div>
+                                <input type="text" id="smtpHost" name="hostname"
+                                       data-onload-value="{$smtpConfig.hostname|null}"
+                                       placeholder="smtp.server.tld" maxlength="128" class="form-control">
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -55,18 +111,46 @@
                                    placeholder="1" maxlength="2" min="1" max="30" class="input-int form-control">
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row mb-0">
                         <label class="col-form-label col-md-3" for="smtpTLS">TLS Encryption</label>
                         <div class="col-md-2">
-                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-                                <label class="btn btn-outline-success{if $smtpConfig.useTLS} active{/if}">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-info{if $smtpConfig.useTLS} active{/if}">
                                     <input type="radio" name="status"
                                            value="on"{if $smtpConfig.useTLS} checked=""{/if}> Yes
                                 </label>
-                                <label class="btn btn-outline-danger{if !$smtpConfig.useTLS} active{/if}">
+                                <label class="btn btn-outline-info{if !$smtpConfig.useTLS} active{/if}">
                                     <input type="radio" name="status"
                                            value="off"{if !$smtpConfig.useTLS} checked=""{/if}> No
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="smtpUser">Username</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-login-variant"></i></span>
+                                </div>
+                                <input type="text" id="smtpUser" name="username"
+                                       data-onload-value="{$smtpConfig.username|null}"
+                                       placeholder="postmaster@smtp.server" maxlength="128" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <label class="col-form-label col-md-3" for="smtpPass">Password</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-form-textbox-password"></i></span>
+                                </div>
+                                <input type="text" id="smtpPass" name="password"
+                                       data-onload-value="{$smtpConfig.password|null}"
+                                       placeholder="secret" maxlength="128" class="form-control">
                             </div>
                         </div>
                     </div>
