@@ -228,6 +228,7 @@ class Search extends AbstractAdminController
             $users = $usersQuery->paginate();
 
             $result["page"] = $page;
+            $result["count"] = $users->totalRows();
             $result["nav"] = $users->compactNav();
             $result["status"] = true;
         } catch (AppException $e) {
@@ -246,7 +247,6 @@ class Search extends AbstractAdminController
                     } catch (AppException $e) {
                     }
 
-                    $result["count"]++;
                     $result["rows"][] = $user;
                 } catch (\Exception $e) {
                     $this->app->errors()->trigger($e, E_USER_WARNING);

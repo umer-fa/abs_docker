@@ -86,7 +86,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
 
             // Retrieve API session ORM model
             $sessionTokenId = new Base16($sessionTokenId);
-            $this->apiSession = Sessions::getSession((new Base16($sessionTokenId))->binary());
+            $this->apiSession = Sessions::getSession($sessionTokenId->binary());
             $this->apiSession->validate(); // Validate checksum
             $this->apiSession->_lastUsedOn = $this->apiSession->lastUsedOn;
 

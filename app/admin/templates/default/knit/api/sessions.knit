@@ -141,10 +141,10 @@
                     <table class="table table-sm table-hover table-striped no-wrap-table">
                         <thead>
                         <tr class="thead-dark">
-                            <th scope="col" class="text-center" rowspan="2">Token</th>
                             <th scope="col" class="text-center" rowspan="2">
                                 <i class="mdi mdi-check-all" data-toggle="tooltip" title="Checksum"></i>
                             </th>
+                            <th scope="col" class="text-center" rowspan="2">Token</th>
                             <th scope="col" class="text-center" rowspan="2">Device</th>
                             <th scope="col" class="text-center" rowspan="2">Status</th>
                             <th scope="col" class="text-center" rowspan="2">IP Address</th>
@@ -163,8 +163,7 @@
                         <tbody>
                         {foreach $result.rows as $sess}
                             <tr>
-                                <td class="text-left">{$sess.token}</td>
-                                <td class="text-left">
+                                <td class="text-center">
                                     {if $sess._checksumValidated === true}
                                         <span class="text-success" data-toggle="tooltip" title="OK"
                                               data-placement="bottom"><i
@@ -175,9 +174,10 @@
                                                     class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}
                                 </td>
+                                <td class="text-left">{$sess.token}</td>
                                 <td class="text-center">
                                     {if $sess.type === 'web'}
-                                        <i class="mdi mdi-web" data-toggle="tooltip" title="Web"></i>
+                                        <i class="mdi mdi-web-box" data-toggle="tooltip" title="Web"></i>
                                     {elseif $sess.type === 'desktop'}
                                         <i class="mdi mdi-desktop-classic" data-toggle="tooltip" title="Desktop"></i>
                                     {elseif $sess.type === 'mobile'}
@@ -193,7 +193,7 @@
                                     {/if}
                                 </td>
                                 <td class="text-right">{$sess.ipAddress}</td>
-                                <td class="text-left">
+                                <td class="text-center">
                                     {if $sess.authUserId}<a
                                         href="{$page.authRoot}users/edit?{$sess.authUserId}">{$sess.authUserEm}</a>{else}
                                         <span class="text-muted">n/a</span>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Admin\Controllers\Api;
 
 use App\Admin\Controllers\AbstractAdminController;
+use App\Common\API\API_Session;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
@@ -144,14 +145,14 @@ class Sessions extends AbstractAdminController
             $start = ($page * $perPage) - $perPage;
 
             $apiLogsDb = $this->app->db()->apiLogs();
-            $logsQuery = $apiLogsDb->query()->table(\App\Common\Database\API\Sessions::NAME)
+            $sessQuery = $apiLogsDb->query()->table(\App\Common\Database\API\Sessions::NAME)
                 ->limit($search["perPage"])
                 ->start($start);
 
             if ($search["sort"] === "asc") {
-                $logsQuery->asc("id");
+                $sessQuery->asc("id");
             } else {
-                $logsQuery->desc("id");
+                $sessQuery->desc("id");
             }
 
             $whereQuery = "`id`>0";
@@ -185,13 +186,13 @@ class Sessions extends AbstractAdminController
                 $whereData[] = $search["archived"] === "yes" ? 1 : 0;
             }
 
-            $logsQuery->where($whereQuery, $whereData);
-            $logs = $logsQuery->paginate();
+            $sessQuery->where($whereQuery, $whereData);
+            $sessions = $sessQuery->paginate();
 
             $result["page"] = $page;
-            $result["count"] = $logs->totalRows();
-            $result["rows"] = $logs->rows();
-            $result["nav"] = $logs->compactNav();
+            $result["count"] = $sessions->totalRows();
+            $result["rows"] = [];
+            $result["nav"] = $sessions->compactNav();
             $result["status"] = true;
         } catch (AppException $e) {
             $errorMessage = $e->getMessage();
@@ -201,21 +202,28 @@ class Sessions extends AbstractAdminController
         }
 
         // Work with data...
-        if ($result["status"]) {
-            if (is_array($result["rows"])) {
-                for ($i = 0; $i < count($result["rows"]); $i++) {
-                    // Remove binary checksum value
-                    $result["rows"][$i]["checksum"] = null;
-                    $result["rows"][$i]["token"] = bin2hex($result["rows"][$i]["token"]);
+        if (isset($sessions) && $sessions->count()) {
+            foreach ($sessions->rows() as $sessRow) {
+                try {
+                    $sess = new API_Session($sessRow);
 
-                    // User registered e-mail
-                    $rowAuthUserId = intval($result["rows"][$i]["auth_user_id"]);
-                    if (is_int($rowAuthUserId) && $rowAuthUserId > 0) {
-                        $rowAuthUser = Users::get($rowAuthUserId);
-                        $result["rows"][$i]["auth_user_em"] = $rowAuthUser->email;
+                    try {
+                        $sess->validate();
+                    } catch (AppException $e) {
                     }
 
-                    unset($rowAuthUser, $rowAuthUserId);
+                    if ($sess->authUserId) {
+                        $sessAuthUser = Users::get($sess->authUserId);
+                    }
+
+                    $sessObj = Validator::JSON_Filter($sess, "api.Session");
+                    $sessObj["token"] = $sess->token()->hexits(false);
+                    $sessObj["authUserEm"] = isset($sessAuthUser) && $sessAuthUser ? $sessAuthUser->email : null;
+
+                    $result["rows"][] = $sessObj;
+                    unset($sess, $sessAuthUser, $sessObj);
+                } catch (\Exception $e) {
+                    $this->app->errors()->trigger($e, E_USER_WARNING);
                 }
             }
         }

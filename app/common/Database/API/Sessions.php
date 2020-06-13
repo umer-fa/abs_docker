@@ -78,7 +78,7 @@ class Sessions extends AbstractAppTable
             $tokenHex = $token->base16()->hexits(false);
             $memoryId = sprintf('api_sess_%s', $tokenHex);
             $queryCol = "token";
-            $queryVal = $tokenHex;
+            $queryVal = $token->raw();
         } elseif ($ip) {
             if (!Validator::isValidIP($ip, true)) {
                 throw new \InvalidArgumentException('Invalid IP address');
@@ -102,7 +102,7 @@ class Sessions extends AbstractAppTable
                     throw new API_Exception('SESSION_NOT_FOUND');
                 }
             }
-
+            throw $e;
             throw new API_Exception('SESSION_RETRIEVE_ERROR');
         }
     }
