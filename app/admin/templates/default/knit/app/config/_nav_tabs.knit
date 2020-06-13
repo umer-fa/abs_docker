@@ -2,17 +2,17 @@
     <div class="col-12">
         <ul class="nav nav-tabs mb-3">
             <li class="nav-item">
-                <a class="nav-link{if $page.index.c === 1} active{/if}" href="{$page.authRoot}app/config/program">
+                <a class="nav-link text-pink font-weight-bold{if $page.index.c === 1} active{/if}" href="{$page.authRoot}app/config/program">
                     <i class="mdi mdi-cog-box mr-2"></i>OAuth/ReCaptcha
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{if $page.index.c === 2} active{/if}" href="{$page.authRoot}app/config/smtp">
+                <a class="nav-link text-pink font-weight-bold{if $page.index.c === 2} active{/if}" href="{$page.authRoot}app/config/smtp">
                     <i class="mdi mdi-email-edit mr-2"></i>SMTP
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{if $page.index.c === 3} active{/if}" href="{$page.authRoot}app/config/sms">
+                <a class="nav-link text-pink font-weight-bold{if $page.index.c === 3} active{/if}" href="{$page.authRoot}app/config/sms">
                     <i class="mdi mdi-message-settings mr-2"></i>SMS
                 </a>
             </li>

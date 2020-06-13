@@ -5,6 +5,8 @@ namespace App\Admin\Controllers\App;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Config\APIServerAccess;
+use App\Common\Config\ProgramConfig;
+use App\Common\Config\SMTPConfig;
 use App\Common\Exception\AppControllerException;
 use Comely\Cache\Cache;
 use Comely\Cache\Exception\CacheException;
@@ -42,6 +44,24 @@ class Caching extends AbstractAdminController
         $cachedObjects[] = [
             "name" => "API Server Accessibility",
             "key" => APIServerAccess::CACHE_KEY,
+            "size" => null,
+            "cachedOn" => null,
+            "expiresIn" => null,
+            "age" => null
+        ];
+
+        $cachedObjects[] = [
+            "name" => "Program Configuration",
+            "key" => ProgramConfig::CACHE_KEY,
+            "size" => null,
+            "cachedOn" => null,
+            "expiresIn" => null,
+            "age" => null
+        ];
+
+        $cachedObjects[] = [
+            "name" => "SMTP Configuration",
+            "key" => SMTPConfig::CACHE_KEY,
             "size" => null,
             "cachedOn" => null,
             "expiresIn" => null,
