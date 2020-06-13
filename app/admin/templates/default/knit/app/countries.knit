@@ -8,7 +8,7 @@
                     <mark class="text-info">./engine.sh countries_rebuild</mark>
                 </div>
                 <form method="post" action="{$page.authRoot}app/countries?save" class="xhr-form">
-                    <input type="hidden" name="token" value="{$page.token}">
+                    <input type="hidden" name="xsrf" value="{$page.token}">
                     <div class="form-group text-right">
                         <button type="submit" class="btn btn-outline-danger">Save Changes</button>
                     </div>
