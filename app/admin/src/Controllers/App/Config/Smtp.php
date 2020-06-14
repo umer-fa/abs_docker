@@ -64,7 +64,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("senderName", $sender)) {
+        if ($this->smtpConfig->setValue("senderName", $sender, true)) {
             $changes++;
         }
 
@@ -84,7 +84,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("senderEmail", $senderEm)) {
+        if ($this->smtpConfig->setValue("senderEmail", $senderEm, true)) {
             $changes++;
         }
 
@@ -116,7 +116,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("serverName", $serverName)) {
+        if ($this->smtpConfig->setValue("serverName", $serverName, true)) {
             $changes++;
         }
 
@@ -141,7 +141,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("hostname", $hostname)) {
+        if ($this->smtpConfig->setValue("hostname", $hostname, true)) {
             $changes++;
         }
 
@@ -199,7 +199,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("username", $username)) {
+        if ($this->smtpConfig->setValue("username", $username, true)) {
             $changes++;
         }
 
@@ -219,7 +219,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->setValue("password", $password)) {
+        if ($this->smtpConfig->setValue("password", $password, true)) {
             $changes++;
         }
 

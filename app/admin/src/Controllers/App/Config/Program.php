@@ -50,7 +50,7 @@ class Program extends AbstractAdminConfigController
         $changes = 0;
 
         // Status
-        $status = Validator::getBool(trim(strval($this->input()->get("reCaptcha"))));
+        $status = Validator::getBool(trim(strval($this->input()->get("reCaptchaStatus"))));
         if ($programConfig->setValue("reCaptcha", $status)) {
             $changes++;
         }

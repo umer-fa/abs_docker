@@ -103,25 +103,35 @@ abstract class AbstractConfigObj
     /**
      * @param string $prop
      * @param $val
+     * @param bool $checkUnInitProp
      * @return bool
      * @throws AppException
      */
-    public function setValue(string $prop, $val): bool
+    public function setValue(string $prop, $val, bool $checkUnInitProp = false): bool
     {
         if (!property_exists($this, $prop)) {
             throw new AppException(sprintf('Prop "%s" does not exist in class "%s"', $prop, get_called_class()));
         }
 
-        $change = true;
-        if (isset($this->$prop)) {
-            $change = $this->$prop !== $val;
+        if ($checkUnInitProp) {
+            $change = true;
+            if (isset($this->$prop)) {
+                $change = $this->$prop !== $val;
+            }
+
+            if ($change) {
+                $this->$prop = $val;
+            }
+
+            return $change;
         }
 
-        if ($change) {
+        if ($this->$prop !== $val) {
             $this->$prop = $val;
+            return true;
         }
 
-        return $change;
+        return false;
     }
 
     /**

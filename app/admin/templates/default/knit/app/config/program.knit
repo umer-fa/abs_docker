@@ -29,18 +29,18 @@
             <div class="card-body">
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="reCaptcha">
-                        <form method="post" action="{$page.authRoot}platform/config?recaptcha_config" class="xhr-form">
+                        <form method="post" action="{$page.authRoot}app/config/program?recaptcha" class="xhr-form">
                             <input type="hidden" name="xsrf" value="{$page.token}">
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">ReCaptcha <strong>Global Status</strong></label>
                                 <div class="col-md-9">
                                     <div class="btn-group btn-group-toggle mx-0" data-toggle="buttons">
                                         <label class="btn btn-outline-danger{if $programConfig.reCaptcha} active{/if}">
-                                            <input type="radio" name="reCaptcha"
+                                            <input type="radio" name="reCaptchaStatus"
                                                    value="on"{if $programConfig.reCaptcha} checked=""{/if}> On
                                         </label>
                                         <label class="btn btn-outline-danger{if !$programConfig.reCaptcha} active{/if}">
-                                            <input type="radio" name="reCaptcha"
+                                            <input type="radio" name="reCaptchaStatus"
                                                    value="off"{if !$programConfig.reCaptcha} checked=""{/if}> Off
                                         </label>
                                     </div>
@@ -74,7 +74,7 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="oAuth">
-                        <form method="post" action="{$page.authRoot}platform/config?oauth" class="xhr-form">
+                        <form method="post" action="{$page.authRoot}app/config/program?oauth" class="xhr-form">
                             <input type="hidden" name="xsrf" value="{$page.token}">
                             <div class="row">
                                 <div class="col-12 mb-3">
