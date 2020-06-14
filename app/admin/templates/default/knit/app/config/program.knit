@@ -77,10 +77,30 @@
                         <form method="post" action="{$page.authRoot}platform/config?oauth" class="xhr-form">
                             <input type="hidden" name="xsrf" value="{$page.token}">
                             <div class="row">
-                                <div class="col-md-6 mb-2 px-2">
+                                <div class="col-12 mb-3">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-title mb-0 float-left">OAuth 2.0 <strong>Global
+                                                    Status</strong></h5>
+                                            <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                                                <label class="btn btn-outline-danger{if $programConfig.oAuthStatus} active{/if}">
+                                                    <input type="radio" name="oAuthStatus"
+                                                           value="on"{if $programConfig.oAuthStatus} checked=""{/if}> On
+                                                </label>
+                                                <label class="btn btn-outline-danger{if !$programConfig.oAuthStatus} active{/if}">
+                                                    <input type="radio" name="oAuthStatus"
+                                                           value="off"{if !$programConfig.oAuthStatus} checked=""{/if}>
+                                                    Off
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
                                     <div class="card border">
                                         <div class="card-header bg-light">
-                                            <h5 class="card-title text-danger mb-0"><i class="mdi mdi-google-plus mr-2"></i>Google
+                                            <h5 class="card-title text-danger mb-0"><i
+                                                        class="mdi mdi-google-plus mr-2"></i>Google
                                             </h5>
                                         </div>
                                         <div class="card-body">
@@ -121,7 +141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2 px-2">
+                                <div class="col-md-6 mb-2">
                                     <div class="card border">
                                         <div class="card-header bg-light">
                                             <h5 class="card-title text-secondary mb-0"><i
@@ -166,7 +186,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2 px-2">
+                                <div class="col-md-6 mb-2">
                                     <div class="card border">
                                         <div class="card-header bg-light">
                                             <h5 class="card-title text-info mb-0"><i class="mdi mdi-linkedin mr-2"></i>Linked
@@ -210,11 +230,14 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="bg-light border-top">
-                                <div class="form-group row">
-                                    <div class="col-12 text-right">
-                                        <button type="submit" class="btn btn-outline-primary m-3">Save Changes</button>
+                                <div class="col-12">
+                                    <div class="bg-light border-top mt-3">
+                                        <div class="form-group row">
+                                            <div class="col-12 text-right">
+                                                <button type="submit" class="btn btn-outline-primary m-3">Save Changes
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
