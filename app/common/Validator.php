@@ -110,6 +110,22 @@ class Validator
     }
 
     /**
+     * @param $num
+     * @param int $min
+     * @return bool
+     */
+    public static function isValidPort($num, int $min = 0x03e8): bool
+    {
+        if (is_int($num)) {
+            if ($num >= $min || $num <= 0xffff) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param $val
      * @return bool
      */
