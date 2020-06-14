@@ -29,7 +29,6 @@ class Smtp extends AbstractAdminConfigController
         try {
             $this->smtpConfig = SMTPConfig::getInstance(true);
         } catch (AppException $e) {
-
             $this->app->errors()->trigger($e, E_USER_WARNING);
             $this->smtpConfig = new SMTPConfig();
         }
@@ -57,7 +56,7 @@ class Smtp extends AbstractAdminConfigController
                 throw new AppControllerException('Sender name is required');
             } elseif ($senderLen > 20) {
                 throw new AppControllerException('Sender name exceeds maximum of 20 characters');
-            } elseif (!preg_match('/^[\w\-]+(\s[\w\-.!])*$/i', $sender)) {
+            } elseif (!preg_match('/^[\w\-]+(\s[\w\-.!]+)*$/i', $sender)) {
                 throw new AppControllerException('Sender name contains an illegal character');
             }
         } catch (AppControllerException $e) {
@@ -65,8 +64,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->senderName !== $sender) {
-            $this->smtpConfig->senderName = $sender;
+        if ($this->smtpConfig->setValue("senderName", $sender)) {
             $changes++;
         }
 
@@ -86,8 +84,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->senderEmail !== $senderEm) {
-            $this->smtpConfig->senderEmail = $senderEm;
+        if ($this->smtpConfig->setValue("senderEmail", $senderEm)) {
             $changes++;
         }
 
@@ -119,8 +116,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->serverName !== $serverName) {
-            $this->smtpConfig->serverName = $serverName;
+        if ($this->smtpConfig->setValue("serverName", $serverName)) {
             $changes++;
         }
 
@@ -145,8 +141,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->hostname !== $hostname) {
-            $this->smtpConfig->hostname = $hostname;
+        if ($this->smtpConfig->setValue("hostname", $hostname)) {
             $changes++;
         }
 
@@ -161,8 +156,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->port !== $port) {
-            $this->smtpConfig->port = $port;
+        if ($this->smtpConfig->setValue("port", $port)) {
             $changes++;
         }
 
@@ -179,15 +173,13 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->timeOut !== $timeOut) {
-            $this->smtpConfig->timeOut = $timeOut;
+        if ($this->smtpConfig->setValue("timeOut", $timeOut)) {
             $changes++;
         }
 
         // TLS Encryption
         $useTLS = Validator::getBool(trim(strval($this->input()->get("use_tls"))));
-        if ($this->smtpConfig->useTLS !== $useTLS) {
-            $this->smtpConfig->useTLS = $useTLS;
+        if ($this->smtpConfig->setValue("useTLS", $useTLS)) {
             $changes++;
         }
 
@@ -207,8 +199,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->username !== $username) {
-            $this->smtpConfig->username = $username;
+        if ($this->smtpConfig->setValue("username", $username)) {
             $changes++;
         }
 
@@ -228,8 +219,7 @@ class Smtp extends AbstractAdminConfigController
             throw $e;
         }
 
-        if ($this->smtpConfig->password !== $password) {
-            $this->smtpConfig->password = $password;
+        if ($this->smtpConfig->setValue("password", $password)) {
             $changes++;
         }
 

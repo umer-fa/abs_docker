@@ -101,6 +101,30 @@ abstract class AbstractConfigObj
     }
 
     /**
+     * @param string $prop
+     * @param $val
+     * @return bool
+     * @throws AppException
+     */
+    public function setValue(string $prop, $val): bool
+    {
+        if (!property_exists($this, $prop)) {
+            throw new AppException(sprintf('Prop "%s" does not exist in class "%s"', $prop, get_called_class()));
+        }
+
+        $change = true;
+        if (isset($this->$prop)) {
+            $change = $this->$prop !== $val;
+        }
+
+        if ($change) {
+            $this->$prop = $val;
+        }
+
+        return $change;
+    }
+
+    /**
      * @throws AppException
      */
     public function save(): void
@@ -109,7 +133,7 @@ abstract class AbstractConfigObj
             try {
                 $bytes = Kernel::getInstance()->ciphers()->project()->encrypt($this);
             } catch (AppConfigException|SecurityUtilException $e) {
-                throw new AppException('Failed to encrypt API accessibility configuration');
+                throw new AppException('Failed to encrypt configuration object');
             }
         } else {
             $bytes = new Binary(serialize($this));
