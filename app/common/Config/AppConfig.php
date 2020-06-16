@@ -128,7 +128,7 @@ class AppConfig
         try {
             $this->mysqlRootPassword = Validator::String($this->getEnv("MYSQL_ROOT_PASSWORD"))
                 ->nullable()
-                ->match('/^[a-z0-9@#~_\-.$^&*()]{4,32}$/i')
+                ->match('/^[a-z0-9@#~_\-.$^&*()!]{4,32}$/i')
                 ->validate();
         } catch (ValidationException $e) {
             throw new AppConfigException(sprintf('ENV[MYSQL_ROOT_PASSWORD]: %s', get_class($e)));
