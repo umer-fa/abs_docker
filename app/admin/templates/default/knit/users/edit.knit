@@ -1,3 +1,61 @@
 {knit "header"}
-{$user|var_dump}
+<div class="row">
+    <div class="col-lg-3">
+        <div class="list-group page-sub-nav">
+            <a href="#overview" data-toggle="tab" class="list-group-item list-group-item-action active">
+                <i class="ion ion-ios-people-outline mr-2"></i>Overview
+            </a>
+            <a href="#edit" data-toggle="tab" class="list-group-item list-group-item-action">
+                <i class="mdi mdi-account-edit mr-2"></i>Edit
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="overview">{$user|var_dump}</div>
+            <div class="tab-pane fade" id="edit">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <ul class="nav nav-tabs card-header-tabs mb-0">
+                            <li class="nav-item">
+                                <a href="#account" data-toggle="tab" class="nav-link active">
+                                    <i class="mdi mdi-account mr-2"></i>Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#password" data-toggle="tab" class="nav-link">
+                                    <i class="mdi mdi-form-textbox-password mr-2"></i>Password</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#advanced" data-toggle="tab" class="nav-link">
+                                    <i class="mdi mdi-account-settings mr-2"></i>Advanced</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="account">
+                                <form method="post" action="{$page.authRoot}users/edit" class="xhr-form">
+                                    <input type="hidden" name="xsrf" value="{$page.token}">
+                                    <input type="hidden" name="userId" value="{$user.id}">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3">Referred By</label>
+                                        <div class="col-md-9">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class=""
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="password">password</div>
+                            <div class="tab-pane fade" id="advanced">refactor</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {knit "footer"}
