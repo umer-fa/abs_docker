@@ -9,6 +9,8 @@ services:
       - ../storage:/home/comely-io/engine/storage
       - ../tmp:/home/comely-io/engine/tmp
       - ../log/engine:/home/comely-io/engine/log
+    env_file:
+      - .env
     networks:
       comely-app-net:
         ipv4_address: 10.0.20.11
@@ -23,6 +25,8 @@ services:
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
+    env_file:
+      - .env
     environment:
       COMELY_APP_DEBUG: 1
       COMELY_APP_CACHED_CONFIG: "true"
@@ -41,6 +45,8 @@ services:
       - ../log/api:/home/comely-io/api/log
       - ../storage:/home/comely-io/api/storage
       - ../tmp:/home/comely-io/api/tmp
+    env_file:
+      - .env
     environment:
       COMELY_APP_CACHED_CONFIG: "true"
     ports:
