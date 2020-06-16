@@ -4,6 +4,6 @@ composer.phar
 workspace/
 
 .env
-config.env
+.env
 vendor/
 config/

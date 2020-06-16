@@ -32,13 +32,13 @@ if [[ -z "$DOCKER_COMPOSE" ]]; then
   DOCKER_COMPOSE=$1
 fi
 
-DOCKER_ENV_FILE="config.env";
+DOCKER_ENV_FILE=".env";
 if [[ ! -f "$DOCKER_ENV_FILE" ]]; then
   echo -e "\e[31mERROR:\e[0m Environment configuration file \"\e[36m${DOCKER_ENV_FILE}\e[0m\" does not exist";
   exit
 fi
 
-cp config.env docker/.env
+cp .env docker/.env
 cd docker/
 DOCKER_COMPOSE_FILE="docker-compose.$DOCKER_COMPOSE.yml";
 

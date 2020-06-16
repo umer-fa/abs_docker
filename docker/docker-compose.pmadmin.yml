@@ -7,8 +7,6 @@ services:
       - PMA_PORT=3306
     ports:
       - "${PMA_LISTEN:-36001}:80"
-    env_file:
-      - ../config.env
     networks:
       comely-app-net:
         ipv4_address: 10.0.20.9
