@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\API\Controllers;
 
+use App\Common\Config\ProgramConfig;
 use App\Common\Database\API\Sessions;
 use App\Common\Exception\API_Exception;
 use App\Common\Exception\APIAuthException;
@@ -76,6 +77,7 @@ class Session extends AbstractSessionAPIController
                     "status" => $authUser->status,
                     "firstName" => $authUser->firstName,
                     "lastName" => $authUser->lastName,
+                    "username" => $authUser->username,
                     "email" => $authUser->email,
                     "isEmailVerified" => $authUser->isEmailVerified === 1,
                     "hasGoogle2FA" => $authUser->credentials()->googleAuthSeed ? true : false,
@@ -99,6 +101,14 @@ class Session extends AbstractSessionAPIController
             "lastVerified" => $this->apiSession->recaptchaLast,
             "publicKey" => null
         ];
+
+        $programConfig = ProgramConfig::getInstance(true);
+        if ($programConfig->reCaptcha) {
+            if ($programConfig->reCaptchaPub) {
+                $reCaptcha["required"] = true;
+                $reCaptcha["publicKey"] = $programConfig->reCaptchaPub;
+            }
+        }
 
         $this->response()->set("reCaptcha", $reCaptcha);
         $this->response()->set("issuedOn", $this->apiSession->issuedOn);
