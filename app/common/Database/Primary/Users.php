@@ -64,7 +64,7 @@ class Users extends AbstractAppTable
         $k = Kernel::getInstance();
 
         try {
-            return self::CachedSearch(User::CACHE_KEY, "id", $id, $cache);
+            return self::CachedSearch(sprintf(User::CACHE_KEY, $id), "id", $id, $cache);
         } catch (\Exception $e) {
             if ($e instanceof ORM_ModelNotFoundException) {
                 throw AppException::ModelNotFound(sprintf('No such user with id #%d exists', $id));
@@ -86,7 +86,8 @@ class Users extends AbstractAppTable
         $k = Kernel::getInstance();
 
         try {
-            return self::CachedSearch(User::CACHE_KEY_EMAIL, "email", $email, $cache);
+            $cacheId = sprintf(User::CACHE_KEY_EMAIL, md5(strtolower($email)));
+            return self::CachedSearch($cacheId, "email", $email, $cache);
         } catch (\Exception $e) {
             if ($e instanceof ORM_ModelNotFoundException) {
                 throw AppException::ModelNotFound('E-mail address is not registered');
@@ -108,7 +109,7 @@ class Users extends AbstractAppTable
         $k = Kernel::getInstance();
 
         try {
-            return self::CachedSearch(User::CACHE_KEY_USERNAME, "username", $username, $cache);
+            return self::CachedSearch(sprintf(User::CACHE_KEY_USERNAME, strtolower($username)), "username", $username, $cache);
         } catch (\Exception $e) {
             if ($e instanceof ORM_ModelNotFoundException) {
                 throw AppException::ModelNotFound('Username is not registered');
@@ -148,7 +149,7 @@ class Users extends AbstractAppTable
     private static function CachedSearch(string $cacheId, string $colName, $arg, bool $cache = true): User
     {
         $k = Kernel::getInstance();
-        $query = $k->memory()->query(sprintf($cacheId, $arg), self::MODEL);
+        $query = $k->memory()->query($cacheId, self::MODEL);
         if ($cache) {
             $query->cache(User::CACHE_TTL);
         }
