@@ -133,7 +133,7 @@ class Add extends AbstractAdminController
 
             // Duplicate Check
             $dup = $db->query()->table(Users::NAME)
-                ->where('`username`=?', [$email])
+                ->where('`username`=?', [$username])
                 ->fetch();
             if ($dup->count()) {
                 throw new AppControllerException('Username is already registered!');
