@@ -122,25 +122,21 @@ class Add extends AbstractAdminController
         // Username
         try {
             $username = trim(strval($this->input()->get("username")));
-            if (!$username) {
-                $username = null;
-            } else {
-                $usernameLen = strlen($username);
-                if ($usernameLen <= 4) {
-                    throw new AppControllerException('Username is too short');
-                } elseif ($usernameLen >= 20) {
-                    throw new AppControllerException('Username is too long');
-                } elseif (!Validator::isValidUsername($username)) {
-                    throw new AppControllerException('Username contains an illegal character');
-                }
+            $usernameLen = strlen($username);
+            if ($usernameLen <= 4) {
+                throw new AppControllerException('Username is too short');
+            } elseif ($usernameLen >= 20) {
+                throw new AppControllerException('Username is too long');
+            } elseif (!Validator::isValidUsername($username)) {
+                throw new AppControllerException('Username contains an illegal character');
+            }
 
-                // Duplicate Check
-                $dup = $db->query()->table(Users::NAME)
-                    ->where('`username`=?', [$email])
-                    ->fetch();
-                if ($dup->count()) {
-                    throw new AppControllerException('Username is already registered!');
-                }
+            // Duplicate Check
+            $dup = $db->query()->table(Users::NAME)
+                ->where('`username`=?', [$email])
+                ->fetch();
+            if ($dup->count()) {
+                throw new AppControllerException('Username is already registered!');
             }
         } catch (AppControllerException $e) {
             $e->setParam("username");

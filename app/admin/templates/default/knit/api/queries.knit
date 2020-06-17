@@ -190,7 +190,7 @@
                                     {if $query.flag_user_id}
                                         <a href="{$page.authRoot}users/view?{$query.flag_user_id|dechex}"
                                            target="_blank">
-                                            {$query.flag_user_em}
+                                            {$query.flag_user_username}
                                         </a>
                                     {else}
                                         <span class="text-muted">n/a</span>

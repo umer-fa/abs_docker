@@ -186,9 +186,7 @@
                                         data-placement="bottom"><i
                                             class="mdi mdi-email-alert"></i></span>{/if}<a
                                             href="{$page.authRoot}users/edit?{$user.id}">{$user.email}</a></td>
-                                <td class="text-center">{if $user.username|is_string}{$user.username}{else}
-                                        <span class="text-muted">n/a</span>
-                                    {/if}</td>
+                                <td class="text-center">{$user.username}</td>
                                 <td class="text-left">{if $user.firstName}{$user.firstName}{if $user.lastName} {$user.lastName}{/if}
                                     {else}
                                         {if $user.lastName}{$user.lastName}{else}

@@ -195,7 +195,7 @@
                                 <td class="text-right">{$sess.ipAddress}</td>
                                 <td class="text-center">
                                     {if $sess.authUserId}<a
-                                        href="{$page.authRoot}users/edit?{$sess.authUserId}">{$sess.authUserEm}</a>{else}
+                                        href="{$page.authRoot}users/edit?{$sess.authUserId}">{$sess.authUsername}</a>{else}
                                         <span class="text-muted">n/a</span>
                                     {/if}
                                 </td>

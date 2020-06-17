@@ -56,7 +56,7 @@
                                     <span class="input-group-text"><i class="mdi mdi-login"></i></span>
                                 </div>
                                 <input type="text" name="username" id="addUsername" data-onload-value=""
-                                       placeholder="(optional)" maxlength="20" class="form-control">
+                                       placeholder="a-z0-9.-_" maxlength="20" class="form-control">
                             </div>
                         </div>
                     </div>

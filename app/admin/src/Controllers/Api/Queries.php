@@ -280,7 +280,7 @@ class Queries extends AbstractAdminController
                     $rowFlagUserId = intval($result["rows"][$i]["flag_user_id"]);
                     if (is_int($rowFlagUserId) && $rowFlagUserId > 0) {
                         $rowFlagUser = Users::get($rowFlagUserId);
-                        $result["rows"][$i]["flag_user_em"] = $rowFlagUser->email;
+                        $result["rows"][$i]["flag_user_username"] = $rowFlagUser->username;
                     }
 
                     unset($shortEndpoint, $rowFlagUser, $rowFlagUserId);

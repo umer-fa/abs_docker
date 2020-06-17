@@ -218,7 +218,7 @@ class Sessions extends AbstractAdminController
 
                     $sessObj = Validator::JSON_Filter($sess, "api.Session");
                     $sessObj["token"] = $sess->token()->hexits(false);
-                    $sessObj["authUserEm"] = isset($sessAuthUser) && $sessAuthUser ? $sessAuthUser->email : null;
+                    $sessObj["authUsername"] = isset($sessAuthUser) && $sessAuthUser ? $sessAuthUser->username : null;
 
                     $result["rows"][] = $sessObj;
                     unset($sess, $sessAuthUser, $sessObj);
