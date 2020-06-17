@@ -227,7 +227,7 @@ class Me extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title('My Account')->index(200, 10)
+        $this->page()->title('My Account')->index(200, 30)
             ->prop("icon", "ion ion-ios-people-outline");
 
         $this->breadcrumbs("Staff Management", null, "ion ion-ios-people-outline");
