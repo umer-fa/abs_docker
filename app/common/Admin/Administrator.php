@@ -36,7 +36,7 @@ class Administrator extends AbstractAppModel
     /** @var Privileges|null */
     private ?Privileges $_privileges = null;
     /** @var bool|null */
-    private ?bool $_checksumVerified = null;
+    public ?bool $_checksumVerified = null;
 
     /**
      * @return void

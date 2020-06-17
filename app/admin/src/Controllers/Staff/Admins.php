@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Admin\Controllers\Staff;
 
 use App\Admin\Controllers\AbstractAdminController;
+use App\Common\Admin\Administrator;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Kernel\ErrorHandler\Errors;
 
@@ -25,16 +26,25 @@ class Admins extends AbstractAdminController
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
 
         try {
-            $admins = Administrators::Find()->asc("id")->all();
+            $admins = Administrators::Find()->query("WHERE 1 ORDER BY `id` ASC")->all();
         } catch (\Exception $e) {
             $this->flash()->danger(Errors::Exception2String($e));
             $this->redirect($this->authRoot . "dashboard");
             exit;
         }
 
-        var_dump($admins);
+        $adminsCount = count($admins);
+        for ($i = 0; $i < $adminsCount; $i++) {
+            /** @var Administrator $admin */
+            $admin = $admins[$i];
+            try {
+                $admin->validate();
+            } catch (\Exception $e) {
+            }
+        }
 
-        $template = $this->template("staff/admins.knit");
+        $template = $this->template("staff/admins.knit")
+            ->assign("admins", $admins);
         $this->body($template);
     }
 }
