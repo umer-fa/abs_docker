@@ -35,6 +35,8 @@ class Kernel
     public const VERSION_ID = 202015500;
     /** @var int[] */
     public const ROOT_ADMINISTRATORS = [1];
+    /** @var string[] */
+    public const USERNAME_PREFIXES = ["COMELY"];
     /** @var string */
     public const API_SESS_AUTH_NAME = "api-token";
 

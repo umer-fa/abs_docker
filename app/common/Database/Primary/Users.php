@@ -120,6 +120,25 @@ class Users extends AbstractAppTable
     }
 
     /**
+     * @return string
+     */
+    public static function generateRandomUsername(): string
+    {
+        $k = Kernel::getInstance();
+        $prefixes = $k->constant("username_prefixes");
+        if (!$prefixes || !is_array($prefixes)) {
+            throw new \UnexpectedValueException('No username prefixes have been specified');
+        }
+
+        $prefix = count($prefixes) === 1 ? $prefixes[0] : $prefixes[rand(0, count($prefixes) - 1)];
+        if (!$prefix) {
+            throw new \UnexpectedValueException('Failed to get a random prefix');
+        }
+
+        return sprintf("%s%d", strtoupper($prefix), mt_rand(0x5F5E100, 0x3B9AC9FF));
+    }
+
+    /**
      * @param string $cacheId
      * @param string $colName
      * @param $arg
