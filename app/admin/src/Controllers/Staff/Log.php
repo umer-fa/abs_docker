@@ -100,7 +100,7 @@ class Log extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title('Audit Log')->index(7, 20)
+        $this->page()->title('Audit Log')->index(200, 20)
             ->prop("containerIsFluid", true)
             ->prop("icon", "mdi mdi-book-open");
 

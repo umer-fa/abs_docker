@@ -135,6 +135,27 @@
                             </a>
                         </nav>
                     </div>
+                    <div class="sb-sidenav-menu-heading">Management</div>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#navStaff"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="mdi mdi-shield-account mr-2"></i></div>
+                        Staff Control
+                        <div class="sb-sidenav-collapse-arrow"><i class="ion ion-arrow-down-b"></i></div>
+                    </a>
+                    <div class="collapse{if $page.index.a === 200} show{/if}" id="navStaff" aria-labelledby="headingOne"
+                         data-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{$page.authRoot}staff/admins">
+                                <i class="mdi mdi-shield-account mr-2"></i>Administrators
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}staff/me">
+                                <i class="mdi mdi-account-settings mr-2"></i>My Account
+                            </a>
+                            <a class="nav-link" href="{$page.authRoot}staff/log">
+                                <i class="mdi mdi-table mr-2"></i>Activity Log
+                            </a>
+                        </nav>
+                    </div>
                     <a class="nav-link" href="{$page.authRoot}logout">
                         <div class="sb-nav-link-icon"><i class="ion ion-log-out"></i></div>
                         Logout</a>
