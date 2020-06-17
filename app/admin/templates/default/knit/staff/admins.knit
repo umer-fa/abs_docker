@@ -1,7 +1,7 @@
 {knit "header"}
 <div class="row">
     <div class="col-12">
-        <div class="mb-3">
+        <div class="text-right mb-3">
             <a href="{$page.authRoot}staff/create_admin" class="btn btn-outline-danger">
                 <i class="mdi mdi-shield-plus mr-2"></i>Create Administrator
             </a>
