@@ -77,6 +77,20 @@ $(function () {
 
         $(this).val(current);
     });
+
+    $("input.input-uc").on("change keyup blur", function () {
+        let value = $(this).val();
+        if (value.length) {
+            $(this).val(value.toUpperCase());
+        }
+    });
+
+    $("input.input-lc").on("change keyup blur", function () {
+        let value = $(this).val();
+        if (value.length) {
+            $(this).val(value.toLowerCase());
+        }
+    });
 });
 
 function cleanDecimalDigits(amount) {
