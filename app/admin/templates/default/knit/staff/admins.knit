@@ -21,6 +21,7 @@
                             <i class="mdi mdi-check-all" data-toggle="tooltip" title="Checksum"></i>
                         </th>
                         <th scope="col" class="text-center">E-mail Address</th>
+                        <th scope="col" class="text-center">Phone</th>
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
@@ -39,6 +40,9 @@
                                                 class="mdi mdi-alert-circle-outline"></i></span>
                                 {/if}</td>
                             <td class="text-left"><a href="javascript:void(0);">{$admin.email}</a></td>
+                            <td class="{if $admin.phone}text-right{else}text-center{/if}">
+                                {if $admin.phone}{$admin.phone}{else}<span class="text-muted">n/a</span>{/if}
+                            </td>
                             <td class="text-center">
                                 {if $admin.isRoot}
                                     <span class="text-danger">root</span>

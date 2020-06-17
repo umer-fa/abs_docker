@@ -42,7 +42,6 @@ class Admins extends AbstractAdminController
 
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
 
-
         try {
             $admins = Administrators::Find()->query("WHERE 1 ORDER BY `id` ASC")->all();
         } catch (\Exception $e) {
