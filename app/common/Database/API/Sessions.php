@@ -102,7 +102,7 @@ class Sessions extends AbstractAppTable
                     throw new API_Exception('SESSION_NOT_FOUND');
                 }
             }
-            throw $e;
+
             throw new API_Exception('SESSION_RETRIEVE_ERROR');
         }
     }
