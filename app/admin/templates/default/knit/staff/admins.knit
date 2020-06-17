@@ -13,7 +13,7 @@
                 </h5>
             </div>
             <div class="table-responsive">
-                <table class="table table-sm table-striped table-hover">
+                <table class="table table-sm table-striped table-bordered table-hover mb-0">
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col" class="text-right">ID</th>
@@ -55,10 +55,12 @@
                                     {if $admin.canEdit}
                                         <a href="{$page.authRoot}staff/edit?{$admin.id}"
                                            class="btn btn-sm btn-outline-dark" data-toggle="tooltip"
+                                           data-placement="bottom"
                                            title="Edit Administrator"><i class="mdi mdi-shield-edit"></i></a>
                                     {/if}
                                     <a href="{$page.authRoot}staff/logs?admin={$admin.id}"
-                                       class="btn btn-sm btn-outline-dark" data-toggle="tooltip" title="Activity Log"><i
+                                       class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="bottom"
+                                       title="Activity Log"><i
                                                 class="mdi mdi-table"></i></a>
                                 </div>
                             </td>
