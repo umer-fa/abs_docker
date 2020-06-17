@@ -1,0 +1,3 @@
+{knit "header"}
+{$admins|var_dump}
+{knit "footer"}
