@@ -42,10 +42,8 @@ class Log extends AbstractAdminController
         $this->listingAllAdmins = false;
         if ($this->authAdmin->privileges()->root()) {
             $this->listingAllAdmins = true;
-        } else {
-            if ($this->authAdmin->privileges()->viewAdminsLogs) {
-                $this->listingAllAdmins = false;
-            }
+        } elseif ($this->authAdmin->privileges()->viewAdminsLogs) {
+            $this->listingAllAdmins = true;
         }
 
         if ($this->listingAllAdmins) {
@@ -56,11 +54,13 @@ class Log extends AbstractAdminController
                 }
 
                 // Get admins list
-                $admins = Administrators::Find(null)->query("WHERE 1 ORDER BY `email` ASC", []);
+                $admins = Administrators::Find()->query("WHERE 1 ORDER BY `email` ASC", []);
                 /** @var Administrator $admin */
                 foreach ($admins as $admin) {
-                    if ($admin->privileges()->root() && !$canIncludeRootAdmins) {
-                        continue;
+                    if ($admin->privileges()->root()) {
+                        if (!$canIncludeRootAdmins) {
+                            continue;
+                        }
                     }
 
                     $this->adminsList[] = [
@@ -104,7 +104,7 @@ class Log extends AbstractAdminController
             ->prop("containerIsFluid", true)
             ->prop("icon", "mdi mdi-book-open");
 
-        $this->breadcrumbs("Staff Management", null, "ion ion-ios-people-outline");
+        $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
 
         $result = [
             "status" => false,
