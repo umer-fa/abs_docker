@@ -1,7 +1,7 @@
 {knit "header"}
 <div class="row">
     <div class="col-12">
-        <div class="text-right mb-3">
+        <div class="mb-3">
             <a href="{$page.authRoot}staff/admins" class="btn btn-outline-dark">
                 &laquo; Return
             </a>
@@ -11,7 +11,7 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i class="mdi mdi-shield-plus-outline mr-2">Create Administrator</i>
+                        <i class="mdi mdi-shield-plus-outline mr-2"></i>Create Administrator
                     </h5>
                 </div>
                 <div class="card-body">
