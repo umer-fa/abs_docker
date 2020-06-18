@@ -10,6 +10,7 @@ use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
 use App\Common\Validator;
+use Comely\Utils\Security\Passwords;
 
 /**
  * Class Edit
@@ -68,6 +69,169 @@ class Edit extends AbstractAdminController
         } catch (AppException $e) {
             $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
         }
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
+     * @throws \Comely\Utils\Security\Exception\SecurityUtilException
+     */
+    public function postEdit(): void
+    {
+        $this->verifyXSRF();
+        $this->totpSessionCheck(30);
+
+        // Validate
+        if (!$this->adminAcc->_checksumVerified) {
+            throw new AppControllerException('Administrative account checksum is invalid');
+        } elseif ($this->authAdmin->id === $this->adminAcc->id) {
+            throw new AppControllerException('You cannot edit your own account');
+        }
+
+        // Changes?
+        $adminNewEmail = null;
+        $adminNewPassword = null;
+        $adminNewStatus = null;
+
+        $db = $this->app->db()->primary();
+
+        // Status
+        $currentStatus = $this->adminAcc->status === 1;
+        $newStatus = Validator::getBool(trim(strval($this->input()->get("status"))));
+        if ($newStatus !== $currentStatus) {
+            $adminNewStatus = $newStatus;
+        }
+
+        // E-mail address
+        try {
+            $email = trim(strval($this->input()->get("email")));
+            if (!$email) {
+                throw new AppControllerException('E-mail address is required');
+            } elseif (strlen($email) > 64) {
+                throw new AppControllerException('E-mail address is too long');
+            } elseif (!Validator::isValidEmailAddress($email)) {
+                throw new AppControllerException('Invalid e-mail address');
+            }
+
+            if ($email !== $this->adminAcc->email) {
+                $adminNewEmail = $email;
+                $dup = $db->query()->table(Administrators::NAME)
+                    ->where('`email`=?', [$adminNewEmail])
+                    ->fetch();
+                if ($dup->count()) {
+                    throw new AppControllerException('E-mail address is already in use!');
+                }
+            }
+        } catch (AppControllerException $e) {
+            $e->setParam("email");
+            throw $e;
+        }
+
+        // Password
+        $adminNewPassword = trim(strval($this->input()->get("adminNewPass")));
+        if ($adminNewPassword) {
+            $adminNewPassword = null;
+        } else {
+            try {
+                try {
+                    $adminAccCredentials = $this->adminAcc->credentials();
+                } catch (AppException $e) {
+                    throw new AppControllerException('Credentials object is corrupted');
+                }
+
+                $newPasswordLen = strlen($adminNewPassword);
+                if ($newPasswordLen <= 5) {
+                    throw new AppControllerException('New password is too short');
+                } elseif ($newPasswordLen > 32) {
+                    throw new AppControllerException('New password is too long');
+                } elseif (Passwords::Strength($adminNewPassword) < 4) {
+                    throw new AppControllerException('New password is too weak!');
+                }
+
+                if ($adminAccCredentials->verifyPassword($adminNewPassword)) {
+                    throw new AppControllerException('New password cannot be same as existing one!');
+                }
+            } catch (AppException $e) {
+                $e->setParam("adminNewPass");
+                throw $e;
+            }
+        }
+
+        // Save changes?
+        if (!$adminNewStatus && !$adminNewEmail && !$adminNewPassword) {
+            throw new AppControllerException('There are no changes to be saved!');
+        }
+
+        if ($adminNewEmail) {
+            $oldEmail = $this->adminAcc->email;
+            $this->adminAcc->email = $adminNewEmail;
+            $newEmailLog = sprintf('Admin [#%d] email changed from "%s" to "%s"', $this->adminAcc->id, $oldEmail, $adminNewEmail);
+        }
+
+        if ($adminNewStatus) {
+            $this->adminAcc->status = $adminNewStatus ? 1 : 0;
+            $newStatusLog = sprintf(
+                'Admin [#%d] status changed to %s',
+                $this->adminAcc->id,
+                $adminNewStatus === 1 ? "ENABLED" : "DISABLED"
+            );
+        }
+
+        if ($adminNewPassword && isset($adminAccCredentials)) {
+            $adminCipher = $this->adminAcc->cipher();
+            $adminAccCredentials->setPassword($adminNewPassword);
+            $this->adminAcc->set("credentials", $adminCipher->encrypt(clone $adminAccCredentials)->raw());
+            $newPasswordLog = sprintf('Admin [#%d] %s password reset', $this->adminAcc->id, $this->adminAcc->email);
+        }
+
+        try {
+            $db->beginTransaction();
+
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update administrative account');
+            });
+
+            // Create Logs
+            if (isset($newEmailLog)) {
+                $this->authAdmin->log($newEmailLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+            }
+
+            if (isset($newStatusLog)) {
+                $this->authAdmin->log($newStatusLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+            }
+
+            if (isset($newPasswordLog)) {
+                $this->authAdmin->log($newPasswordLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+            }
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to insert administrator row');
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("Administrative account updated");
+
+        if (isset($newEmailLog)) {
+            $this->messages()->info($newEmailLog);
+        }
+
+        if (isset($newStatusLog)) {
+            $this->messages()->info($newStatusLog);
+        }
+
+        if (isset($newPasswordLog)) {
+            $this->messages()->info($newPasswordLog);
+        }
+
+        $this->response()->set("disabled", true);
     }
 
     /**

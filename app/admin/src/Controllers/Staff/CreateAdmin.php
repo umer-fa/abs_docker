@@ -64,7 +64,7 @@ class CreateAdmin extends AbstractAdminController
                 ->where('`email`=?', [$email])
                 ->fetch();
             if ($dup->count()) {
-                throw new AppControllerException('E-mail address is already registered!');
+                throw new AppControllerException('E-mail address is already in use!');
             }
         } catch (AppControllerException $e) {
             $e->setParam("email");
