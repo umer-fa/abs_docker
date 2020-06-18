@@ -1,0 +1,56 @@
+{knit "header"}
+<div class="row">
+    <div class="col-12">
+        <div class="text-right mb-3">
+            <a href="{$page.authRoot}staff/admins" class="btn btn-outline-dark">
+                &laquo; Return
+            </a>
+        </div>
+        <form method="post" action="{$page.authRoot}staff/create_admin" class="xhr-form">
+            <input type="hidden" name="xsrf" value="{$page.token}">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="mdi mdi-shield-plus-outline mr-2">Create Administrator</i>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="adminEmail">E-mail Address</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="mdi mdi-email-plus"></i>
+                                    </span>
+                                </div>
+                                <input type="text" name="email" id="adminEmail" data-onload-value=""
+                                       placeholder="admin2@domain.com" maxlength="64" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="adminPass">Password</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="mdi mdi-asterisk"></i>
+                                    </span>
+                                </div>
+                                <input type="text" name="newAdminPass" id="adminPass" data-onload-value=""
+                                       placeholder="secret" maxlength="32" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Insert Administrator
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{knit "footer"}
