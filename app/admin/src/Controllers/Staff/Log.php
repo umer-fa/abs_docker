@@ -9,6 +9,7 @@ use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Validator;
+use Comely\Database\Exception\DatabaseException;
 use Comely\DataTypes\Integers;
 
 /**
@@ -47,30 +48,38 @@ class Log extends AbstractAdminController
         }
 
         if ($this->listingAllAdmins) {
-            try {
-                $canIncludeRootAdmins = false;
-                if ($this->authAdmin->privileges()->root()) {
-                    $canIncludeRootAdmins = true;
-                }
+            $canIncludeRootAdmins = false;
+            if ($this->authAdmin->privileges()->root()) {
+                $canIncludeRootAdmins = true;
+            }
 
+            try {
                 // Get admins list
-                $admins = Administrators::Find()->query("WHERE 1 ORDER BY `email` ASC", []);
+                $admins = Administrators::Find()->query("WHERE 1 ORDER BY `email` ASC", [])->all();
+                $adminsList = [];
                 /** @var Administrator $admin */
                 foreach ($admins as $admin) {
-                    if ($admin->privileges()->root()) {
-                        if (!$canIncludeRootAdmins) {
-                            continue;
+                    try {
+                        if ($admin->privileges()->root()) {
+                            if (!$canIncludeRootAdmins) {
+                                continue;
+                            }
                         }
+                    } catch (AppException $e) {
+                        $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
                     }
 
-                    $this->adminsList[] = [
+                    $adminsList[] = [
                         "id" => $admin->id,
                         "email" => $admin->email
                     ];
                 }
-            } catch (\Exception $e) {
-                $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
-                trigger_error('Failed to retrieve All administrators list');
+            } catch (DatabaseException $e) {
+                $this->app->errors()->trigger($e, E_USER_WARNING);
+            }
+
+            if (isset($adminsList) && $adminsList) {
+                $this->adminsList = $adminsList;
             }
         }
     }
