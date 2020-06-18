@@ -200,7 +200,7 @@ class Edit extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title(sprintf('Administrative Account # %d', $this->adminAcc->id))->index(200, 10)
+        $this->page()->title("Edit Admin")->index(200, 10)
             ->prop("icon", "mdi mdi-shield-edit");
 
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");

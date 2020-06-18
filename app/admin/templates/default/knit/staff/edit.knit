@@ -5,7 +5,7 @@
             <h5 class="text-danger">
                 <i class="mdi mdi-shield-account mr-2"></i>{$adminAcc.email}<br>
                 <small class="text-muted">{if $isRootAdmin}<span class="text-warning">Root</span>{/if} Administrative
-                    Account</small>
+                    Account [ID#{$adminAcc.id}]</small>
             </h5>
         </div>
         <div class="text-right mt-3">
@@ -19,7 +19,11 @@
             <div class="card-header pb-0">
                 <ul class="nav nav-tabs card-header-tabs mb-0">
                     <li class="nav-item">
-                        <a href="#privileges" data-toggle="tab" class="nav-link active">
+                        <a href="#edit" data-toggle="tab" class="nav-link active">
+                            <i class="mdi mdi-shield-edit mr-2"></i>Edit</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#privileges" data-toggle="tab" class="nav-link">
                             <i class="mdi mdi-shield-key mr-2"></i>Privileges</a>
                     </li>
                     <li class="nav-item">
@@ -30,7 +34,59 @@
             </div>
             <div class="card-body">
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="privileges">
+                    <div class="tab-pane fade show active" id="edit">
+                        <form method="POST" action="{$page.authRoot}staff/edit?edit" class="xhr-form">
+                            <input type="hidden" name="adminId" value="{$adminAcc.id}">
+                            <input type="hidden" name="xsrf" value="{$page.token}">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="adminStatus">Status</label>
+                                <div class="col-md-3">
+                                    <select name="status" id="adminStatus" class="form-control">
+                                        <option value="0"{if !$adminAcc.status} selected=""{/if}>Disabled</option>
+                                        <option value="1"{if $adminAcc.status} selected=""{/if}>Enabled</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="adminEmail">E-mail Address</label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="mdi mdi-email-plus"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" name="email" id="adminEmail"
+                                               data-onload-value="{$adminAcc.email}"
+                                               placeholder="{$adminAcc.email}" maxlength="64" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="adminNewPass">New Password</label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="mdi mdi-asterisk"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" name="adminNewPass" id="adminNewPass"
+                                               data-onload-value=""
+                                               placeholder="secret" maxlength="32" class="form-control">
+                                    </div>
+                                    <div class="col-md-9 offset-md-3">
+                                        <small class="text-muted"><i class="mdi mdi-alert-circle-outline mr-1"></i>Leave
+                                            BLANK for no change in password</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-light border-top mt-3 p-3 text-right">
+                                <button type="submit" class="btn btn-outline-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="privileges">
                         <form method="POST" action="{$page.authRoot}staff/edit?privileges" class="xhr-form">
                             <input type="hidden" name="adminId" value="{$adminAcc.id}">
                             <input type="hidden" name="xsrf" value="{$page.token}">
@@ -41,17 +97,17 @@
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             <label class="btn btn-outline-info{if $privilege.current || $isRootAdmin} active{/if}">
                                                 <input type="radio" name="{$privilege.prop}"
-                                                       value="on"{if $privilege.current || $isRootAdmin} checked=""{/if}>On
+                                                       value="on"{if $privilege.current || $isRootAdmin} checked=""{/if}>Yes
                                             </label>
                                             <label class="btn btn-outline-info{if !$privilege.current && !$isRootAdmin} active{/if}">
                                                 <input type="radio" name="{$privilege.prop}"
-                                                       value="off"{if !$privilege.current && !$isRootAdmin} checked=""{/if}>Off
+                                                       value="off"{if !$privilege.current && !$isRootAdmin} checked=""{/if}>No
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             {/foreach}
-                            <div class="bg-light border-top mt-3">
+                            <div class="bg-light border-top mt-3 p-3 text-right">
                                 <button type="submit" class="btn btn-outline-primary">Save Changes</button>
                             </div>
                         </form>
