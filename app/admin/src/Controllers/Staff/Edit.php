@@ -385,7 +385,7 @@ class Edit extends AbstractAdminController
             $newStatusLog = sprintf(
                 'Admin [#%d] status changed to %s',
                 $this->adminAcc->id,
-                $adminNewStatus === 1 ? "ENABLED" : "DISABLED"
+                $adminNewStatus ? "ENABLED" : "DISABLED"
             );
         }
 
