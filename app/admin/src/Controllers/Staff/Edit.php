@@ -366,7 +366,7 @@ class Edit extends AbstractAdminController
         }
 
         // Save changes?
-        if (!$adminNewStatus && !$adminNewEmail && !$adminNewPassword) {
+        if (!is_bool($adminNewStatus) && !$adminNewEmail && !$adminNewPassword) {
             throw new AppControllerException('There are no changes to be saved!');
         }
 
