@@ -156,7 +156,7 @@ class CreateAdmin extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title('Create Administrator')->index(200, 10)
+        $this->page()->title('Create Administrator')->index(200, 40)
             ->prop("icon", "mdi mdi-shield-plus");
 
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
