@@ -144,7 +144,7 @@ class CreateAdmin extends AbstractAdminController
         }
 
         $this->response()->set("status", true);
-        $this->messages()->success("New user account has been registered!");
+        $this->messages()->success("New administrator account created");
         $this->messages()->info("Redirecting...");
         $this->response()->set("disabled", true);
         $this->response()->set("redirect", $this->authRoot . "staff/edit?" . $admin->id);
