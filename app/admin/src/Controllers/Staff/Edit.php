@@ -376,7 +376,7 @@ class Edit extends AbstractAdminController
             $newEmailLog = sprintf('Admin [#%d] email changed from "%s" to "%s"', $this->adminAcc->id, $oldEmail, $adminNewEmail);
         }
 
-        if ($adminNewStatus) {
+        if (is_bool($adminNewStatus)) {
             $this->adminAcc->status = $adminNewStatus ? 1 : 0;
             $newStatusLog = sprintf(
                 'Admin [#%d] status changed to %s',
