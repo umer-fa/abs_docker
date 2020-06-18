@@ -74,7 +74,7 @@
             </div>
         </form>
         {if $errorMessage}
-            <div class="alert alert-danger mt-2">
+            <div class="alert alert-danger mt-3">
                 <i class="ion ion-android-warning mr-2"></i>{$errorMessage}
             </div>
         {/if}
@@ -110,7 +110,7 @@
                     </ul>
                 </nav>
             {/if}
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0">Total Results: <span
                                 class="badge badge-primary font-weight-light px-1">{$result.count}</span></h5>
