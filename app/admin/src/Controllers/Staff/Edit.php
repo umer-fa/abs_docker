@@ -438,8 +438,6 @@ class Edit extends AbstractAdminController
         if (isset($newPasswordLog)) {
             $this->messages()->info($newPasswordLog);
         }
-
-        $this->response()->set("disabled", true);
     }
 
     /**
@@ -511,8 +509,6 @@ class Edit extends AbstractAdminController
 
         $this->response()->set("status", true);
         $this->messages()->success("Administrative privileges updated");
-        $this->messages()->info("Redirecting...");
-        $this->response()->set("disabled", true);
     }
 
     /**
