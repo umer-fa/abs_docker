@@ -205,6 +205,10 @@ class Edit extends AbstractAdminController
             throw new AppControllerException('Cannot disable 2FA, credentials object is corrupted');
         }
 
+        if(!$adminAccCredentials->getGoogleAuthSeed()) {
+            throw new AppControllerException('Google 2FA is already disabled on this account');
+        }
+
         $db = $this->app->db()->primary();
 
         try {
