@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Staff;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Admin\Administrator;
+use App\Common\Admin\Credentials;
 use App\Common\Admin\Privileges;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppControllerException;
@@ -69,6 +70,211 @@ class Edit extends AbstractAdminController
         } catch (AppException $e) {
             $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
         }
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    public function postReset(): void
+    {
+        $this->verifyXSRF();
+        $this->totpSessionCheck(30);
+
+        $action = strtolower(trim(strval($this->input()->get("action"))));
+        switch ($action) {
+            case "checksum":
+                $this->reComputeChecksum();
+                break;
+            case "disable2fa":
+                $this->disable2FA();
+                break;
+            case "credentials":
+                $this->resetCredentials();
+                break;
+            case "privileges":
+                $this->resetPrivileges();
+                break;
+            default:
+                throw new AppControllerException('Unknown action to perform');
+        }
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function resetPrivileges(): void
+    {
+        try {
+            $adminPrivileges = $this->adminAcc->privileges();
+        } catch (AppException $e) {
+        }
+
+        if (isset($adminPrivileges)) {
+            throw new AppControllerException('Privileges object for this admin account is OK');
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $adminCipher = $this->adminAcc->cipher();
+            $this->adminAcc->set("privileges", $adminCipher->encrypt(new Privileges($this->adminAcc))->raw());
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update administrative account');
+            });
+
+            $this->authAdmin->log(
+                sprintf('Admin [#%d] privileges reset', $this->adminAcc->id),
+                __CLASS__,
+                null,
+                ["admins", $this->adminAcc->id]
+            );
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update administrator row');
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("Privileges object has been reset for this administrator");
+        $this->flash()->success("Privileges object has been reset for this administrator");
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function resetCredentials(): void
+    {
+        try {
+            $adminAccCredentials = $this->adminAcc->credentials();
+        } catch (AppException $e) {
+        }
+
+        if (isset($adminAccCredentials)) {
+            throw new AppControllerException('Credentials for this admin account is OK');
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $adminCipher = $this->adminAcc->cipher();
+            $this->adminAcc->set("credentials", $adminCipher->encrypt(new Credentials($this->adminAcc))->raw());
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update administrative account');
+            });
+
+            $this->authAdmin->log(
+                sprintf('Admin [#%d] credentials reset', $this->adminAcc->id),
+                __CLASS__,
+                null,
+                ["admins", $this->adminAcc->id]
+            );
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update administrator row');
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("Credentials have been reset for this administrator");
+        $this->flash()->success("Credentials have been reset for this administrator");
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function disable2FA(): void
+    {
+        try {
+            $adminAccCredentials = $this->adminAcc->credentials();
+        } catch (AppException $e) {
+            throw new AppControllerException('Cannot disable 2FA, credentials object is corrupted');
+        }
+
+        $db = $this->app->db()->primary();
+
+        try {
+            $adminCipher = $this->adminAcc->cipher();
+            $adminAccCredentials->setGoogleAuthSeed(null); // set to NULL
+
+            $this->adminAcc->set("credentials", $adminCipher->encrypt(clone $adminAccCredentials)->raw());
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update administrative account');
+            });
+
+            $this->authAdmin->log(
+                sprintf('Admin [#%d] 2FA disabled', $this->adminAcc->id),
+                __CLASS__,
+                null,
+                ["admins", $this->adminAcc->id]
+            );
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update administrator row');
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("2FA has been disabled for this administrator");
+        $this->flash()->success("2FA has been disabled for this administrator");
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function reComputeChecksum(): void
+    {
+        if ($this->adminAcc->_checksumVerified) {
+            throw new AppControllerException('Checksum does not require recompute');
+        }
+
+        $db = $this->app->db()->primary();
+
+        try {
+            $this->adminAcc->set("checksum", $this->adminAcc->checksum()->raw());
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update administrative account');
+            });
+
+            $this->authAdmin->log(
+                sprintf('Admin [#%d] checksum recomputed', $this->adminAcc->id),
+                __CLASS__,
+                null,
+                ["admins", $this->adminAcc->id]
+            );
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update administrator row');
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("Administrative account checksum updated");
+        $this->flash()->success("Administrative account checksum updated");
+        $this->response()->set("refresh", true);
     }
 
     /**

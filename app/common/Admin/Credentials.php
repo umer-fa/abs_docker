@@ -61,9 +61,9 @@ class Credentials
     }
 
     /**
-     * @param string $seed
+     * @param string|null $seed
      */
-    public function setGoogleAuthSeed(string $seed): void
+    public function setGoogleAuthSeed(?string $seed): void
     {
         $this->googleAuthSeed = $seed;
     }
