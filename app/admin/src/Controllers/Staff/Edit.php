@@ -131,7 +131,7 @@ class Edit extends AbstractAdminController
 
         // Password
         $adminNewPassword = trim(strval($this->input()->get("adminNewPass")));
-        if ($adminNewPassword) {
+        if (!$adminNewPassword) {
             $adminNewPassword = null;
         } else {
             try {
