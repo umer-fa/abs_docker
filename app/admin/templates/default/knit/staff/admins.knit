@@ -62,7 +62,7 @@
                                            data-placement="bottom"
                                            title="Edit Administrator"><i class="mdi mdi-shield-edit"></i></a>
                                     {/if}
-                                    <a href="{$page.authRoot}staff/logs?admin={$admin.id}"
+                                    <a href="{$page.authRoot}staff/log?admin={$admin.id}"
                                        class="btn btn-sm btn-outline-dark" data-toggle="tooltip" data-placement="bottom"
                                        title="Activity Log"><i
                                                 class="mdi mdi-table"></i></a>
