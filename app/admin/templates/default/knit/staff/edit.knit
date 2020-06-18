@@ -113,10 +113,24 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="reset">
-                        <form method="POST" action="{$page.authRoot}staff/edit?privileges" class="xhr-form">
+                        <form method="POST" action="{$page.authRoot}staff/edit?reset" class="xhr-form">
                             <input type="hidden" name="adminId" value="{$adminAcc.id}">
                             <input type="hidden" name="xsrf" value="{$page.token}">
-                            refactor
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-3" for="action">Action</label>
+                                <div class="col-md-6">
+                                    <select name="action" id="action" class="form-control">
+                                        <option value="" selected="" disabled="">(select)</option>
+                                        <option value="disable2fa">Disabled 2FA</option>
+                                        <option value="checksum">Recompute Checksum</option>
+                                        <option value="privileges">Recreate Privileges</option>
+                                        <option value="credentials">Recreate Credentials</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="bg-light border-top mt-3 p-3 text-right">
+                                <button type="submit" class="btn btn-outline-danger">Execute</button>
+                            </div>
                         </form>
                     </div>
                 </div>
