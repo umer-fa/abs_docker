@@ -189,6 +189,8 @@ class Edit extends AbstractAdminController
         try {
             $db->beginTransaction();
 
+            $this->adminAcc->set("checksum", $this->adminAcc->checksum()->raw());
+
             $this->adminAcc->query()->update(function () {
                 throw new AppControllerException('Failed to update administrative account');
             });
