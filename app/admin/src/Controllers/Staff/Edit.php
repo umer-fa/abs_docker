@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Staff;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Admin\Administrator;
+use App\Common\Admin\Privileges;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
@@ -18,6 +19,8 @@ class Edit extends AbstractAdminController
 {
     /** @var Administrator */
     private Administrator $adminAcc;
+    /** @var Privileges */
+    private Privileges $adminPrivileges;
 
     /**
      * @return void
@@ -46,7 +49,66 @@ class Edit extends AbstractAdminController
         try {
             $this->adminAcc->validate();
         } catch (AppException $e) {
+            $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
         }
+
+        try {
+            $this->adminPrivileges = $this->adminAcc->privileges();
+        } catch (AppException $e) {
+            $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
+            $this->adminPrivileges = new Privileges($this->adminAcc);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getPrivilegesProps(): array
+    {
+        $props = [];
+        $props[] = [
+            "prop" => "viewAdmins",
+            "label" => "View all Administrative accounts",
+            "current" => $this->adminPrivileges->viewAdmins,
+        ];
+
+        $props[] = [
+            "prop" => "viewAdminsLogs",
+            "label" => "View logs of other Administrators",
+            "current" => $this->adminPrivileges->viewAdminsLogs,
+        ];
+
+        $props[] = [
+            "prop" => "viewConfig",
+            "label" => "View Configurations",
+            "current" => $this->adminPrivileges->viewConfig,
+        ];
+
+        $props[] = [
+            "prop" => "editConfig",
+            "label" => "Edit Configurations",
+            "current" => $this->adminPrivileges->editConfig,
+        ];
+
+        $props[] = [
+            "prop" => "viewUsers",
+            "label" => "Search/Browse Users",
+            "current" => $this->adminPrivileges->viewUsers,
+        ];
+
+        $props[] = [
+            "prop" => "manageUsers",
+            "label" => "Add/Edit Users",
+            "current" => $this->adminPrivileges->manageUsers,
+        ];
+
+        $props[] = [
+            "prop" => "viewAPIQueriesPayload",
+            "label" => "View API queries payloads",
+            "current" => $this->adminPrivileges->viewAPIQueriesPayload,
+        ];
+
+        return $props;
     }
 
     /**
@@ -60,12 +122,9 @@ class Edit extends AbstractAdminController
 
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
 
-        try {
-            $privileges = $this->adminAcc->privileges();
-        } catch (\Exception $e) {
-        }
 
         $template = $this->template("staff/edit.knit")
+            ->assign("privileges", $this->getPrivilegesProps())
             ->assign("isRootAdmin", isset($privileges) && $privileges->root())
             ->assign("adminAcc", $this->adminAcc);
         $this->body($template);

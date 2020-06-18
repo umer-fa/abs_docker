@@ -4,13 +4,13 @@
         <div class="border-bottom bg-light p-4">
             <h5 class="text-danger">
                 <i class="mdi mdi-shield-account mr-2"></i>{$adminAcc.email}<br>
-                <small class="text-muted">{if $isRootAdmin}<span class="text-danger">Root</span>{/if} Administrative
+                <small class="text-muted">{if $isRootAdmin}<span class="text-warning">Root</span>{/if} Administrative
                     Account</small>
             </h5>
         </div>
-        <div class="mt-3">
+        <div class="text-right mt-3">
             <div class="btn-group btn-group-sm">
-                <a href="{$page.authRoot}staff/log?admin={$adminAcc.id}" class="btn btn-outline-danger btn-sm">
+                <a href="{$page.authRoot}staff/log?admin={$adminAcc.id}" class="btn btn-outline-dark btn-sm">
                     <i class="mdi mdi-table mr-1"></i>View Logs
                 </a>
             </div>
@@ -31,9 +31,35 @@
             <div class="card-body">
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="privileges">
-                        privileges
+                        <form method="POST" action="{$page.authRoot}staff/edit?privileges" class="xhr-form">
+                            <input type="hidden" name="adminId" value="{$adminAcc.id}">
+                            <input type="hidden" name="xsrf" value="{$page.token}">
+                            {foreach $privileges as $privilege}
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3">{$privilege.label}</label>
+                                    <div class="col-md-2">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-outline-info{if $privilege.current || $isRootAdmin} active{/if}">
+                                                <input type="radio" name="{$privilege.prop}"
+                                                       value="on"{if $privilege.current || $isRootAdmin} checked=""{/if}>On
+                                            </label>
+                                            <label class="btn btn-outline-info{if !$privilege.current && !$isRootAdmin} active{/if}">
+                                                <input type="radio" name="{$privilege.prop}"
+                                                       value="off"{if !$privilege.current && !$isRootAdmin} checked=""{/if}>Off
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            {/foreach}
+                        </form>
                     </div>
-                    <div class="tab-pane fade" id="reset">refactor</div>
+                    <div class="tab-pane fade" id="reset">
+                        <form method="POST" action="{$page.authRoot}staff/edit?privileges" class="xhr-form">
+                            <input type="hidden" name="adminId" value="{$adminAcc.id}">
+                            <input type="hidden" name="xsrf" value="{$page.token}">
+                            refactor
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
