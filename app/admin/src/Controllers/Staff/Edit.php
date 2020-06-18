@@ -35,6 +35,23 @@ class Edit extends AbstractAdminController
             }
 
             $this->adminAcc = Administrators::get($adminId);
+
+            try {
+                $this->adminPrivileges = $this->adminAcc->privileges();
+            } catch (AppException $e) {
+                $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
+                $this->adminPrivileges = new Privileges($this->adminAcc);
+            }
+
+            if (!$this->authAdmin->privileges()->root()) {
+                throw new AppControllerException('Only root admins can edit/reset administrative accounts');
+            } else {
+                if ($this->adminAcc->privileges()->root()) {
+                    if ($this->adminAcc->id > $this->authAdmin->id) {
+                        throw new AppControllerException('You cannot edit this root administrative account');
+                    }
+                }
+            }
         } catch (\Exception $e) {
             if ($e instanceof AppException) {
                 $this->flash()->danger($e->getMessage());
@@ -51,13 +68,79 @@ class Edit extends AbstractAdminController
         } catch (AppException $e) {
             $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
         }
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    public function postPrivileges(): void
+    {
+        $this->verifyXSRF();
+        $this->totpSessionCheck(30);
+
+        // Make sure checksum and privileges object is valid
+        if (!$this->adminAcc->_checksumVerified) {
+            throw new AppControllerException('Administrative account checksum is invalid');
+        } elseif ($this->adminPrivileges->root()) {
+            throw new AppControllerException('Root administrative accounts do not need privileges');
+        }
+
+        $db = $this->app->db()->primary();
+        $changes = 0;
+
+        // Privileges
+        $privileges = $this->getPrivilegesProps();
+        foreach ($privileges as $privilege) {
+            $privilegeProp = $privilege["prop"];
+            $privilegeCurrent = $privilege["current"];
+            $newTrigger = Validator::getBool(trim(strval($this->input()->get($privilegeProp))));
+            if ($privilegeCurrent !== $newTrigger) {
+                $this->adminPrivileges->$privilegeProp = $newTrigger;
+                $changes++;
+            }
+
+            unset($privilegeProp, $privilegeCurrent, $newTrigger);
+        }
+
+        // Changes?
+        if (!$changes) {
+            throw new AppControllerException('There are no changes to be saved');
+        }
 
         try {
-            $this->adminPrivileges = $this->adminAcc->privileges();
+            $db->beginTransaction();
+
+            $adminCipher = $this->adminAcc->cipher();
+            $this->adminAcc->set("privileges", $adminCipher->encrypt(clone $this->adminPrivileges)->raw());
+            $this->adminAcc->query()->update(function () {
+                throw new AppControllerException('Failed to update privileges column');
+            });
+
+            // Create Log
+            $this->authAdmin->log(
+                sprintf('Administrator [#%d] "%s" privileges updated', $this->adminAcc->id, $this->adminAcc->email),
+                __CLASS__,
+                __LINE__,
+                ["admins", $this->adminAcc->id]
+            );
+
+            $db->commit();
         } catch (AppException $e) {
-            $this->app->errors()->trigger($e->getMessage(), E_USER_WARNING);
-            $this->adminPrivileges = new Privileges($this->adminAcc);
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to insert administrator row');
         }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("Administrative privileges updated");
+        $this->messages()->info("Redirecting...");
+        $this->response()->set("disabled", true);
     }
 
     /**
@@ -117,15 +200,14 @@ class Edit extends AbstractAdminController
      */
     public function get(): void
     {
-        $this->page()->title(sprintf('Administrative Account # %d', $this->authAdmin->id))->index(200, 10)
+        $this->page()->title(sprintf('Administrative Account # %d', $this->adminAcc->id))->index(200, 10)
             ->prop("icon", "mdi mdi-shield-edit");
 
         $this->breadcrumbs("Staff Management", null, "mdi mdi-shield-account");
 
-
         $template = $this->template("staff/edit.knit")
             ->assign("privileges", $this->getPrivilegesProps())
-            ->assign("isRootAdmin", isset($privileges) && $privileges->root())
+            ->assign("isRootAdmin", $this->adminPrivileges->root())
             ->assign("adminAcc", $this->adminAcc);
         $this->body($template);
     }
