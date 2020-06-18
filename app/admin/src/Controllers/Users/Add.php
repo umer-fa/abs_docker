@@ -207,6 +207,14 @@ class Add extends AbstractAdminController
                 throw new AppControllerException('Failed to finalise user row');
             });
 
+            // Create Log
+            $this->authAdmin->log(
+                sprintf('User [#%d] "%s" created', $user->id, $user->username),
+                __CLASS__,
+                __LINE__,
+                ["users", $user->id]
+            );
+
             $db->commit();
         } catch (AppException $e) {
             $db->rollBack();
