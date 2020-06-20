@@ -5,6 +5,7 @@ namespace App\Common\Users;
 
 use App\Common\Database\AbstractAppModel;
 use App\Common\Database\Primary\Users;
+use App\Common\Exception\AppConfigException;
 use App\Common\Exception\AppException;
 use App\Common\Validator;
 use Comely\Cache\Exception\CacheException;
@@ -94,14 +95,13 @@ class User extends AbstractAppModel
     /**
      * @return Cipher
      * @throws AppException
-     * @throws \App\Common\Exception\AppConfigException
      */
     public function cipher(): Cipher
     {
         if (!$this->_cipher) {
             try {
                 $this->_cipher = $this->app->ciphers()->users()->remix(sprintf("user_%d", $this->id));
-            } catch (CipherException $e) {
+            } catch (AppConfigException|CipherException $e) {
                 $this->app->errors()->triggerIfDebug($e);
                 throw new AppException('Failed to retrieve User cipher');
             }
@@ -113,7 +113,6 @@ class User extends AbstractAppModel
     /**
      * @return Binary
      * @throws AppException
-     * @throws \App\Common\Exception\AppConfigException
      */
     public function checksum(): Binary
     {
@@ -135,7 +134,6 @@ class User extends AbstractAppModel
 
     /**
      * @throws AppException
-     * @throws \App\Common\Exception\AppConfigException
      */
     public function validate(): void
     {

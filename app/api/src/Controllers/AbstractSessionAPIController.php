@@ -32,6 +32,8 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
      * @throws API_Exception
      * @throws AppException
      * @throws \App\Common\Exception\AppConfigException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Database\Exception\ORM_ModelException
      */
     final public function apiCallback(): void
     {

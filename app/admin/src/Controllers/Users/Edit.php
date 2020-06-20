@@ -22,7 +22,6 @@ class Edit extends AbstractAdminController
     private User $user;
 
     /**
-     * @throws \App\Common\Exception\AppConfigException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function adminCallback(): void
