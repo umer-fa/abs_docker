@@ -145,7 +145,7 @@
                     </h5>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-sm table-bordered table-hover table-striped no-wrap-table">
+                    <table class="table table-sm table-bordered table-hover table-striped no-wrap-table mb-0">
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center">ID</th>
@@ -186,7 +186,9 @@
                                         data-placement="bottom"><i
                                             class="mdi mdi-email-alert"></i></span>{/if}<a
                                             href="{$page.authRoot}users/edit?{$user.id}">{$user.email}</a></td>
-                                <td class="text-center">{$user.username}</td>
+                                <td class="text-center">
+                                    <a href="{$page.authRoot}users/edit?{$user.id}">{$user.username}</a>
+                                </td>
                                 <td class="text-left">{if $user.firstName}{$user.firstName}{if $user.lastName} {$user.lastName}{/if}
                                     {else}
                                         {if $user.lastName}{$user.lastName}{else}

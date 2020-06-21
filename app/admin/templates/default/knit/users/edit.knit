@@ -20,7 +20,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <dl class="row">
+                        <dl class="row mb-0">
                             <dt class="col-md-3">Referred By:</dt>
                             <dd class="col-md-9">{if $referrer|isset && $referrer}<a
                                     href="{$page.authRoot}users/edit?{$referrer.id}">{$referrer.username}</a>{else}
@@ -61,6 +61,35 @@
                             <dt class="col-md-3">Registered On:</dt>
                             <dd class="col-md-9">{$user.joinStamp|dated}</dd>
                         </dl>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="mdi mdi-shield-account mr-2"></i>Administrative History
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-striped table-hover">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col" class="text-center">Timestamp</th>
+                                    <th scope="col" class="text-center">Log</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {foreach $adminLogs as $adminLog}
+                                    <tr>
+                                        <td class="text-right">{$adminLog.timeStamp|dated}</td>
+                                        <td class="text-left">{$adminLog.log}</td>
+                                    </tr>
+                                {foreachelse}
+                                    <tr>
+                                        <td colspan="2" class="text-muted">There are no administrative logs for this user!</td>
+                                    </tr>
+                                {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

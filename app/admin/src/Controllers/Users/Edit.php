@@ -12,6 +12,7 @@ use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Users\User;
 use App\Common\Validator;
+use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
 
 /**
@@ -95,6 +96,7 @@ class Edit extends AbstractAdminController
             $adminLogs = Logs::Find()
                 ->query("WHERE `flag` IN ('users','transact') AND `flag_id`=? ORDER BY `id` DESC", [$this->user->id])
                 ->all();
+        } catch (ORM_ModelNotFoundException $e) {
         } catch (\Exception $e) {
             $this->app->errors()->trigger($e, E_USER_WARNING);
         }
