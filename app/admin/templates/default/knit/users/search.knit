@@ -181,7 +181,7 @@
                                                                                                data-toggle="tooltip"
                                                                                                title="Verified"
                                                                                                data-placement="bottom"><i
-                                            class="mdi mdi-email-check-outline-outline"></i></span>{else}<span
+                                            class="mdi mdi-email-check-outline"></i></span>{else}<span
                                         class="text-warning mx-2" data-toggle="tooltip" title="Not Verified"
                                         data-placement="bottom"><i
                                             class="mdi mdi-email-alert"></i></span>{/if}<a
