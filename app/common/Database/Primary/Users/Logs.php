@@ -31,8 +31,7 @@ class Logs extends AbstractAppTable
 
         $cols->int("id")->bytes(4)->unSigned()->autoIncrement();
         $cols->int("user")->bytes(4)->unSigned();
-        $cols->string("flag")->length(16)->nullable();
-        $cols->int("flag_id")->bytes(4)->unSigned()->default(0);
+        $cols->string("flags")->length(128)->nullable();
         $cols->string("controller")->length(255)->nullable();
         $cols->string("log")->length(64);
         $cols->string("data")->length(255)->nullable();
@@ -49,19 +48,38 @@ class Logs extends AbstractAppTable
      * @param array|null $data
      * @param string|null $controller
      * @param int|null $line
-     * @param string|null $flag
-     * @param int|null $flagId
+     * @param array|null $flags
      * @return Log
      * @throws AppException
      * @throws \Comely\Database\Exception\DatabaseException
      */
-    public static function insert(int $user, string $message, ?array $data = null, ?string $controller = null, ?int $line = null, ?string $flag = null, ?int $flagId = null): Log
+    public static function insert(int $user, string $message, ?array $data = null, ?string $controller = null, ?int $line = null, ?array $flags = null): Log
     {
         // Log
         if (!preg_match('/^[\w]+[\w\-.]+$/', $message)) {
             throw new AppException('Invalid log format');
         } elseif (strlen($message) >= 64) {
             throw new AppException('Log cannot exceed 64 bytes');
+        }
+
+        // Flags
+        $logFlags = null;
+        if ($flags) {
+            $logFlags = [];
+            $flagIndex = -1;
+            foreach ($flags as $flag) {
+                $flagIndex++;
+                if (!preg_match('/^\w{1,16}(:[0-9]{1,10})?$/', $flag)) {
+                    throw new AppException(sprintf('Invalid user log flag at index %d', $flagIndex));
+                }
+
+                $logFlags[] = $flag;
+            }
+
+            $logFlags = implode(",", $logFlags);
+            if (strlen($logFlags) > 128) {
+                throw new AppException('User log flags exceed limit of 128 bytes');
+            }
         }
 
         // Data
@@ -91,8 +109,7 @@ class Logs extends AbstractAppTable
         $log = new Log();
         $log->id = 0;
         $log->user = $user;
-        $log->flag = $flag ? substr($flag, 0, 16) : null;
-        $log->flagId = $flagId ?? 0;
+        $log->flags = $logFlags;
         $log->controller = $controller;
         $log->log = $message;
         $log->data = $encodedData ?? null;

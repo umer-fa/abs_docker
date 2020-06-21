@@ -21,9 +21,7 @@ class Log extends AbstractAppModel
     /** @var int */
     public int $user;
     /** @var null|string */
-    public ?string $flag = null;
-    /** @var int */
-    public int $flagId = 0;
+    public ?string $flags = null;
     /** @var null|string */
     public ?string $controller = null;
     /** @var string */
