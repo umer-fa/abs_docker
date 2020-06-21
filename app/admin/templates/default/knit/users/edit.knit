@@ -36,6 +36,10 @@
                                     <span class="text-danger">Error</span>
                                 {/if}
                             </dd>
+                            <dt class="col-md-3">Status:</dt>
+                            <dd class="col-md-9"><span
+                                        class="text-{if $user.status === 'active'}muted{else}warning{/if}">{$user.status|ucfirst}</span>
+                            </dd>
                             <dt class="col-md-3">E-mail address:</dt>
                             <dd class="col-md-9">
                                 {$user.email}<a href="{$page.authRoot}mails/queue?email={$user.email}"
@@ -113,7 +117,7 @@
                         <ul class="nav nav-tabs card-header-tabs mb-0">
                             <li class="nav-item">
                                 <a href="#account" data-toggle="tab" class="nav-link active">
-                                    <i class="mdi mdi-account mr-2"></i>Profile</a>
+                                    <i class="mdi mdi-account mr-2"></i>Account</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#password" data-toggle="tab" class="nav-link">
@@ -128,16 +132,20 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="account">
-                                <form method="post" action="{$page.authRoot}users/edit" class="xhr-form">
+                                <form method="post" action="{$page.authRoot}users/edit?edit" class="xhr-form">
                                     <input type="hidden" name="xsrf" value="{$page.token}">
                                     <input type="hidden" name="userId" value="{$user.id}">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3">Referred By</label>
-                                        <div class="col-md-9">
+                                        <label class="col-form-label col-md-3" for="referrer">Referred By</label>
+                                        <div class="col-md-6">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <span class=""
+                                                    <span class="input-group-text"><i
+                                                                class="mdi mdi-account-plus-outline"></i></span>
                                                 </div>
+                                                <input type="text" name="referrer" id="referrer" maxlength="20"
+                                                       data-onload-value="{if $referrer|isset && $referrer}{$referrer.username}{/if}"
+                                                       placeholder="Username" class="form-control">
                                             </div>
                                         </div>
                                     </div>
