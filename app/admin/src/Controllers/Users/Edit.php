@@ -110,6 +110,10 @@ class Edit extends AbstractAdminController
                         throw new AppControllerException('Referrer checksum validation fail');
                     }
                 }
+
+                if ($referrer->id === $this->user->id) {
+                    throw new AppControllerException('User cannot be its own referrer');
+                }
             } catch (AppException $e) {
                 $e->setParam("referrer");
                 throw $e;
