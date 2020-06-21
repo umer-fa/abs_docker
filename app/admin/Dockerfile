@@ -40,7 +40,7 @@ RUN chown -R comely-io:comely-io /home/comely-io/
 
 USER comely-io
 WORKDIR /home/comely-io/admin
-RUN composer install
+RUN composer update
 
 USER root
 WORKDIR /root/admin
