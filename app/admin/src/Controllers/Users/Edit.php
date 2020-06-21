@@ -205,7 +205,7 @@ class Edit extends AbstractAdminController
             $this->user->set("checksum", $this->user->checksum()->raw());
             $this->user->query()->update();
 
-            $usersFlag = sprintf('users_%d', $this->user->id);
+            $usersFlag = sprintf('users:%d', $this->user->id);
 
             if (isset($referrerChangeLog)) {
                 $this->authAdmin->log($referrerChangeLog, __CLASS__, null, [$usersFlag]);
@@ -312,7 +312,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" password changed', $this->user->username),
                 __CLASS__,
                 null,
-                [sprintf('users_%d', $this->user->id)]
+                [sprintf('users:%d', $this->user->id)]
             );
 
             $db->commit();
@@ -394,7 +394,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" disabled 2FA', $this->user->username),
                 __CLASS__,
                 null,
-                [sprintf('users_%d', $this->user->id)]
+                [sprintf('users:%d', $this->user->id)]
             );
 
             $db->commit();
@@ -445,7 +445,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" params obj RESET', $this->user->username),
                 __CLASS__,
                 null,
-                [sprintf('users_%d', $this->user->id)]
+                [sprintf('users:%d', $this->user->id)]
             );
 
             $db->commit();
@@ -496,7 +496,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" credentials RESET', $this->user->username),
                 __CLASS__,
                 null,
-                [sprintf('users_%d', $this->user->id)]
+                [sprintf('users:%d', $this->user->id)]
             );
 
             $db->commit();
@@ -542,7 +542,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" checksum RESET', $this->user->username),
                 __CLASS__,
                 null,
-                [sprintf('users_%d', $this->user->id)]
+                [sprintf('users:%d', $this->user->id)]
             );
 
             $db->commit();
@@ -601,7 +601,7 @@ class Edit extends AbstractAdminController
         // Administrative History
         try {
             $adminLogs = Logs::Find()
-                ->query("WHERE `flag` LIKE ? ORDER BY `id` DESC", [sprintf('%%users_%d%%', $this->user->id)])
+                ->query("WHERE `flag` LIKE ? ORDER BY `id` DESC", [sprintf('%%users:%d%%', $this->user->id)])
                 ->all();
         } catch (ORM_ModelNotFoundException $e) {
         } catch (\Exception $e) {

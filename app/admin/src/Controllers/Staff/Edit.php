@@ -126,7 +126,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] privileges reset', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                [sprintf("admins_%d", $this->authAdmin->id)]
+                [sprintf("admins:%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -171,7 +171,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] credentials reset', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                [sprintf("admins_%d", $this->authAdmin->id)]
+                [sprintf("admins:%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -220,7 +220,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] 2FA disabled', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                [sprintf("admins_%d", $this->authAdmin->id)]
+                [sprintf("admins:%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -260,7 +260,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] checksum recomputed', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                [sprintf("admins_%d", $this->authAdmin->id)]
+                [sprintf("admins:%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -401,7 +401,7 @@ class Edit extends AbstractAdminController
                 throw new AppControllerException('Failed to update administrative account');
             });
 
-            $adminsFlag = sprintf("admins_%d", $this->authAdmin->id);
+            $adminsFlag = sprintf("admins:%d", $this->authAdmin->id);
 
             // Create Logs
             if (isset($newEmailLog)) {
@@ -496,7 +496,7 @@ class Edit extends AbstractAdminController
                 sprintf('Administrator [#%d] "%s" privileges updated', $this->adminAcc->id, $this->adminAcc->email),
                 __CLASS__,
                 __LINE__,
-                [sprintf("admins_%d", $this->authAdmin->id)]
+                [sprintf("admins:%d", $this->authAdmin->id)]
             );
 
             $db->commit();
