@@ -182,7 +182,7 @@ class Edit extends AbstractAdminController
         }
 
         // Save Changes?
-        if ($this->user->changes()) {
+        if (!$this->user->changes()) {
             throw new AppControllerException('There are no changes to be saved!');
         }
 
