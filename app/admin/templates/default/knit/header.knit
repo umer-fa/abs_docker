@@ -66,7 +66,7 @@
                             <a class="nav-link" href="{$page.authRoot}users/add">
                                 <i class="mdi mdi-account-plus-outline mr-2"></i>Create User
                             </a>
-                            <a class="nav-link" href="{$page.authRoot}users/logs">
+                            <a class="nav-link" href="{$page.authRoot}users/log">
                                 <i class="mdi mdi-table mr-2"></i>Activity Log
                             </a>
                         </nav>
