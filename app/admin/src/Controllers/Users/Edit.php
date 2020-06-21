@@ -122,7 +122,7 @@ class Edit extends AbstractAdminController
                 'User "%s" referrer changed from %s to "%s"',
                 $this->user->username,
                 $this->referrer ? sprintf('"%s"', $this->referrer->username) : "NULL",
-                $referrer->username
+                isset($referrer) && $referrer instanceof User ? sprintf('"%s"', $referrer->username) : "NULL"
             );
         }
 
