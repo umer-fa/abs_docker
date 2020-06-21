@@ -25,7 +25,6 @@ services:
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
-      - ../app/admin/vendor:/home/comely-io/admin/vendor
     env_file:
       - .env
     environment:
