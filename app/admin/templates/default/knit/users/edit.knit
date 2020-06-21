@@ -149,6 +149,55 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3" for="status">Status</label>
+                                        <div class="col-md-6">
+                                            <select name="status" id="status" class="form-control">
+                                                <option value="active"{if $user.status === 'active'} selected=""{/if}>
+                                                    Active
+                                                </option>
+                                                <option value="frozen"{if $user.status === 'frozen'} selected=""{/if}>
+                                                    Frozen (Can login)
+                                                </option>
+                                                <option value="disabled"{if $user.status === 'disabled'} selected=""{/if}>
+                                                    Disabled (Cannot login)
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3" for="email">E-mail address</label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i
+                                                                class="mdi mdi-email"></i></span>
+                                                </div>
+                                                <input type="text" name="email" id="email" maxlength="64"
+                                                       data-onload-value="{$user.email}"
+                                                       placeholder="user@domain.com" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3" for="isEmailVerified">E-mail
+                                            Verification</label>
+                                        <div class="col-md-6">
+                                            <select name="isEmailVerified" id="isEmailVerified" class="form-control">
+                                                <option value="true"{if $user.isEmailVerified === 1} selected=""{/if}>
+                                                    Verified
+                                                </option>
+                                                <option value="false"{if $user.isEmailVerified !== 1} selected=""{/if}>
+                                                    Not Verified
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row bg-light border-top py-3 mb-0">
+                                        <div class="col-md-9 offset-md-3">
+                                            <button type="button" class="btn btn-outline-danger mr-2" id="transactSubmitBtn">Save Changes</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="password">password</div>
