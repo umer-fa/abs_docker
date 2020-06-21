@@ -147,7 +147,7 @@ class Edit extends AbstractAdminController
             }
 
             if ($status !== $this->user->status) {
-                $statusChangeLog = sprintf('User "%s" status changed from %s to %s', $this->user->username, $this->user->status, $status);
+                $statusChangeLog = sprintf('User "%s" status changed from %s to %s', $this->user->username, strtoupper($this->user->status), strtoupper($status));
                 $this->user->status = $status;
             }
         } catch (AppException $e) {
@@ -251,6 +251,8 @@ class Edit extends AbstractAdminController
 
         $this->response()->set("status", true);
         $this->messages()->success("User account has been updated!");
+        $this->response()->set("refresh", true);
+        $this->response()->set("disabled", true);
     }
 
     /**
