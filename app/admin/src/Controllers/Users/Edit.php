@@ -123,8 +123,10 @@ class Edit extends AbstractAdminController
             $referrerChange = true;
         } elseif ($this->user->referrer && !$referrer) {
             $referrerChange = true;
-        } elseif ($this->user->referrer !== $referrer->id) {
-            $referrerChange = true;
+        } elseif ($this->user->referrer && $referrer) {
+            if($this->user->referrer !== $referrer->id) {
+                $referrerChange = true;
+            }
         }
 
         if ($referrerChange) {

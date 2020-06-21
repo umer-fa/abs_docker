@@ -177,7 +177,7 @@
                                                     class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}</td>
                                 <td class="text-center text-{if $user.status === 'active'}muted{else}danger{/if}">{$user.status|ucfirst}</td>
-                                <td class="text-left">{if $user.isEmailVerified === 1}<span class="text-success mr-2"
+                                <td class="text-left">{if $user.isEmailVerified === 1}<span class="text-success mx-2"
                                                                                                data-toggle="tooltip"
                                                                                                title="Verified"
                                                                                                data-placement="bottom"><i
