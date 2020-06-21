@@ -1,7 +1,7 @@
 {knit "header"}
 <div class="row">
     <div class="col-lg-3">
-        <div class="list-group page-sub-nav">
+        <div class="list-group page-sub-nav mb-3">
             <a href="#overview" data-toggle="tab" class="list-group-item list-group-item-action active">
                 <i class="ion ion-ios-people-outline mr-2"></i>Overview
             </a>
@@ -12,7 +12,58 @@
     </div>
     <div class="col-lg-9">
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="overview">{$user|var_dump}</div>
+            <div class="tab-pane fade show active" id="overview">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="mdi mdi-account-check mr-2"></i>{$user.username}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-md-3">Referred By:</dt>
+                            <dd class="col-md-9">{if $referrer|isset && $referrer}<a
+                                    href="{$page.authRoot}users/edit?{$referrer.id}">{$referrer.username}</a>{else}
+                                    <span class="text-muted">n/a</span>
+                                {/if}</dd>
+                            <dt class="col-md-3">User ID:</dt>
+                            <dd class="col-md-9">{$user.id}</dd>
+                            <dt class="col-md-3">Checksum:</dt>
+                            <dd class="col-md-9">
+                                {if $user._checksumVerified}
+                                    <span class="text-success">OK</span>
+                                {else}
+                                    <span class="text-danger">Error</span>
+                                {/if}
+                            </dd>
+                            <dt class="col-md-3">E-mail address:</dt>
+                            <dd class="col-md-9">
+                                {$user.email}<a href="{$page.authRoot}mails/queue?email={$user.email}"
+                                                class="btn btn-sm btn-outline-dark ml-2 float-right"
+                                                data-toggle="tooltip" title="Check E-mails Queue"><i
+                                            class="mdi mdi-email-search-outline"></i></a>
+                            </dd>
+                            <dd class="col-md-9 offset-md-3">
+                                {if $user.isEmailVerified}
+                                    <span class="text-success">Verified</span>
+                                {else}
+                                    <span class="text-danger">Unverified</span>
+                                {/if}
+                            </dd>
+                            <dt class="col-md-3">Name:</dt>
+                            <dd class="col-md-9">{$user.firstName} {$user.lastName}</dd>
+                            <dt class="col-md-3">Phone/SMS:</dt>
+                            <dd class="col-md-9">{if $user.phoneSms}{$user.phoneSms}{else}
+                                    <span class="text-muted">n/a</span>
+                                {/if}</dd>
+                            <dt class="col-md-3">Country:</dt>
+                            <dd class="col-md-9">{$country.name|null}</dd>
+                            <dt class="col-md-3">Registered On:</dt>
+                            <dd class="col-md-9">{$user.joinStamp|dated}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
             <div class="tab-pane fade" id="edit">
                 <div class="card">
                     <div class="card-header pb-0">

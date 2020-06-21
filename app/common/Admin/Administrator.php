@@ -86,8 +86,8 @@ class Administrator extends AbstractAppModel
     {
         $flagId = null;
         if ($flag) {
-            $flag = isset($flag[0]) ? strval($flag[0]) : null;
             $flagId = isset($flag[1]) ? intval($flag[1]) : null;
+            $flag = isset($flag[0]) ? strval($flag[0]) : null;
         }
 
         return Administrators\Logs::insert($this->id, $msg, $cont, $line, $flag, $flagId);

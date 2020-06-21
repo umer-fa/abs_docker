@@ -238,8 +238,8 @@ class User extends AbstractAppModel
     {
         $flagId = null;
         if ($flag) {
-            $flag = isset($flag[0]) ? strval($flag[0]) : null;
             $flagId = isset($flag[1]) ? intval($flag[1]) : null;
+            $flag = isset($flag[0]) ? strval($flag[0]) : null;
         }
 
         return Users\Logs::insert($this->id, $msg, $data, $cnt, $line, $flag, $flagId);
