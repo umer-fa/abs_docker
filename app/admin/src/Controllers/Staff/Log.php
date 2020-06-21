@@ -214,7 +214,8 @@ class Log extends AbstractAdminController
             }
 
             if ($search["match"]) {
-                $whereQuery .= ' AND (`log` LIKE ? OR `ip_address` LIKE ?)';
+                $whereQuery .= ' AND (`flags` LIKE ? OR `log` LIKE ? OR `ip_address` LIKE ?)';
+                $whereData[] = sprintf('%%%s%%', $search["match"]);
                 $whereData[] = sprintf('%%%s%%', $search["match"]);
                 $whereData[] = sprintf('%%%s%%', $search["match"]);
             }

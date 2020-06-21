@@ -124,7 +124,7 @@ class Edit extends AbstractAdminController
         } elseif ($this->user->referrer && !$referrer) {
             $referrerChange = true;
         } elseif ($this->user->referrer && $referrer) {
-            if($this->user->referrer !== $referrer->id) {
+            if ($this->user->referrer !== $referrer->id) {
                 $referrerChange = true;
             }
         }
@@ -205,20 +205,22 @@ class Edit extends AbstractAdminController
             $this->user->set("checksum", $this->user->checksum()->raw());
             $this->user->query()->update();
 
+            $usersFlag = sprintf('users_%d', $this->user->id);
+
             if (isset($referrerChangeLog)) {
-                $this->authAdmin->log($referrerChangeLog, __CLASS__, null, ["users", $this->user->id]);
+                $this->authAdmin->log($referrerChangeLog, __CLASS__, null, [$usersFlag]);
             }
 
             if (isset($statusChangeLog)) {
-                $this->authAdmin->log($statusChangeLog, __CLASS__, null, ["users", $this->user->id]);
+                $this->authAdmin->log($statusChangeLog, __CLASS__, null, [$usersFlag]);
             }
 
             if (isset($emailChangeLog)) {
-                $this->authAdmin->log($emailChangeLog, __CLASS__, null, ["users", $this->user->id]);
+                $this->authAdmin->log($emailChangeLog, __CLASS__, null, [$usersFlag]);
             }
 
             if (isset($emailVerifyLog)) {
-                $this->authAdmin->log($emailVerifyLog, __CLASS__, null, ["users", $this->user->id]);
+                $this->authAdmin->log($emailVerifyLog, __CLASS__, null, [$usersFlag]);
             }
 
             $db->commit();
@@ -310,7 +312,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" password changed', $this->user->username),
                 __CLASS__,
                 null,
-                ["users", $this->user->id]
+                [sprintf('users_%d', $this->user->id)]
             );
 
             $db->commit();
@@ -392,7 +394,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" disabled 2FA', $this->user->username),
                 __CLASS__,
                 null,
-                ["users", $this->user->id]
+                [sprintf('users_%d', $this->user->id)]
             );
 
             $db->commit();
@@ -443,7 +445,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" params obj RESET', $this->user->username),
                 __CLASS__,
                 null,
-                ["users", $this->user->id]
+                [sprintf('users_%d', $this->user->id)]
             );
 
             $db->commit();
@@ -494,7 +496,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" credentials RESET', $this->user->username),
                 __CLASS__,
                 null,
-                ["users", $this->user->id]
+                [sprintf('users_%d', $this->user->id)]
             );
 
             $db->commit();
@@ -540,7 +542,7 @@ class Edit extends AbstractAdminController
                 sprintf('User "%s" checksum RESET', $this->user->username),
                 __CLASS__,
                 null,
-                ["users", $this->user->id]
+                [sprintf('users_%d', $this->user->id)]
             );
 
             $db->commit();
@@ -599,7 +601,7 @@ class Edit extends AbstractAdminController
         // Administrative History
         try {
             $adminLogs = Logs::Find()
-                ->query("WHERE `flag` IN ('users','transact') AND `flag_id`=? ORDER BY `id` DESC", [$this->user->id])
+                ->query("WHERE `flag` LIKE ? ORDER BY `id` DESC", [sprintf('%%users_%d%%', $this->user->id)])
                 ->all();
         } catch (ORM_ModelNotFoundException $e) {
         } catch (\Exception $e) {

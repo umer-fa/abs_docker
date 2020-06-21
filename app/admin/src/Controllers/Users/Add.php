@@ -212,7 +212,7 @@ class Add extends AbstractAdminController
                 sprintf('User [#%d] "%s" created', $user->id, $user->username),
                 __CLASS__,
                 __LINE__,
-                ["users", $user->id]
+                [sprintf('users_%d', $user->id)]
             );
 
             $db->commit();

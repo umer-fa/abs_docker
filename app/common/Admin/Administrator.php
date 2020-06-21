@@ -77,20 +77,14 @@ class Administrator extends AbstractAppModel
      * @param string $msg
      * @param string|null $cont
      * @param int|null $line
-     * @param array|null $flag
+     * @param array|null $flags
      * @return Log
      * @throws AppException
      * @throws \Comely\Database\Exception\DatabaseException
      */
-    public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flag = null): Log
+    public function log(string $msg, ?string $cont = null, ?int $line = null, ?array $flags = null): Log
     {
-        $flagId = null;
-        if ($flag) {
-            $flagId = isset($flag[1]) ? intval($flag[1]) : null;
-            $flag = isset($flag[0]) ? strval($flag[0]) : null;
-        }
-
-        return Administrators\Logs::insert($this->id, $msg, $cont, $line, $flag, $flagId);
+        return Administrators\Logs::insert($this->id, $msg, $cont, $line, $flags);
     }
 
     /**

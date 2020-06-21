@@ -20,9 +20,7 @@ class Log extends AbstractAppModel
     /** @var int */
     public int $admin;
     /** @var string|null */
-    public ?string $flag = null;
-    /** @var int|null */
-    public ?int $flagId = null;
+    public ?string $flags = null;
     /** @var string|null */
     public ?string $controller = null;
     /** @var string */

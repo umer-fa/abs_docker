@@ -126,7 +126,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] privileges reset', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                ["admins", $this->adminAcc->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -171,7 +171,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] credentials reset', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                ["admins", $this->adminAcc->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -201,7 +201,7 @@ class Edit extends AbstractAdminController
             throw new AppControllerException('Cannot disable 2FA, credentials object is corrupted');
         }
 
-        if(!$adminAccCredentials->getGoogleAuthSeed()) {
+        if (!$adminAccCredentials->getGoogleAuthSeed()) {
             throw new AppControllerException('Google 2FA is already disabled on this account');
         }
 
@@ -220,7 +220,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] 2FA disabled', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                ["admins", $this->adminAcc->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -260,7 +260,7 @@ class Edit extends AbstractAdminController
                 sprintf('Admin [#%d] checksum recomputed', $this->adminAcc->id),
                 __CLASS__,
                 null,
-                ["admins", $this->adminAcc->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
         } catch (AppException $e) {
             $db->rollBack();
@@ -401,17 +401,19 @@ class Edit extends AbstractAdminController
                 throw new AppControllerException('Failed to update administrative account');
             });
 
+            $adminsFlag = sprintf("admins_%d", $this->authAdmin->id);
+
             // Create Logs
             if (isset($newEmailLog)) {
-                $this->authAdmin->log($newEmailLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+                $this->authAdmin->log($newEmailLog, __CLASS__, null, [$adminsFlag]);
             }
 
             if (isset($newStatusLog)) {
-                $this->authAdmin->log($newStatusLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+                $this->authAdmin->log($newStatusLog, __CLASS__, null, [$adminsFlag]);
             }
 
             if (isset($newPasswordLog)) {
-                $this->authAdmin->log($newPasswordLog, __CLASS__, null, ["admins", $this->adminAcc->id]);
+                $this->authAdmin->log($newPasswordLog, __CLASS__, null, [$adminsFlag]);
             }
 
             $db->commit();
@@ -494,7 +496,7 @@ class Edit extends AbstractAdminController
                 sprintf('Administrator [#%d] "%s" privileges updated', $this->adminAcc->id, $this->adminAcc->email),
                 __CLASS__,
                 __LINE__,
-                ["admins", $this->adminAcc->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
 
             $db->commit();

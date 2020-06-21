@@ -31,8 +31,7 @@ class Logs extends AbstractAppTable
 
         $cols->int("id")->bytes(4)->unSigned()->autoIncrement();
         $cols->int("admin")->bytes(4)->unSigned();
-        $cols->string("flag")->length(16)->nullable();
-        $cols->int("flag_id")->bytes(4)->unSigned()->nullable();
+        $cols->string("flags")->length(128)->nullable();
         $cols->string("controller")->length(255)->nullable();
         $cols->string("log")->length(255);
         $cols->string("ip_address")->length(45);
@@ -47,18 +46,37 @@ class Logs extends AbstractAppTable
      * @param string $message
      * @param string|null $controller
      * @param int|null $line
-     * @param string|null $flag
-     * @param int|null $flagId
+     * @param array|null $flags
      * @return Log
      * @throws AppException
-     * @throws DatabaseException
+     * @throws \Comely\Database\Exception\DatabaseException
+     *
      */
-    public static function insert(int $adminId, string $message, ?string $controller = null, ?int $line = null, ?string $flag = null, ?int $flagId = null): Log
+    public static function insert(int $adminId, string $message, ?string $controller = null, ?int $line = null, ?array $flags = null): Log
     {
         if (!preg_match('/^\w+[\w\s@\-:=.#\",\[\];]+$/', $message)) {
             throw new AppException('Admin log contains an illegal character');
         } elseif (strlen($message) > 255) {
             throw new AppException('Admin log cannot exceed 255 bytes');
+        }
+
+        $logFlags = null;
+        if ($flags) {
+            $logFlags = [];
+            $flagIndex = -1;
+            foreach ($flags as $flag) {
+                $flagIndex++;
+                if (!preg_match('/^\w{1,16}(:[0-9]{1,10})?$/', $flag)) {
+                    throw new AppException(sprintf('Invalid admin log flag at index %d', $flagIndex));
+                }
+
+                $logFlags[] = $flag;
+            }
+
+            $logFlags = implode(",", $logFlags);
+            if (strlen($logFlags) > 128) {
+                throw new AppException('Admin log flags exceed limit of 128 bytes');
+            }
         }
 
         if ($controller && $line) {
@@ -72,8 +90,7 @@ class Logs extends AbstractAppTable
         $log = new Log();
         $log->id = 0;
         $log->admin = $adminId;
-        $log->flag = $flag ? substr($flag, 0, 16) : null;
-        $log->flagId = $flagId;
+        $log->flags = $logFlags;
         $log->controller = $controller;
         $log->log = $message;
         $log->ipAddress = $app->http()->remote()->ipAddress ?? "";

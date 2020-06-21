@@ -130,7 +130,7 @@ class CreateAdmin extends AbstractAdminController
                 sprintf('Administrator [#%d] "%s" created', $admin->id, $admin->email),
                 __CLASS__,
                 __LINE__,
-                ["admins", $admin->id]
+                [sprintf("admins_%d", $this->authAdmin->id)]
             );
 
             $db->commit();
