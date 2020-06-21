@@ -601,7 +601,7 @@ class Edit extends AbstractAdminController
         // Administrative History
         try {
             $adminLogs = Logs::Find()
-                ->query("WHERE `flag` LIKE ? ORDER BY `id` DESC", [sprintf('%%users:%d%%', $this->user->id)])
+                ->query("WHERE `flags` LIKE ? ORDER BY `id` DESC", [sprintf('%%users:%d%%', $this->user->id)])
                 ->all();
         } catch (ORM_ModelNotFoundException $e) {
         } catch (\Exception $e) {
