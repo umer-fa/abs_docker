@@ -132,11 +132,11 @@
                                 <tr>
                                     <td class="text-center">{if $log.adminEmail|isset}{$log.adminEmail}{else}{$log.admin}{/if}</td>
                                     <td class="text-center">
-                                        {if $log.flag}
-                                            <i class="ion ion-ios-flag" data-toggle="tooltip"
-                                               title="{$log.flag} {if $log.flag_id > 0}[#{$log.flag_id}]{/if}"></i>
+                                        {if $log.flags}
+                                            <i class="mdi mdi-flag-outline text-info" data-toggle="tooltip"
+                                               title="{$log.flags}"></i>
                                         {else}
-                                            <i class="ion ion-ios-flag-outline text-muted"></i>
+                                            <i class="mdi mdi-flag-outline text-muted"></i>
                                         {/if}
                                     </td>
                                     <td class="text-left">{$log.log}</td>
