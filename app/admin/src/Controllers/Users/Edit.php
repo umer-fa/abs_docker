@@ -98,12 +98,10 @@ class Edit extends AbstractAdminController
 
         // Referrer
         $referrer = trim(strval($this->input()->get("referrer")));
-        $referrerId = 0;
         if ($referrer) {
             try {
                 $referrer = Users::Username($referrer);
-                $referrerId = $referrer->id;
-                if ($this->user->referrer !== $referrerId) {
+                if ($this->user->referrer !== $referrer->id) {
                     try {
                         $referrer->validate();
                     } catch (AppException $e) {
@@ -120,13 +118,22 @@ class Edit extends AbstractAdminController
             }
         }
 
-        if (!$this->referrer || $this->referrer->id !== $referrerId) {
-            $this->user->referrer = $referrerId;
+        $referrerChange = false;
+        if (!$this->user->referrer && $referrer) {
+            $referrerChange = true;
+        } elseif ($this->user->referrer && !$referrer) {
+            $referrerChange = true;
+        } elseif ($this->user->referrer !== $referrer->id) {
+            $referrerChange = true;
+        }
+
+        if ($referrerChange) {
+            $this->user->referrer = $referrer ? $referrer->id : 0;
             $referrerChangeLog = sprintf(
-                'User "%s" referrer changed from %s to "%s"',
+                'User "%s" referrer changed from %s to %s',
                 $this->user->username,
                 $this->referrer ? sprintf('"%s"', $this->referrer->username) : "NULL",
-                isset($referrer) && $referrer instanceof User ? sprintf('"%s"', $referrer->username) : "NULL"
+                $referrer ? sprintf('"%s"', $referrer->username) : "NULL"
             );
         }
 
