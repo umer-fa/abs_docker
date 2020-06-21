@@ -10,6 +10,7 @@ use App\Common\Admin\Privileges;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
+use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Validator;
 use Comely\Utils\Security\Passwords;
 
@@ -55,12 +56,7 @@ class Edit extends AbstractAdminController
                 }
             }
         } catch (\Exception $e) {
-            if ($e instanceof AppException) {
-                $this->flash()->danger($e->getMessage());
-            } else {
-                $this->app->errors()->trigger($e, E_USER_WARNING);
-            }
-
+            $this->flash()->danger($e instanceof AppException ? $e->getMessage() : Errors::Exception2String($e));
             $this->redirect($this->authRoot . "staff/admins");
             exit;
         }

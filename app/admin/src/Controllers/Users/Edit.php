@@ -9,9 +9,11 @@ use App\Common\Database\Primary\Countries;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
+use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Users\User;
 use App\Common\Validator;
+use Comely\Database\Exception\DatabaseException;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
 
@@ -44,12 +46,7 @@ class Edit extends AbstractAdminController
 
             $this->user = Users::get($userId);
         } catch (\Exception $e) {
-            if ($e instanceof AppException) {
-                $this->flash()->danger($e->getMessage());
-            } else {
-                $this->app->errors()->trigger($e, E_USER_WARNING);
-            }
-
+            $this->flash()->danger($e instanceof AppException ? $e->getMessage() : Errors::Exception2String($e));
             $this->redirect($this->authRoot . "users/search");
             exit;
         }
@@ -72,8 +69,14 @@ class Edit extends AbstractAdminController
         }
     }
 
+    public function postEdit(): void
+    {
+
+    }
+
     /**
      * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
      * @throws \Comely\Knit\Exception\KnitException
      * @throws \Comely\Knit\Exception\TemplateException
      */
@@ -101,6 +104,24 @@ class Edit extends AbstractAdminController
             $this->app->errors()->trigger($e, E_USER_WARNING);
         }
 
+        // Last Seen Log
+        $db = $this->app->db()->primary();
+        $lastSeenOn = null;
+        try {
+            $lastSeenLog = $db->query()->table(Users\Logs::NAME)
+                ->cols("time_stamp")
+                ->where('`user`=?', [$this->user->id])
+                ->desc("time_stamp")
+                ->limit(1)
+                ->fetch()
+                ->first();
+            if ($lastSeenLog) {
+                $lastSeenOn = $lastSeenLog["time_stamp"];
+            }
+        } catch (DatabaseException $e) {
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+        }
+
         // Knit Modifiers
         KnitModifiers::Dated($this->knit());
         KnitModifiers::Null($this->knit());
@@ -110,6 +131,7 @@ class Edit extends AbstractAdminController
             ->assign("referrer", $this->referrer)
             ->assign("adminLogs", isset($adminLogs) ? $adminLogs : [])
             ->assign("country", isset($country) ? $country : [])
+            ->assign("lastSeenOn", $lastSeenOn)
             ->assign("countries", Countries::List());
         $this->body($template);
     }
