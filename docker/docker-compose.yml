@@ -9,7 +9,7 @@ services:
       - ../storage:/home/comely-io/engine/storage
       - ../tmp:/home/comely-io/engine/tmp
       - ../log/engine:/home/comely-io/engine/log
-      - ~/.composer/cache:/home/comely-io/.composer/cache
+      - ../app/engine/vendor:/home/comely-io/engine/vendor
     env_file:
       - .env
     networks:
@@ -26,7 +26,7 @@ services:
       - ../log/admin:/home/comely-io/admin/log
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
-      - ~/.composer/cache:/home/comely-io/.composer/cache
+      - ../app/admin/vendor:/home/comely-io/admin/vendor
     env_file:
       - .env
     environment:
@@ -47,7 +47,7 @@ services:
       - ../log/api:/home/comely-io/api/log
       - ../storage:/home/comely-io/api/storage
       - ../tmp:/home/comely-io/api/tmp
-      - ~/.composer/cache:/home/comely-io/.composer/cache
+      - ../app/api/vendor:/home/comely-io/api/vendor
     env_file:
       - .env
     environment:

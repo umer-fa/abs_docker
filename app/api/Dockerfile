@@ -38,10 +38,6 @@ COPY ./app/api/www api/www/
 USER root
 RUN chown -R comely-io:comely-io /home/comely-io/
 
-USER comely-io
-WORKDIR /home/comely-io/api
-RUN composer install
-
 USER root
 WORKDIR /root/api
 RUN chmod +x entrypoint.sh

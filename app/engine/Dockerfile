@@ -30,11 +30,6 @@ COPY ./app/engine/src engine/src/
 USER root
 RUN chown -R comely-io:comely-io /home/comely-io/
 
-USER comely-io
-WORKDIR /home/comely-io/engine
-RUN chmod +x src/console
-RUN composer install
-
 USER root
 WORKDIR /root/engine
 RUN chmod +x entrypoint.sh
