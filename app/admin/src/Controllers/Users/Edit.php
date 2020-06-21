@@ -11,11 +11,14 @@ use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\KnitModifiers;
+use App\Common\Users\Credentials;
+use App\Common\Users\Params;
 use App\Common\Users\User;
 use App\Common\Validator;
 use Comely\Database\Exception\DatabaseException;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
+use Comely\Utils\Security\Passwords;
 
 /**
  * Class Edit
@@ -38,6 +41,12 @@ class Edit extends AbstractAdminController
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
 
         try {
+            if (!$this->authAdmin->privileges()->root()) {
+                if (!$this->authAdmin->privileges()->viewUsers) {
+                    throw new AppControllerException('You do not have privilege to view users');
+                }
+            }
+
             $queryUserId = explode("=", strval($this->request()->url()->query()))[0];
             $userId = Validator::UInt($this->input()->get("userId") ?? $queryUserId ?? null);
             if (!$userId) {
@@ -69,9 +78,487 @@ class Edit extends AbstractAdminController
         }
     }
 
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
     public function postEdit(): void
     {
+        $this->verifyXSRF();
+        $this->totpSessionCheck();
+        $this->editUserPrivilegeCheck();
+        $db = $this->app->db()->primary();
 
+        // Checksum OK?
+        if (!$this->user->_checksumVerified) {
+            throw new AppControllerException('Cannot update; User checksum must be recomputed first');
+        }
+
+        // Referrer
+        $referrer = trim(strval($this->input()->get("referrer")));
+        $referrerId = null;
+        if ($referrer) {
+            try {
+                $referrer = Users::Username($referrer);
+                $referrerId = $referrer->id;
+                if ($this->user->referrer !== $referrerId) {
+                    try {
+                        $referrer->validate();
+                    } catch (AppException $e) {
+                        throw new AppControllerException('Referrer checksum validation fail');
+                    }
+                }
+            } catch (AppException $e) {
+                $e->setParam("referrer");
+                throw $e;
+            }
+        }
+
+        if ($this->user->referrer !== $referrerId) {
+            $this->user->referrer = $referrerId;
+            $referrerChangeLog = sprintf(
+                'User "%s" referrer changed from %s to "%s"',
+                $this->user->username,
+                $this->referrer ? sprintf('"%s"', $this->referrer->username) : "NULL",
+                $referrer->username
+            );
+        }
+
+        // Status
+        $status = trim(strval($this->input()->get("status")));
+        try {
+            if (!in_array($status, ["active", "frozen", "disabled"])) {
+                throw new AppControllerException('Invalid user status');
+            }
+
+            if ($status !== $this->user->status) {
+                $statusChangeLog = sprintf('User "%s" status changed from %s to %s', $this->user->username, $this->user->status, $status);
+                $this->user->status = $status;
+            }
+        } catch (AppException $e) {
+            $e->setParam("status");
+            throw $e;
+        }
+
+        // E-mail Address
+        $email = trim(strval($this->input()->get("email")));
+        try {
+            if (!$email) {
+                throw new AppControllerException('E-mail address is required');
+            } elseif (!Validator::isValidEmailAddress($email)) {
+                throw new AppControllerException('Invalid e-mail address');
+            } elseif (strlen($email) > 64) {
+                throw new AppControllerException('E-mail address is too long');
+            }
+
+            if ($email !== $this->user->email) {
+                // Changing Email address...
+                $dupEm = $db->query()->table(Users::NAME)
+                    ->where('email=?', [$email])
+                    ->fetch();
+                if ($dupEm->count()) {
+                    throw new AppControllerException('E-mail address is already in use!');
+                }
+
+                $emailChangeLog = sprintf('User "%s" e-mail changed from "%s" to "%s"', $this->user->username, $this->user->email, $email);
+                $this->user->email = $email;
+            }
+        } catch (AppException $e) {
+            $e->setParam("email");
+            throw $e;
+        }
+
+        $emailIsVerified = Validator::getBool(trim(strval($this->input()->get("isEmailVerified"))));
+        $currentEmStatus = $this->user->isEmailVerified === 1;
+        if ($currentEmStatus !== $emailIsVerified) {
+            $this->user->isEmailVerified = $emailIsVerified ? 1 : 0;
+            $emailVerifyLog = sprintf(
+                'User "%s" e-mail verification changed to %s',
+                $this->user->username,
+                $emailIsVerified ? "VERIFIED" : "NOT VERIFIED"
+            );
+        }
+
+        // Save Changes?
+        if ($this->user->changes()) {
+            throw new AppControllerException('There are no changes to be saved!');
+        }
+
+        try {
+            $db->beginTransaction();
+
+            $this->user->set("checksum", $this->user->checksum()->raw());
+            $this->user->query()->update();
+
+            if (isset($referrerChangeLog)) {
+                $this->authAdmin->log($referrerChangeLog, __CLASS__, null, ["users", $this->user->id]);
+            }
+
+            if (isset($statusChangeLog)) {
+                $this->authAdmin->log($statusChangeLog, __CLASS__, null, ["users", $this->user->id]);
+            }
+
+            if (isset($emailChangeLog)) {
+                $this->authAdmin->log($emailChangeLog, __CLASS__, null, ["users", $this->user->id]);
+            }
+
+            if (isset($emailVerifyLog)) {
+                $this->authAdmin->log($emailVerifyLog, __CLASS__, null, ["users", $this->user->id]);
+            }
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user');
+        }
+
+        $this->user->deleteCached();
+
+        if (isset($referrerChangeLog)) {
+            $this->messages()->info($referrerChangeLog);
+        }
+
+        if (isset($statusChangeLog)) {
+            $this->messages()->info($statusChangeLog);
+        }
+
+        if (isset($emailChangeLog)) {
+            $this->messages()->info($emailChangeLog);
+        }
+
+        if (isset($emailVerifyLog)) {
+            $this->messages()->info($emailVerifyLog);
+        }
+
+        $this->response()->set("status", true);
+        $this->messages()->success("User account has been updated!");
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    public function postPassword(): void
+    {
+        $this->verifyXSRF();
+        $this->totpSessionCheck();
+        $this->editUserPrivilegeCheck();
+
+        // Credentials
+        try {
+            $credentials = $this->user->credentials();
+        } catch (\Exception $e) {
+            $this->app->errors()->trigger($e instanceof AppException ? $e->getMessage() : $e, E_USER_WARNING);
+            throw new AppControllerException('Cannot retrieve user credentials');
+        }
+
+        // New Password
+        $newPassword = trim(strval($this->input()->get("newPassword")));
+        try {
+            $newPasswordLen = strlen($newPassword);
+            if (!$newPassword) {
+                throw new AppControllerException('New password is required');
+            } elseif ($newPasswordLen < 6) {
+                throw new AppControllerException('New Password is too short');
+            } elseif ($newPasswordLen > 32) {
+                throw new AppControllerException('New Password is too long');
+            } elseif (Passwords::Strength($newPassword) < 4) {
+                throw new AppControllerException('New Password is too weak!');
+            }
+
+            if ($credentials->verifyPassword($newPassword)) {
+                throw new AppControllerException('New password must be different from existing one!');
+            }
+        } catch (AppException $e) {
+            $e->setParam("newPassword");
+            throw $e;
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $db->beginTransaction();
+
+            $userCipher = $this->user->cipher();
+            $credentials->hashPassword($newPassword);
+            $this->user->set("credentials", $userCipher->encrypt(clone $credentials)->raw());
+            $this->user->query()->update();
+
+            $this->authAdmin->log(
+                sprintf('User "%s" password changed', $this->user->username),
+                __CLASS__,
+                null,
+                ["users", $this->user->id]
+            );
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user password');
+        }
+
+        $this->user->deleteCached();
+
+        $this->response()->set("status", true);
+        $this->messages()->success("User password has been updated successfully!");
+        $this->response()->set("refresh", true);
+        $this->response()->set("disabled", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws DatabaseException
+     * @throws \App\Common\Exception\XSRF_Exception
+     */
+    public function postReset(): void
+    {
+        $this->verifyXSRF();
+        $this->totpSessionCheck();
+        $this->editUserPrivilegeCheck();
+
+        $action = strtolower(trim(strval($this->input()->get("action"))));
+        switch ($action) {
+            case "checksum":
+                $this->recomputeChecksum();
+                return;
+            case "disabled2fa":
+                $this->disable2FA();
+                return;
+            case "credentials":
+                $this->resetCredentials();
+                return;
+            case "params":
+                $this->resetParams();
+                return;
+            default:
+                throw new AppControllerException('Invalid reset action to perform!');
+        }
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function disable2FA(): void
+    {
+        try {
+            $credentials = $this->user->credentials();
+        } catch (\Exception $e) {
+        }
+
+        if (!isset($credentials)) {
+            throw new AppControllerException('Cannot disable 2FA; User credentials must be RESET');
+        } elseif (!$credentials->googleAuthSeed) {
+            throw new AppControllerException('2FA is already disabled for this user!');
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $db->beginTransaction();
+
+            $userCipher = $this->user->cipher();
+            $credentials->googleAuthSeed = null;
+            $this->user->set("credentials", $userCipher->encrypt(clone $credentials)->raw());
+            $this->user->query()->update();
+            $this->authAdmin->log(
+                sprintf('User "%s" disabled 2FA', $this->user->username),
+                __CLASS__,
+                null,
+                ["users", $this->user->id]
+            );
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user');
+        }
+
+        $this->user->deleteCached();
+
+        $this->flash()->danger("2FA has been disabled for this user!");
+
+        $this->response()->set("status", true);
+        $this->messages()->success("2FA has been disabled for this user!");
+        $this->response()->set("disabled", true);
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function resetParams(): void
+    {
+        try {
+            $params = $this->user->params();
+        } catch (\Exception $e) {
+        }
+
+        if (isset($params)) {
+            throw new AppControllerException('User params object is OK');
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $db->beginTransaction();
+
+            $userCipher = $this->user->cipher();
+            $newParams = new Params($this->user);
+            $this->user->set("params", $userCipher->encrypt($newParams)->raw());
+            $this->user->query()->update();
+            $this->authAdmin->log(
+                sprintf('User "%s" params obj RESET', $this->user->username),
+                __CLASS__,
+                null,
+                ["users", $this->user->id]
+            );
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user');
+        }
+
+        $this->user->deleteCached();
+
+        $this->flash()->info("User params object has been reset!");
+
+        $this->response()->set("status", true);
+        $this->messages()->success("User params object has been reset!");
+        $this->response()->set("disabled", true);
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function resetCredentials(): void
+    {
+        try {
+            $credentials = $this->user->credentials();
+        } catch (\Exception $e) {
+        }
+
+        if (isset($credentials)) {
+            throw new AppControllerException('User credentials object is OK');
+        }
+
+        $db = $this->app->db()->primary();
+        try {
+            $db->beginTransaction();
+
+            $userCipher = $this->user->cipher();
+            $newCredentials = new Credentials($this->user);
+            $this->user->set("credentials", $userCipher->encrypt($newCredentials)->raw());
+            $this->user->query()->update();
+            $this->authAdmin->log(
+                sprintf('User "%s" credentials RESET', $this->user->username),
+                __CLASS__,
+                null,
+                ["users", $this->user->id]
+            );
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user');
+        }
+
+        $this->user->deleteCached();
+
+        $this->flash()->info("User credentials object has been reset!");
+        $this->flash()->info("User's password reset is required!");
+
+        $this->response()->set("status", true);
+        $this->messages()->success("User credentials object has been reset!");
+        $this->response()->set("disabled", true);
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DatabaseException
+     */
+    private function recomputeChecksum(): void
+    {
+        if ($this->user->_checksumVerified) {
+            throw new AppControllerException('User checksum does not require recompute');
+        }
+
+        $db = $this->app->db()->primary();
+
+        try {
+            $db->beginTransaction();
+
+            $this->user->set("checksum", $this->user->checksum()->raw());
+            $this->user->query()->update();
+            $this->authAdmin->log(
+                sprintf('User "%s" checksum RESET', $this->user->username),
+                __CLASS__,
+                null,
+                ["users", $this->user->id]
+            );
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update user');
+        }
+
+        $this->user->deleteCached();
+
+        $this->flash()->info("User checksum has been recomputed!");
+
+        $this->response()->set("status", true);
+        $this->messages()->success("User checksum has been recomputed!");
+        $this->response()->set("disabled", true);
+        $this->response()->set("refresh", true);
+    }
+
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     */
+    private function editUserPrivilegeCheck(): void
+    {
+        if (!$this->authAdmin->privileges()->root()) {
+            if (!$this->authAdmin->privileges()->manageUsers) {
+                throw new AppControllerException('You do not have privilege to edit users');
+            }
+        }
     }
 
     /**
