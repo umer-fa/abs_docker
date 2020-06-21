@@ -98,7 +98,7 @@ class Edit extends AbstractAdminController
 
         // Referrer
         $referrer = trim(strval($this->input()->get("referrer")));
-        $referrerId = null;
+        $referrerId = 0;
         if ($referrer) {
             try {
                 $referrer = Users::Username($referrer);
@@ -116,7 +116,7 @@ class Edit extends AbstractAdminController
             }
         }
 
-        if ($this->user->referrer !== $referrerId) {
+        if (!$this->referrer || $this->referrer->id !== $referrerId) {
             $this->user->referrer = $referrerId;
             $referrerChangeLog = sprintf(
                 'User "%s" referrer changed from %s to "%s"',
