@@ -187,6 +187,7 @@ class API_Session extends AbstractAppModel
     {
         try {
             $this->authUserId = $user->id;
+            $this->authSessionOtp = null;
             $this->set("checksum", $this->checksum()->raw());
             $this->query()->where("id", $this->id)->update(function () {
                 throw new AppException('Failed to authenticate current session');
