@@ -138,7 +138,7 @@
                     </h5>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-sm table-hover table-striped no-wrap-table">
+                    <table class="table table-sm table-hover table-striped no-wrap-table mb-0">
                         <thead>
                         <tr class="thead-dark">
                             <th scope="col" class="text-center" rowspan="2">
