@@ -45,6 +45,7 @@ class Signin extends AbstractSessionAPIController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users\Tally');
 
         // ReCaptcha Validation
         if ($this->isReCaptchaRequired()) {
