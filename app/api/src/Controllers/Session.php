@@ -53,7 +53,6 @@ class Session extends AbstractSessionAPIController
     }
 
     /**
-     * @throws \App\Common\Exception\AppConfigException
      * @throws \App\Common\Exception\AppException
      * @throws \Comely\Database\Exception\DbConnectionException
      */
