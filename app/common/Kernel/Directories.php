@@ -32,6 +32,8 @@ class Directories
     /** @var Directory|null */
     private ?Directory $knit = null;
     /** @var Directory|null */
+    private ?Directory $emails = null;
+    /** @var Directory|null */
     private ?Directory $semaphore = null;
 
     use NoDumpTrait;
@@ -106,6 +108,19 @@ class Directories
         }
 
         return $this->semaphore;
+    }
+
+    /**
+     * @return Directory
+     * @throws AppDirException
+     */
+    public function emails(): Directory
+    {
+        if (!$this->emails) {
+            $this->emails = $this->dir("emails", "/tmp/emails", true);
+        }
+
+        return $this->emails;
     }
 
     /**

@@ -6,6 +6,7 @@ services:
       dockerfile: app/engine/Dockerfile
     restart: always
     volumes:
+      - ../emails:/home/comely-io/engine/emails
       - ../storage:/home/comely-io/engine/storage
       - ../tmp:/home/comely-io/engine/tmp
       - ../log/engine:/home/comely-io/engine/log
@@ -24,6 +25,7 @@ services:
       - ../app/admin/templates/default/knit:/home/comely-io/admin/template
       - ../app/admin/templates/default/www:/home/comely-io/admin/www/default
       - ../log/admin:/home/comely-io/admin/log
+      - ../emails:/home/comely-io/admin/emails
       - ../storage:/home/comely-io/admin/storage
       - ../tmp:/home/comely-io/admin/tmp
       - ../app/admin/vendor:/home/comely-io/admin/vendor
@@ -45,6 +47,7 @@ services:
     restart: always
     volumes:
       - ../log/api:/home/comely-io/api/log
+      - ../emails:/home/comely-io/api/emails
       - ../storage:/home/comely-io/api/storage
       - ../tmp:/home/comely-io/api/tmp
       - ../app/api/vendor:/home/comely-io/api/vendor
