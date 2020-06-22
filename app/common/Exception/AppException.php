@@ -20,7 +20,7 @@ class AppException extends \Exception
      */
     public static function ModelNotFound(string $message): AppException
     {
-        return new self($message, self::MODEL_NOT_FOUND);
+        return new static($message, self::MODEL_NOT_FOUND);
     }
 
     /**
@@ -31,7 +31,7 @@ class AppException extends \Exception
      */
     public static function Param(string $param, string $message, ?int $code = null): self
     {
-        return (new self($message, $code))->setParam($param);
+        return (new static($message, (int)$code))->setParam($param);
     }
 
     /**
