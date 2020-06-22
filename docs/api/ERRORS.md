@@ -43,4 +43,3 @@ LOGIN_ID_REQ | Login ID is required | Focus on field
 LOGIN_ID_INVALID | Login ID contains an illegal character | Focus on field
 LOGIN_ID_UNKNOWN | No such user is registered | Focus on field
 USER_STATUS_DISABLED | Your account is disabled; Contact support | Focus on field
-SUGGESTED_SEED_REQ | Suggested 
