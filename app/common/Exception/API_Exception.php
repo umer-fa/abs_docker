@@ -20,14 +20,6 @@ class API_Exception extends AppControllerException
     /**
      * @return static
      */
-    public static function DatabaseQueryError(): self
-    {
-        return new self('DB_QUERY_ERROR');
-    }
-
-    /**
-     * @return static
-     */
     public static function ControllerDisabled(): self
     {
         return new self('API_CONTROLLER_DISABLED');
