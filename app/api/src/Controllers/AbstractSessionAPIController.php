@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\API\Controllers;
 
 use App\Common\API\API_Session;
+use App\Common\Config\ProgramConfig;
 use App\Common\Database\API\Sessions;
 use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppException;
@@ -131,6 +132,32 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
 
         // Callback
         $this->sessionAPICallback();
+    }
+
+    /**
+     * @return bool
+     * @throws AppException
+     */
+    final public function isReCaptchaRequired(): bool
+    {
+        if ($this->apiSession->type !== "web") {
+            return false;
+        }
+
+        if ($this->apiSession->recaptchaLast) {
+            if (time() - $this->apiSession->recaptchaLast < 30) {
+                return false;
+            }
+        }
+
+        $programConfig = ProgramConfig::getInstance();
+        if ($programConfig->reCaptcha) {
+            if ($programConfig->reCaptchaPub && $programConfig->reCaptchaPrv) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     abstract public function sessionAPICallback(): void;
