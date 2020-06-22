@@ -32,6 +32,11 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Tally');
 
+        // Signed in controllers are enabled?
+        if (!$this->apiAccess->signIn) {
+            throw API_Exception::ControllerDisabled();
+        }
+
         $this->authUser = $this->apiSession->authenticate();
         $this->authUser->validate(); // Validate checksum
         $this->authUser->credentials(); // Decrypt credentials
