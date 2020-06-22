@@ -13,6 +13,7 @@ use App\Common\Users\Credentials;
 use App\Common\Users\Params;
 use App\Common\Users\User;
 use App\Common\Validator;
+use Comely\Database\Schema;
 use Comely\DataTypes\Integers;
 use Comely\Utils\Security\Passwords;
 
@@ -44,6 +45,9 @@ class Signup extends AbstractSessionAPIController
     public function post(): void
     {
         $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
 
         // ReCaptcha Validation
         if ($this->isReCaptchaRequired()) {
