@@ -14,6 +14,9 @@ use Comely\Database\Exception\DatabaseException;
  */
 class Tally extends AbstractAppModel
 {
+    public const TABLE = \App\Common\Database\Primary\Users\Tally::NAME;
+    public const SERIALIZABLE = false;
+
     /** @var int */
     public int $user;
     /** @var null|int */
