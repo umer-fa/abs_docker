@@ -97,7 +97,8 @@ abstract class AbstractConfigObj
             }
         }
 
-        return $configObject;
+        static::$instance = $configObject;
+        return static::$instance;
     }
 
     /**
