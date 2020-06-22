@@ -252,6 +252,7 @@ class Signup extends AbstractSessionAPIController
             $user->set("checksum", $user->checksum()->raw());
             $user->set("credentials", $userCipher->encrypt(clone $credentials)->raw());
             $user->set("params", $userCipher->encrypt(clone $params)->raw());
+            $user->set("authToken", $this->apiSession->token()->binary()->raw());
 
             // Save Changes
             $user->query()->where('id', $user->id)->update(function () {
