@@ -26,5 +26,10 @@ PASSWORD_LEN_MIN | Password must be 8 digits or longer | Focus on input field
 PASSWORD_LEN_MAX | Password cannot exceed 32 characters | Focus on input field
 PASSWORD_WEAK | Password is too weak | Focus on input field, Suggest a stronger password
 PASSWORD_CONFIRM_MATCH | You must retype same password | Focus on input field
+PASSWORD_INCORRECT | Incorrect password | Focus on input field
 COUNTRY_INVALID | Select a country | Focus on input field
 TERMS_UNCHECKED | You must agree with our Terms & Conditions | Focus on checkbox
+LOGIN_ID_REQ | Login ID is required | Focus on field
+LOGIN_ID_INVALID | Login ID contains an illegal character | Focus on field
+LOGIN_ID_UNKNOWN | No such user is registered | Focus on field
+USER_STATUS_DISABLED | User account status is disabled | Focus on field

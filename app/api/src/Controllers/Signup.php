@@ -263,9 +263,12 @@ class Signup extends AbstractSessionAPIController
             // Todo: Queue email notification
 
             $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
         } catch (\Exception $e) {
             $db->rollBack();
-            $this->app->errors()->triggerIfDebug($e instanceof AppException ? $e->getMessage() : $e, E_USER_WARNING);
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw API_Exception::InternalError();
         }
 
@@ -273,7 +276,6 @@ class Signup extends AbstractSessionAPIController
         $this->apiSession->loginAs($user);
 
         $this->status(true);
-        $this->response()->set("email", $user->email);
         $this->response()->set("username", $user->username);
     }
 }

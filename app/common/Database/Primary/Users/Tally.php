@@ -52,9 +52,7 @@ class Tally extends AbstractAppTable
         try {
             $tally = self::Find(["user" => $user->id])->first();
         } catch (DatabaseException $e) {
-            if ($e instanceof ORM_ModelNotFoundException) {
-                trigger_error(sprintf('User %d tally row not found in database', $user->id), E_USER_WARNING);
-            } else {
+            if (!$e instanceof ORM_ModelNotFoundException) {
                 $k->errors()->triggerIfDebug($e, E_USER_WARNING);
                 trigger_error(sprintf('Failed to retrieve user %d tally', $user->id), E_USER_WARNING);
             }
