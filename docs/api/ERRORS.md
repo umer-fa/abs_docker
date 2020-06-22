@@ -1,5 +1,6 @@
 Error Code | Message | Possible Resolution
 --- | --- | ---
+TOKEN_ALREADY_SUPPLIED | Cannot create new session; Session token header was already specified | n/a
 API_CONTROLLER_DISABLED | This endpoint is currently disabled | n/a
 INTERNAL_ERROR  | An internal error has occurred | n/a
 PLATFORM_ACCESS_ERROR | An error occurred while retrieving API access triggers | n/a

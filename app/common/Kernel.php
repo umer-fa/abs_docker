@@ -25,21 +25,8 @@ use FurqanSiddiqui\SemaphoreEmulator\SemaphoreEmulator;
  * Class Kernel
  * @package App\Common
  */
-class Kernel
+class Kernel implements AppConstants
 {
-    /** @var string App Name, Extending class should change these constant */
-    public const NAME = "Comely App Kernel";
-    /** string Comely App Kernel Version (Major.Minor.Release-Suffix) */
-    public const VERSION = "2020.155";
-    /** int Comely App Kernel Version (Major . Minor . Release) */
-    public const VERSION_ID = 202015500;
-    /** @var int[] */
-    public const ROOT_ADMINISTRATORS = [1];
-    /** @var string[] */
-    public const USERNAME_PREFIXES = ["COMELY"];
-    /** @var string */
-    public const API_SESS_AUTH_NAME = "api-token";
-
     /** @var Kernel|null */
     protected static ?Kernel $instance = null;
 
