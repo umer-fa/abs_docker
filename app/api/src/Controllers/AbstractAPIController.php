@@ -11,6 +11,7 @@ use App\Common\Database\API\QueriesPayload;
 use App\Common\Exception\API_Exception;
 use App\Common\Kernel;
 use App\Common\Kernel\Http\Controllers\API_Controller;
+use App\Common\Validator;
 use Comely\Database\Database;
 use Comely\Database\Schema;
 
@@ -20,17 +21,26 @@ use Comely\Database\Schema;
  */
 abstract class AbstractAPIController extends API_Controller
 {
+    protected APIServerAccess $apiAccess;
     /** @var string */
     protected string $ipAddress;
     /** @var null|Query */
     protected ?Query $queryLog = null;
 
     /**
-     * @return void
+     * @throws API_Exception
      */
     public function callback(): void
     {
         $this->app = APIService::getInstance();
+
+        try {
+            $this->apiAccess = APIServerAccess::getInstance();
+        } catch (\Exception $e) {
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw new API_Exception('PLATFORM_ACCESS_ERROR');
+        }
+
         parent::callback();
     }
 
@@ -41,8 +51,13 @@ abstract class AbstractAPIController extends API_Controller
     {
         // Has a valid remote IP address?
         $this->ipAddress = $this->app->http()->remote()->ipAddress ?? "";
-        if (!$this->ipAddress) {
+        if (!Validator::isValidIP($this->ipAddress)) {
             throw new API_Exception('BAD_REMOTE_ADDR');
+        }
+
+        // Global Status
+        if (!$this->apiAccess->globalStatus) {
+            throw new API_Exception('API_DISABLED');
         }
 
         // Schema Events
@@ -152,21 +167,6 @@ abstract class AbstractAPIController extends API_Controller
         } catch (\Exception $e) {
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw new API_Exception('DB_CONNECTION_ERROR');
-        }
-    }
-
-    /**
-     * @param bool $useCache
-     * @return APIServerAccess
-     * @throws API_Exception
-     */
-    public function access(bool $useCache = true): APIServerAccess
-    {
-        try {
-            return APIServerAccess::getInstance($useCache);
-        } catch (\Exception $e) {
-            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
-            throw new API_Exception('PLATFORM_ACCESS_ERROR');
         }
     }
 
