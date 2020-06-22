@@ -4,6 +4,16 @@ TOKEN_ALREADY_SUPPLIED | Cannot create new session; Session token header was alr
 API_CONTROLLER_DISABLED | This endpoint is currently disabled | n/a
 INTERNAL_ERROR  | An internal error has occurred | n/a
 PLATFORM_ACCESS_ERROR | An error occurred while retrieving API access triggers | n/a
+AUTH_NOT_LOGGED_IN | You are not logged in | Redirect to login page
+AUTH_USER_RETRIEVE_ERROR | Failed to retrieve authenticated user | Redirect to login page 
+AUTH_TOKEN_MISMATCH | Session lost; You have logged into a different device | Redirect to login page 
+AUTH_USER_DISABLED | Your account is disabled; Contact support | Redirect to login page
+AUTH_USER_TIMEOUT | Your session has timed out | Redirect to login page
+AUTH_USER_OTP | 2FA authentication is required | Redirect to 2FA page
+AUTH_USER_2FA_NOT_SETUP | User has not enabled 2FA authentication | Redirect to dashboard page
+2FA_TOTP_REQ | TOTP code is required | Focus on input field
+2FA_TOTP_INVALID | TOTP code is invalid | Focus on input field
+2FA_TOTP_USED | This TOTP is already used | Focus on input field
 ALREADY_LOGGED_IN | You are already logged in! | Redirect user to authenticated screen (i.e. dashboard)
 RECAPTCHA_REQ | ReCaptcha validation is required | n/a
 RECAPTCHA_FAILED | ReCaptcha validation was failed | Reset reCaptcha on user screen
@@ -32,4 +42,4 @@ TERMS_UNCHECKED | You must agree with our Terms & Conditions | Focus on checkbox
 LOGIN_ID_REQ | Login ID is required | Focus on field
 LOGIN_ID_INVALID | Login ID contains an illegal character | Focus on field
 LOGIN_ID_UNKNOWN | No such user is registered | Focus on field
-USER_STATUS_DISABLED | User account status is disabled | Focus on field
+USER_STATUS_DISABLED | Your account is disabled; Contact support | Focus on field

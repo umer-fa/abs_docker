@@ -39,7 +39,7 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
         if (!$this->apiSession->authSessionOtp) {
             if ($this->authUser->credentials()->googleAuthSeed) {
                 $byPassOTPControllers = [
-                    'App\API\Controllers\Auth\Otp',
+                    'App\API\Controllers\Auth\Totp',
                     'App\API\Controllers\Auth\Signout',
                 ];
 
@@ -62,6 +62,10 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
             $googleAuthSeed = $this->authUser->credentials()->googleAuthSeed;
             if (!$googleAuthSeed) {
                 throw new API_Exception('AUTH_USER_2FA_NOT_SETUP');
+            }
+
+            if (!$totp) {
+                throw new API_Exception('2FA_TOTP_INVALID');
             }
 
             if (!preg_match('/^[0-9]{6}$/', $totp)) {
