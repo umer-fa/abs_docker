@@ -131,9 +131,9 @@ class mails_queue extends AbstractCronScript
         $compose = $this->smtpAgent->compose();
         $compose->subject($mail->subject);
         if ($mail->type === "html") {
-            $compose->body()->plain($mail->private("compiled"));
-        } else {
             $compose->body()->html($mail->private("compiled"));
+        } else {
+            $compose->body()->plain($mail->private("compiled"));
         }
 
         try {
