@@ -5,7 +5,7 @@ namespace bin;
 
 use App\Common\Database\Primary\Countries;
 use App\Common\Exception\AppException;
-use App\Common\Kernel\AbstractCLIScript;
+use App\Common\Kernel\CLI\AbstractCLIScript;
 
 /**
  * Class countries_rebuild

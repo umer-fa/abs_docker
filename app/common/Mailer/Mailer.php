@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace App\Common\Mailer;
 
+use App\Common\Config\SMTPConfig;
+use App\Common\Exception\AppException;
 use App\Common\Kernel;
+use Comely\DataTypes\Integers;
 use Comely\Knit\Knit;
+use Comely\Mailer\Agents\SMTP;
 
 /**
  * Class Mailer
@@ -31,6 +35,8 @@ class Mailer
     private Kernel $app;
     /** @var Knit */
     private Knit $knit;
+    /** @var \Comely\Mailer\Mailer|null */
+    private ?\Comely\Mailer\Mailer $smtpMailer;
 
     /**
      * Mailer constructor.
@@ -65,5 +71,37 @@ class Mailer
     public function compose(string $to, string $subject): MailConstructor
     {
         return new MailConstructor($to, $subject);
+    }
+
+    /**
+     * @return \Comely\Mailer\Mailer
+     * @throws AppException
+     * @throws \Comely\Mailer\Exception\MailerException
+     */
+    public function smtpMailer(): \Comely\Mailer\Mailer
+    {
+        if ($this->smtpMailer) {
+            return $this->smtpMailer;
+        }
+
+        $smtpConfig = SMTPConfig::getInstance();
+        if (!$smtpConfig) {
+            throw new AppException('SMTP mailer is disabled');
+        }
+
+        $smtpMailer = new \Comely\Mailer\Mailer();
+        $smtpMailer->sender()
+            ->name($smtpConfig->senderName)
+            ->email($smtpConfig->senderEmail);
+
+        $timeOut = Integers::Range($smtpConfig->timeOut, 1, 30) ? $smtpConfig->timeOut : 0;
+        $smtpAgent = new SMTP($smtpConfig->hostname, $smtpConfig->port, $timeOut);
+        $smtpAgent->serverName($smtpConfig->serverName);
+        $smtpAgent->useTLS($smtpConfig->useTLS);
+        $smtpAgent->authCredentials($smtpConfig->username, $smtpConfig->password);
+
+        $smtpMailer->setAgent($smtpAgent);
+        $this->smtpMailer = $smtpMailer;
+        return $this->smtpMailer;
     }
 }

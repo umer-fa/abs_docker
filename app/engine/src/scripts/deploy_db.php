@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace bin;
 
-use App\Common\Kernel\AbstractCLIScript;
+use App\Common\Kernel\CLI\AbstractCLIScript;
 use Comely\Database\Database;
 use Comely\Database\Schema;
 

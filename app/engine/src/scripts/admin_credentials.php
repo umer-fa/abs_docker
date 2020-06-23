@@ -6,7 +6,7 @@ namespace bin;
 use App\Common\Admin\Administrator;
 use App\Common\Admin\Credentials;
 use App\Common\Exception\AppException;
-use App\Common\Kernel\AbstractCLIScript;
+use App\Common\Kernel\CLI\AbstractCLIScript;
 use Comely\Database\Schema;
 use Comely\Utils\Security\Passwords;
 
