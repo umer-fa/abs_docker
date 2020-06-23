@@ -39,5 +39,5 @@ function showRequeueModal(mailId, email, subject) {
 
 function readMailPopup(mailId) {
     let mailPopupName = "queuedMail_" + mailId;
-    window.open(rootPath + "/mails/queue?read&mail=" + mailId, mailPopupName, "width=480,height=550,toolbar=0,menubar=0,location=0");
+    window.open(rootPath + "/mails/queue?read&mail=" + mailId, mailPopupName, "width=540,height=640,toolbar=0,menubar=0,location=0");
 }
