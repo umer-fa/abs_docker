@@ -4,7 +4,7 @@
         <form method="get" action="{$page.authRoot}mails/queue">
             <div class="card">
                 <div class="card-header bg-light">
-                    <h5 class="card-title mb-0"><i class="mai mdi-email-search mr-2"></i>Search Filter</h5>
+                    <h5 class="card-title mb-0"><i class="mdi mdi-email-search mr-2"></i>Search Filter</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-group row">
@@ -31,7 +31,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-3" for="searchStatus">Status</label>
                         <div class="col-md-3">
-                            <select name="status" id="searchStatus">
+                            <select name="status" id="searchStatus" class="form-control">
                                 <option value=""{if !$search.status} selected=""{/if}>(all)</option>
                                 <option value="pending"{if $search.status === "pending"} selected=""{/if}>Pending /
                                     Queued
@@ -147,7 +147,7 @@
                                               data-placement="bottom"><i
                                                     class="mdi mdi-check-circle-outline"></i></span>
                                     {else}
-                                        <span class="text-warning" data-toggle="tooltip" title="Error"
+                                        <span class="text-danger" data-toggle="tooltip" title="Error"
                                               data-placement="bottom"><i
                                                     class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}</td>
@@ -156,14 +156,16 @@
                                 </td>
                                 <td class="text-left">{$mail.email}</td>
                                 <td class="text-left">{if $mail._checksumVerified === true}<a
-                                            href="#">{$mail.subject}</a>{else}<s>{$mail.subject}</s>{/if}</td>
+                                            href="#">{$mail.subject}</a>{else}<s class="text-danger">{$mail.subject}</s>{/if}</td>
                                 <td class="text-center">{$mail.type}</td>
                                 <td class="text-center">{if $mail.lastError}{$mail.lastError}{else}
                                         <span class="text-muted">n/a<span>
                                     {/if}</td>
                                 <td class="text-right">{$mail.attempts}</td>
                                 <td class="text-right">{$mail.timeStamp|dated}</td>
-                                <td class="text-right">{$mail.lastAttempt|dated}</td>
+                                <td class="text-right">{if $mail.lastAttempt}{$mail.lastAttempt|dated}{else}
+                                        <span class="text-muted">n/a</span>
+                                    {/if}</td>
                             </tr>
                             {foreachelse}
                             <tr>
