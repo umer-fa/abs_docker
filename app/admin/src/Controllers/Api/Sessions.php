@@ -97,6 +97,7 @@ class Sessions extends AbstractAdminController
             ->prop("containerIsFluid", true)
             ->prop("icon", "mdi mdi-cookie");
 
+        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/api_sessions.min.js'));
         $this->breadcrumbs("API Server", null, "mdi mdi-api");
 
         $result = [
