@@ -46,6 +46,7 @@ class Signup extends AbstractSessionAPIController
     public function post(): void
     {
         $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\MailsQueue');
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
