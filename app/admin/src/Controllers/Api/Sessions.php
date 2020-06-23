@@ -5,6 +5,7 @@ namespace App\Admin\Controllers\Api;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\API\API_Session;
+use App\Common\Database\API\Baggage;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
@@ -40,6 +41,7 @@ class Sessions extends AbstractAdminController
      * @throws AppException
      * @throws \App\Common\Exception\AppConfigException
      * @throws \App\Common\Exception\XSRF_Exception
+     * @throws \Comely\Database\Exception\DatabaseException
      */
     public function postArchive(): void
     {
@@ -62,8 +64,7 @@ class Sessions extends AbstractAdminController
                 throw new AppControllerException('Failed to retrieve API session');
             }
 
-            $session->validate();
-
+            $session->validate(); // Validate checksum
             if ($session->archived === 1) {
                 throw new AppControllerException('This session is already archived');
             }
@@ -75,10 +76,21 @@ class Sessions extends AbstractAdminController
         // Verify TOTP
         $this->verifyTotp(trim(strval($this->input()->get("totp"))));
 
+        // Archive Session
+        $db = $this->app->db()->primary();
         try {
-            $session->archived = 0;
+            $db->beginTransaction();
+
+            // Archive session
+            $session->archived = 1;
             $session->query()->update();
-        } catch (DatabaseException $e) {
+
+            // Delete baggage
+            $flush = $session->baggage()->flush();
+
+            $db->commit();
+        } catch (\Exception $e) {
+            $db->rollBack();
             $this->app->errors()->trigger($e, E_USER_WARNING);
             throw new AppControllerException('Failed to archive session row');
         }
@@ -86,6 +98,9 @@ class Sessions extends AbstractAdminController
         $this->response()->set("status", true);
         $this->response()->set("refresh", true);
         $this->messages()->success("API session has been archived");
+        if ($flush) {
+            $this->messages()->info(sprintf('%d session baggage items flushed', $flush));
+        }
         $this->messages()->info("Refreshing...");
     }
 
