@@ -12,6 +12,7 @@ use App\Common\Packages\ReCaptcha\ReCaptcha;
 use App\Common\Users\Credentials;
 use App\Common\Users\Params;
 use App\Common\Users\User;
+use App\Common\Users\UserEmailsPresets;
 use App\Common\Validator;
 use Comely\Database\Schema;
 use Comely\DataTypes\Integers;
@@ -261,7 +262,8 @@ class Signup extends AbstractSessionAPIController
 
             $user->log("signup", null, null, null, ["signup"]);
 
-            // Todo: Queue email notification
+            // E-mail message
+            UserEmailsPresets::Signup($user, $country);
 
             $db->commit();
         } catch (AppException $e) {

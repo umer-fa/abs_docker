@@ -1,4 +1,5 @@
-<p>Hi there,</p>
+{knit "header"}
+<p>Dear {$user.firstName} {$user.lastName},</p>
 <p>Your {$config.public.title} account has been successfully registered!</p>
 <p>Your username is: <strong>{$user.username}</strong></p>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
@@ -20,3 +21,4 @@
 <p>Feel free to let us know if you require further information!</p>
 <p>Regards,<br>
     {$config.public.title} Team</p>
+{knit "footer"}

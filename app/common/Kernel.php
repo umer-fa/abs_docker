@@ -14,6 +14,7 @@ use App\Common\Kernel\Directories;
 use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\ErrorHandler\StdErrorHandler;
 use App\Common\Kernel\Memory;
+use App\Common\Mailer\Mailer;
 use Comely\Cache\Cache;
 use Comely\Cache\Exception\CacheException;
 use Comely\Filesystem\Exception\PathNotExistException;
@@ -221,6 +222,14 @@ class Kernel implements AppConstants
         }
 
         return $this->semaphore;
+    }
+
+    /**
+     * @return Mailer
+     */
+    public function mailer(): Mailer
+    {
+        return Mailer::getInstance();
     }
 
     /**

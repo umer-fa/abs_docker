@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-us">
 <head>
     <meta name="viewport" content="width=device-width"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>{literal}{{subject}}{/literal}</title>
+    <title>{$subject}</title>
     <style>{literal}
         img {
             border: none;
@@ -319,12 +319,11 @@
                 border-color: #34495e !important;
             }
         }
-
         {/literal}
     </style>
 </head>
 <body class="">
-<span class="preheader">{literal}{{pre_header}}{/literal}</span>
+{if $preHeader}<span class="preheader">{$preHeader}</span>{/if}
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
     <tr>
         <td>&nbsp;</td>
@@ -336,33 +335,3 @@
                             <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        {literal}{{content_html}}{/literal}
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="footer">
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <span class="apple-link">&copy; {$config.public.title} {$knit.now|date}</span>
-                                <br> Don't like these emails? <a href="#">Unsubscribe</a>.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="content-block powered-by">
-                                Powered by <a href="https://github.com/comely-io" target="_blank"></a>.
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-</body>
-</html>

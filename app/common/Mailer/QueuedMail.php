@@ -22,6 +22,8 @@ class QueuedMail extends AbstractAppModel
     /** @var string */
     public string $lang;
     /** @var string */
+    public string $type;
+    /** @var string */
     public string $status;
     /** @var string|null */
     public ?string $lastError = null;
@@ -33,10 +35,6 @@ class QueuedMail extends AbstractAppModel
     public string $subject;
     /** @var string|null */
     public ?string $preHeader = null;
-    /** @var string */
-    public string $compiled;
-    /** @var string|null */
-    public ?string $template = null;
     /** @var int */
     public int $deleteOnSent = 0;
     /** @var int */
@@ -66,14 +64,10 @@ class QueuedMail extends AbstractAppModel
             }
         }
 
-        if (strlen($this->compiled) > MailsQueue::MAX_COMPILED_BODY) {
+        if (strlen($this->private("compiled")) > MailsQueue::MAX_COMPILED_BODY) {
             throw new AppException(
                 sprintf('Message complied body exceeds limit of %d bytes', MailsQueue::MAX_COMPILED_BODY)
             );
-        }
-
-        if (is_string($this->template) && !in_array($this->template, ["template1", "template2", "template3"])) {
-            throw new AppException('Invalid template selection');
         }
     }
 
@@ -84,14 +78,13 @@ class QueuedMail extends AbstractAppModel
     public function checksum(): Binary
     {
         $raw = sprintf(
-            '%d:%s:%s:%s:%s:%s:%s:%d',
-            $this->id,
+            '%s:%s:%s:%s:%s:%s:%d',
             strtolower($this->lang),
+            strtolower($this->type),
             trim(strtolower($this->email)),
             trim(strtolower(md5(strtolower($this->subject)))),
             $this->preHeader ? trim(strtolower(md5(strtolower($this->preHeader)))) : "",
-            trim(strtolower(md5(strtolower($this->compiled)))),
-            trim(strtolower($this->template)),
+            trim(strtolower(md5(strtolower($this->private("compiled"))))),
             $this->timeStamp
         );
 
