@@ -53,6 +53,8 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
                 }
             }
         }
+
+        $this->authSessCallback();
     }
 
     /**
