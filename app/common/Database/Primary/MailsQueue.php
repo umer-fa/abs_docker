@@ -30,7 +30,7 @@ class MailsQueue extends AbstractAppTable
         $cols->int("id")->bytes(8)->unSigned()->autoIncrement();
         $cols->binary("checksum")->fixed(20);
         $cols->string("lang")->length(5);
-        $cols->enum("type")->options("text", "html")->default("plain");
+        $cols->enum("type")->options("text", "html")->default("text");
         $cols->enum("status")->options("pending", "sent", "fail")->default("pending");
         $cols->string("last_error")->length(255)->nullable();
         $cols->int("attempts")->bytes(1)->unSigned()->default(0);
