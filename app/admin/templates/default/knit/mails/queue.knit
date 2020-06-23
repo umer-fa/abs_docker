@@ -136,6 +136,7 @@
                             <th scope="col" class="text-center">Attempts</th>
                             <th scope="col" class="text-center">Queued On</th>
                             <th scope="col" class="text-center">Last Attempt</th>
+                            <th scope="col" class="text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -156,7 +157,8 @@
                                 </td>
                                 <td class="text-left">{$mail.email}</td>
                                 <td class="text-left">{if $mail._checksumVerified === true}<a
-                                            href="#">{$mail.subject}</a>{else}<s class="text-danger">{$mail.subject}</s>{/if}</td>
+                                        href="#" data-read-mail="{$mail.id}">{$mail.subject}</a>{else}<s
+                                                class="text-danger">{$mail.subject}</s>{/if}</td>
                                 <td class="text-center">{$mail.type}</td>
                                 <td class="text-center">{if $mail.lastError}{$mail.lastError}{else}
                                         <span class="text-muted">n/a<span>
@@ -166,10 +168,20 @@
                                 <td class="text-right">{if $mail.lastAttempt}{$mail.lastAttempt|dated}{else}
                                         <span class="text-muted">n/a</span>
                                     {/if}</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="" class="btn btn-sm btn-outline-dark" data-read-mail="{$mail.id}"><i
+                                                    class="mdi mdi-email-open"></i></a>
+                                        {if $mail.status !== "pending"}
+                                            <a href="" class="btn btn-sm btn-outline-dark" data-requeue-mail="{$mail.id}"><i
+                                                        class="mdi mdi-email-open"></i></a>
+                                        {/if}
+                                    </div>
+                                </td>
                             </tr>
                             {foreachelse}
                             <tr>
-                                <td colspan="10" class="text-muted">There are no results to show</td>
+                                <td colspan="11" class="text-muted">There are no results to show</td>
                             </tr>
                         {/foreach}
                         </tbody>

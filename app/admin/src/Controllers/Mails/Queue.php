@@ -7,6 +7,7 @@ use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Database\Primary\MailsQueue;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
+use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Mailer\QueuedMail;
 use App\Common\Validator;
@@ -31,6 +32,28 @@ class Queue extends AbstractAdminController
     }
 
     /**
+     * @return void
+     */
+    public function getRead(): void
+    {
+        $mailId = Validator::UInt(trim(strval($this->input()->get("mail"))));
+        if (!$mailId) {
+            exit("Invalid e-mail ID");
+        }
+
+        try {
+            /** @var QueuedMail $mail */
+            $mail = MailsQueue::Find(["id" => intval($mailId)])->first();
+            $mail->validate();
+        } catch (\Exception $e) {
+            exit(Errors::Exception2String($e));
+        }
+
+        print $mail->private("compiled");
+        exit;
+    }
+
+    /**
      * @throws AppException
      * @throws \Comely\Knit\Exception\KnitException
      * @throws \Comely\Knit\Exception\TemplateException
@@ -42,6 +65,8 @@ class Queue extends AbstractAdminController
             ->prop("icon", "mdi mdi-mailbox-open-outline");
 
         $this->breadcrumbs("Mails Queue", null, "ion ion-email");
+
+        $this->page()->js($this->request()->url()->root(getenv("ADMIN_TEMPLATE") . '/js/app/mails-queue.min.js'));
 
         $errorMessage = null;
         $result = [
