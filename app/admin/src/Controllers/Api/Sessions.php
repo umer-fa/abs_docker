@@ -6,9 +6,12 @@ namespace App\Admin\Controllers\Api;
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\API\API_Session;
 use App\Common\Database\Primary\Users;
+use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Validator;
+use Comely\Database\Exception\DatabaseException;
+use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
 use Comely\DataTypes\Integers;
 
@@ -32,9 +35,55 @@ class Sessions extends AbstractAdminController
         Schema::Bind($apiDb, 'App\Common\Database\API\Sessions');
     }
 
-    public function postArchiveSession(): void
+    /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\XSRF_Exception
+     */
+    public function postArchive(): void
     {
+        $this->verifyXSRF();
 
+        // Session ID
+        $sessionId = Validator::UInt(trim(strval($this->input()->get("sessionId"))));
+        try {
+            if (!$sessionId) {
+                throw new AppControllerException('Session ID is required');
+            }
+
+            try {
+                /** @var API_Session $session */
+                $session = \App\Common\Database\API\Sessions::Find(["id" => $sessionId])->first();
+            } catch (ORM_ModelNotFoundException $e) {
+                throw new AppControllerException('No such API session exists');
+            } catch (DatabaseException $e) {
+                $this->app->errors()->trigger($e, E_USER_WARNING);
+                throw new AppControllerException('Failed to retrieve API session');
+            }
+
+            $session->validate();
+
+            if ($session->archived === 1) {
+                throw new AppControllerException('This session is already archived');
+            }
+        } catch (AppException $e) {
+            $e->setParam("sessionId");
+            throw $e;
+        }
+
+        try {
+            $session->archived = 0;
+            $session->query()->update();
+        } catch (DatabaseException $e) {
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to archive session row');
+        }
+
+        $this->response()->set("status", true);
+        $this->response()->set("refresh", true);
+        $this->messages()->success("API session has been archived");
+        $this->messages()->info("Refreshing...");
     }
 
     /**

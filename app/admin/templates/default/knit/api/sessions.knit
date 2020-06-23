@@ -174,7 +174,9 @@
                                                     class="mdi mdi-alert-circle-outline"></i></span>
                                     {/if}
                                 </td>
-                                <td class="text-left"><a href="{$page.authRoot}api/queries?key=flag_api_sess&value={$sess.token}">{$sess.token}</a></td>
+                                <td class="text-left"><a
+                                            href="{$page.authRoot}api/queries?key=flag_api_sess&value={$sess.token}">{$sess.token}</a>
+                                </td>
                                 <td class="text-center">
                                     {if $sess.type === 'web'}
                                         <i class="mdi mdi-web-box" data-toggle="tooltip" title="Web"></i>
@@ -213,7 +215,10 @@
                                     {/if}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-dark"><i class="mdi mdi-archive"></i>
+                                        <button class="btn btn-sm btn-outline-dark" data-sess-archive="{$sess.id}"
+                                                data-sess-token="{$sess.token}" data-toggle="tooltip"
+                                                title="Archive session" data-placement="bottom"><i
+                                                    class="mdi mdi-archive"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -228,6 +233,33 @@
                 </div>
             </div>
         {/if}
+    </div>
+</div>
+<div class="modal fade" id="sessArchiveModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" action="{$page.authRoot}api/sessions?archive" class="xhr-form">
+                <input type="hidden" name="xsrf" value="{$page.token}">
+                <input type="hidden" name="sessionId" id="sessArchiveId" value="">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger mb-0">Archive Session</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label-lg col-sm-4 text-danger" for="totp">TOTP Code</label>
+                        <input type="text" id="totp" name="totp" data-onload-value="" placeholder="000000" maxlength="6"
+                               class="input-int form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-outline-danger">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {knit "footer"}
