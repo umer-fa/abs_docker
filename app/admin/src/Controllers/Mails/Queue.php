@@ -44,7 +44,7 @@ class Queue extends AbstractAdminController
     {
         $this->verifyXSRF();
 
-        $mailId = Validator::UInt(trim(strval($this->input()->get("mail"))));
+        $mailId = Validator::UInt(trim(strval($this->input()->get("mailId"))));
 
         try {
             /** @var QueuedMail $mail */
