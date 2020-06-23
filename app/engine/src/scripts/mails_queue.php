@@ -111,9 +111,9 @@ class mails_queue extends AbstractCronScript
     {
         $this->errors()->flush();
 
-        $this->inline(sprintf('{magenta}#%d{/} ', $mail->id));
         $mail->attempts++; // Increase mail attempts
         $mail->lastAttempt = time(); // Set last attempt time
+        $this->inline(sprintf('{magenta}[#%d]{/}{grey}[Attempt#%d] ', $mail->id, $mail->attempts));
 
         try {
             $mail->validate();
@@ -126,7 +126,7 @@ class mails_queue extends AbstractCronScript
             return false;
         }
 
-        $this->inline(sprintf('{grey}to{/} {cyan}%s{/} {grey}(%s){/} ... ', $mail->email, $mail->subject));
+        $this->inline(sprintf('{grey}to{/} {cyan}%s{/} {grey}({/}{yellow}%s{/}{grey}){/} ... ', $mail->email, $mail->subject));
 
         $compose = $this->smtpAgent->compose();
         $compose->subject($mail->subject);
@@ -137,7 +137,7 @@ class mails_queue extends AbstractCronScript
         }
 
         try {
-            $this->smtpAgent->send($compose);
+            $this->smtpAgent->send($compose, $mail->email);
         } catch (\Exception $e) {
             $this->print("{red}Fail{/}");
             if ($e instanceof SMTP_Exception) {

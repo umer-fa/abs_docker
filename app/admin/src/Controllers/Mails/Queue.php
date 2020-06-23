@@ -11,6 +11,9 @@ use App\Common\Kernel\ErrorHandler\Errors;
 use App\Common\Kernel\KnitModifiers;
 use App\Common\Mailer\QueuedMail;
 use App\Common\Validator;
+use Comely\Database\Exception\DatabaseException;
+use Comely\Database\Exception\ORM_Exception;
+use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
 
 /**
@@ -32,6 +35,54 @@ class Queue extends AbstractAdminController
     }
 
     /**
+     * @throws AppControllerException
+     * @throws AppException
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\XSRF_Exception
+     */
+    public function postRequeue(): void
+    {
+        $this->verifyXSRF();
+
+        $mailId = Validator::UInt(trim(strval($this->input()->get("mail"))));
+
+        try {
+            /** @var QueuedMail $mail */
+            $mail = MailsQueue::Find(["id" => intval($mailId)])->first();
+        } catch (ORM_ModelNotFoundException $e) {
+            throw new AppControllerException('No such email exists');
+        } catch (DatabaseException $e) {
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to retrieve email message');
+        }
+
+        $mail->validate();
+
+        if ($mail->status === "pending") {
+            throw new AppControllerException('This message is already pending');
+        }
+
+        $this->verifyTotp(trim(strval($this->input()->get("totp"))));
+
+        try {
+            $mail->status = "pending";
+            $mail->attempts = 0;
+            $mail->lastError = null;
+            $mail->lastAttempt = null;
+            $mail->query()->update();
+        } catch (DatabaseException $e) {
+            $this->app->errors()->trigger($e, E_USER_WARNING);
+            throw new AppControllerException('Failed to update queued mail row');
+        }
+
+        $this->response()->set("status", true);
+        $this->response()->set("totpModalClose", true);
+        $this->messages()->success('E-mail message has been re-queued!');
+        $this->messages()->info('Refreshing page...');
+        $this->response()->set("refresh", true);
+    }
+
+    /**
      * @return void
      */
     public function getRead(): void
@@ -45,6 +96,8 @@ class Queue extends AbstractAdminController
             /** @var QueuedMail $mail */
             $mail = MailsQueue::Find(["id" => intval($mailId)])->first();
             $mail->validate();
+        } catch (AppException $e) {
+            exit($e->getMessage());
         } catch (\Exception $e) {
             exit(Errors::Exception2String($e));
         }
