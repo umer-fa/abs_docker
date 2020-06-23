@@ -36,7 +36,7 @@ class Mailer
     /** @var Knit */
     private Knit $knit;
     /** @var \Comely\Mailer\Mailer|null */
-    private ?\Comely\Mailer\Mailer $smtpMailer;
+    private ?\Comely\Mailer\Mailer $smtpMailer = null;
 
     /**
      * Mailer constructor.
