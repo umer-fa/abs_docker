@@ -31,12 +31,11 @@ class MailsQueue extends AbstractAppTable
         $cols->binary("checksum")->fixed(20);
         $cols->string("lang")->length(5);
         $cols->enum("type")->options("text", "html")->default("text");
-        $cols->enum("status")->options("pending", "sent", "fail")->default("pending");
+        $cols->enum("status")->options("pending", "sent", "failed")->default("pending");
         $cols->string("last_error")->length(255)->nullable();
         $cols->int("attempts")->bytes(1)->unSigned()->default(0);
         $cols->string("email")->length(64);
         $cols->string("subject")->length(64);
-        $cols->string("pre_header")->length(self::MAX_PRE_HEADER)->nullable();
         $cols->binary("compiled")->length(self::MAX_COMPILED_BODY);
         $cols->int("delete_on_sent")->bytes(1)->unSigned()->default(0);
         $cols->int("time_stamp")->bytes(4)->unSigned();

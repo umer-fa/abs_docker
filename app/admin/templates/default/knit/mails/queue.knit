@@ -1,0 +1,180 @@
+{knit "header"}
+<div class="row">
+    <div class="col-12">
+        <form method="get" action="{$page.authRoot}mails/queue">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0"><i class="mai mdi-email-search mr-2"></i>Search Filter</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="searchEmail">E-mail address</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="mdi mdi-email-search-outline"></i>
+                                    </span>
+                                </div>
+                                <input type="text" name="email" id="searchEmail" data-onload-value="{$search.email}"
+                                       placeholder="john.doe@gmail.com" maxlength="64" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="searchSubject">Subject</label>
+                        <div class="col-md-6">
+                            <input type="text" name="subject" id="searchSubject" data-onload-value="{$search.subject}"
+                                   placeholder="Match Subject" maxlength="64" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-3" for="searchStatus">Status</label>
+                        <div class="col-md-3">
+                            <select name="status" id="searchStatus">
+                                <option value=""{if !$search.status} selected=""{/if}>(all)</option>
+                                <option value="pending"{if $search.status === "pending"} selected=""{/if}>Pending /
+                                    Queued
+                                </option>
+                                <option value="sent"{if $search.status === "sent"} selected=""{/if}>Sent Messages
+                                </option>
+                                <option value="failed"{if $search.status === "failed"} selected=""{/if}>Failed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="text-right mb-2">
+                        <a href="#queriesFilterAdvanced" data-toggle="collapse" class="text-info">
+                            Advanced Filters
+                            <i class="ion ion-arrow-down-c ml-2"></i>
+                        </a>
+                    </p>
+                    <div id="queriesFilterAdvanced" class="collapse{if $search.advanced} show{/if}">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-3" for="searchSort">Sort Order</label>
+                            <div class="col-md-3">
+                                <select name="sort" id="searchSort" class="form-control">
+                                    <option value="desc"{if $search.sort !== 'asc'} selected=""{/if}>DESC</option>
+                                    <option value="asc"{if $search.sort === 'asc'} selected=""{/if}>ASC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-3" for="searchPagination">Pagination</label>
+                            <div class="col-md-3">
+                                <select name="perPage" id="searchPagination" class="form-control">
+                                    {foreach $perPageOpts as $perPageOpt}
+                                        <option value="{$perPageOpt}"{if $search.perPage === $perPageOpt} selected=""{/if}>{$perPageOpt}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="ion ion-ios-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        {if $errorMessage}
+            <div class="alert alert-danger mt-3">
+                <i class="ion ion-information-circled mr-2"></i>{$errorMessage}
+            </div>
+        {/if}
+        {if $result.status === true}
+            {if $result.count > 0 && $result.nav.pages}
+                <nav class="mt-3">
+                    <ul class="pagination">
+                        <li class="page-item{if !$result.nav.first} disabled{/if}">
+                            <a href="{if $result.nav.first}{$search.link}&page={$result.nav.first}{else}#{/if}"
+                               class="page-link">&laquo;</a>
+                        </li>
+                        <li class="page-item{if !$result.nav.prev} disabled{/if}">
+                            <a href="{if $result.nav.prev}{$search.link}&page={$result.nav.prev}{else}#{/if}"
+                               class="page-link">&lsaquo;</a>
+                        </li>
+                        {foreach $result.nav.pages as $page}
+                            {if $page.index|isset && $page.start|isset}
+                                <li class="page-item{if $page.index === $result.page} active{/if}">
+                                    <a href="{if $page.index === $result.page}#{else}{$search.link}&page={$page.index}{/if}"
+                                       class="page-link">{$page.index}</a>
+                                </li>
+                            {/if}
+                        {/foreach}
+                        <li class="page-item{if !$result.nav.next} disabled{/if}">
+                            <a href="{if $result.nav.next}{$search.link}&page={$result.nav.next}{else}#{/if}"
+                               class="page-link">&rsaquo;</a>
+                        </li>
+                        <li class="page-item{if !$result.nav.last} disabled{/if}">
+                            <a href="{if $result.nav.last}{$search.link}&page={$result.nav.last}{else}#{/if}"
+                               class="page-link">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            {/if}
+            <div class="card mt-3">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        Total Results:
+                        <span class="badge badge-primary font-weight-light ml-1 px-1">{$result.count}</span>
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover table-striped no-wrap-table mb-0">
+                        <thead>
+                        <tr class="thead-dark">
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col" class="text-center">
+                                <i class="mdi mdi-check-all" data-toggle="tooltip" title="Checksum"></i>
+                            </th>
+                            <th scope="col" class="text-center">Status</th>
+                            <th scope="col" class="text-center">E-mail Address</th>
+                            <th scope="col" class="text-center">Subject</th>
+                            <th scope="col" class="text-center">Type</th>
+                            <th scope="col" class="text-center">Error</th>
+                            <th scope="col" class="text-center">Attempts</th>
+                            <th scope="col" class="text-center">Queued On</th>
+                            <th scope="col" class="text-center">Last Attempt</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach $result.rows as $mail}
+                            <tr>
+                                <td class="text-right">{$mail.id}</td>
+                                <td class="text-center">{if $mail._checksumVerified === true}
+                                        <span class="text-success" data-toggle="tooltip" title="OK"
+                                              data-placement="bottom"><i
+                                                    class="mdi mdi-check-circle-outline"></i></span>
+                                    {else}
+                                        <span class="text-warning" data-toggle="tooltip" title="Error"
+                                              data-placement="bottom"><i
+                                                    class="mdi mdi-alert-circle-outline"></i></span>
+                                    {/if}</td>
+                                <td class="text-center">
+                                    <span class="text-{if $mail.status === 'sent'}success{elseif $mail.status === 'failed'}danger{else}muted{/if}">{$mail.status|ucfirst}</span>
+                                </td>
+                                <td class="text-left">{$mail.email}</td>
+                                <td class="text-left">{if $mail._checksumVerified === true}<a
+                                            href="#">{$mail.subject}</a>{else}<s>{$mail.subject}</s>{/if}</td>
+                                <td class="text-center">{$mail.type}</td>
+                                <td class="text-center">{if $mail.lastError}{$mail.lastError}{else}
+                                        <span class="text-muted">n/a<span>
+                                    {/if}</td>
+                                <td class="text-right">{$mail.attempts}</td>
+                                <td class="text-right">{$mail.timeStamp|dated}</td>
+                                <td class="text-right">{$mail.lastAttempt|dated}</td>
+                            </tr>
+                            {foreachelse}
+                            <tr>
+                                <td colspan="10" class="text-muted">There are no results to show</td>
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {/if}
+    </div>
+</div>
+{knit "footer"}

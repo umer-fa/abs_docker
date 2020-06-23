@@ -33,8 +33,6 @@ class QueuedMail extends AbstractAppModel
     public string $email;
     /** @var string */
     public string $subject;
-    /** @var string|null */
-    public ?string $preHeader = null;
     /** @var int */
     public int $deleteOnSent = 0;
     /** @var int */
@@ -56,14 +54,6 @@ class QueuedMail extends AbstractAppModel
             }
         }
 
-        if (is_string($this->preHeader)) {
-            if (strlen($this->preHeader) > MailsQueue::MAX_PRE_HEADER) {
-                throw new AppException(
-                    sprintf('Message pre-header exceeds limit of %d bytes', MailsQueue::MAX_PRE_HEADER)
-                );
-            }
-        }
-
         if (strlen($this->private("compiled")) > MailsQueue::MAX_COMPILED_BODY) {
             throw new AppException(
                 sprintf('Message complied body exceeds limit of %d bytes', MailsQueue::MAX_COMPILED_BODY)
@@ -78,12 +68,11 @@ class QueuedMail extends AbstractAppModel
     public function checksum(): Binary
     {
         $raw = sprintf(
-            '%s:%s:%s:%s:%s:%s:%d',
+            '%s:%s:%s:%s:%s:%d',
             strtolower($this->lang),
             strtolower($this->type),
             trim(strtolower($this->email)),
             trim(strtolower(md5(strtolower($this->subject)))),
-            $this->preHeader ? trim(strtolower(md5(strtolower($this->preHeader)))) : "",
             trim(strtolower(md5(strtolower($this->private("compiled"))))),
             $this->timeStamp
         );
