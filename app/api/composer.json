@@ -12,6 +12,7 @@
     "comely-io/http": "1.0.46",
     "comely-io/db-orm": "1.2.10",
     "comely-io/cache": "1.0.24",
+    "comely-io/knit": "2.2.11",
     "comely-io/mailer": "1.0.11",
     "furqansiddiqui/semaphore-emulator-php": "0.1.2"
   },
