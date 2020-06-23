@@ -90,6 +90,7 @@ class MailConstructor
         $mail->lang = $this->lang;
         $mail->type = $this->type;
         $mail->status = "pending";
+        $mail->attempts = 0;
         $mail->email = $this->to;
         $mail->subject = $this->subject;
         $mail->preHeader = $this->preHeader;
@@ -182,7 +183,9 @@ class MailConstructor
         $template = $this->mailer->knit()->template($knitFile);
         $template->assign("subject", $this->subject);
         $template->assign("preHeader", $this->preHeader);
-        $template->assign("config", $this->app->config()->public()->array());
+        $template->assign("config", [
+            "public" => $this->app->config()->public()->array()
+        ]);
 
         if ($data) {
             foreach ($data as $key => $value) {

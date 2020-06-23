@@ -53,7 +53,7 @@ class Mailer
      */
     public function knit(): Knit
     {
-        return $this->knit();
+        return $this->knit;
     }
 
     /**
