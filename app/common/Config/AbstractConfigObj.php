@@ -26,8 +26,8 @@ abstract class AbstractConfigObj
     /** @var bool */
     public const IS_ENCRYPTED = false;
 
-    /** @var static */
-    private static ?self $instance = null;
+    /** @var array */
+    private static array $instances = [];
 
     /**
      * @param bool $useCache
@@ -36,8 +36,9 @@ abstract class AbstractConfigObj
      */
     public static function getInstance(bool $useCache = true): self
     {
-        if (static::$instance) {
-            return static::$instance;
+        $instanceId = get_called_class();
+        if (isset(static::$instances[$instanceId])) {
+            return static::$instances[$instanceId];
         }
 
         $k = Kernel::getInstance();
@@ -51,7 +52,8 @@ abstract class AbstractConfigObj
         }
 
         if (isset($configObject) && $configObject instanceof self) {
-            return $configObject;
+            static::$instances[$instanceId] = $configObject;
+            return static::$instances[$instanceId];
         }
 
         if (!is_string(static::DB_KEY)) {
@@ -97,8 +99,16 @@ abstract class AbstractConfigObj
             }
         }
 
-        static::$instance = $configObject;
-        return static::$instance;
+        static::$instances[$instanceId] = $configObject;
+        return static::$instances[$instanceId];
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return [get_called_class()];
     }
 
     /**
