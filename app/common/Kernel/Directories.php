@@ -117,7 +117,7 @@ class Directories
     public function emails(): Directory
     {
         if (!$this->emails) {
-            $this->emails = $this->dir("emails", "/tmp/emails", true);
+            $this->emails = $this->dir("emails", "/emails", true);
         }
 
         return $this->emails;
