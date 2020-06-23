@@ -212,11 +212,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Requeue for sending email <strong class="requeueModalEmSub"></strong> to <strong
-                                class="requeueModalEmAddr"></strong>.</p>
-                    <p>Enter 2FA code below verify!</p>
+                    <p>Requeue for sending email "<strong class="requeueModalEmSub"></strong>" to <strong
+                                class="requeueModalEmAddr text-info"></strong>.</p>
                     <div class="form-group">
-                        <label class="col-form-label-lg col-sm-4" for="totp">TOTP Code</label>
+                        <label class="col-form-label-lg col-sm-4 text-danger" for="totp">TOTP Code</label>
                         <input type="text" id="totp" name="totp" data-onload-value="" placeholder="000000" maxlength="6"
                                class="input-int form-control">
                     </div>
