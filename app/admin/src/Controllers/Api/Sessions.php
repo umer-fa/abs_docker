@@ -72,6 +72,9 @@ class Sessions extends AbstractAdminController
             throw $e;
         }
 
+        // Verify TOTP
+        $this->verifyTotp(trim(strval($this->input()->get("totp"))));
+
         try {
             $session->archived = 0;
             $session->query()->update();
