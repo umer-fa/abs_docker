@@ -12,6 +12,8 @@ class Params
     /** @var int */
     public int $user;
     /** @var string|null */
+    public ?string $emailVerifyBytes = null;
+    /** @var string|null */
     public ?string $resetToken = null;
     /** @var int|null */
     public ?int $resetTokenEpoch = null;
