@@ -14,6 +14,7 @@ use Comely\Utils\Security\Exception\SecurityUtilException;
  * Class AbstractConfigObj
  * @package App\Common\Config
  * @property int $cachedOn
+ * @method void beforeSave()
  */
 abstract class AbstractConfigObj
 {
@@ -152,6 +153,10 @@ abstract class AbstractConfigObj
     {
         if (static::IS_ENCRYPTED) {
             try {
+                if (method_exists($this, 'beforeSave')) {
+                    $this->beforeSave();
+                }
+
                 $bytes = Kernel::getInstance()->ciphers()->project()->encrypt($this);
             } catch (AppConfigException|SecurityUtilException $e) {
                 throw new AppException('Failed to encrypt configuration object');
