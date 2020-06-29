@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\API\Models;
+namespace App\Common\Data;
 
 use App\API\APIService;
 
 /**
  * Class AbstractCachedObj
- * @package App\API\Models
+ * @package App\Common\Data
  * @property int $cachedOn
  */
 abstract class AbstractCachedObj
@@ -20,9 +20,9 @@ abstract class AbstractCachedObj
     /**
      * @param string $instanceKey
      * @param bool $useCache
-     * @return $this
+     * @return static|null
      */
-    public function getInstance(string $instanceKey, bool $useCache = true): self
+    public static function getInstance(string $instanceKey, bool $useCache = true): ?self
     {
         $app = APIService::getInstance();
 
@@ -45,18 +45,39 @@ abstract class AbstractCachedObj
             return static::$instances[$instanceKey];
         }
 
+        return null;
+    }
+
+    /**
+     * @param string $instanceKey
+     * @param bool $useCache
+     * @param array $constructorArgs
+     * @return static
+     */
+    public static function createInstance(string $instanceKey, bool $useCache, array $constructorArgs): self
+    {
+        $app = APIService::getInstance();
+
         // Create new instance
-        $instance = new static();
+        $instanceClass = get_called_class();
+        $instance = new $instanceClass(...$constructorArgs);
 
         // Store in cache?
-        if (isset($cache)) {
+        if ($useCache) {
             try {
-                $cloneObject = clone $instance;
-                $cloneObject->cachedOn = time();
-                $cache->set($instanceKey, $cloneObject, static::CACHE_TTL);
+                $cache = $app->cache();
             } catch (\Exception $e) {
-                $app->errors()->triggerIfDebug($e, E_USER_WARNING);
-                trigger_error(sprintf('Failed to store API model "%s" object in cache', $instanceKey), E_USER_WARNING);
+            }
+
+            if (isset($cache)) {
+                try {
+                    $cloneObject = clone $instance;
+                    $cloneObject->cachedOn = time();
+                    $cache->set($instanceKey, $cloneObject, static::CACHE_TTL);
+                } catch (\Exception $e) {
+                    $app->errors()->triggerIfDebug($e, E_USER_WARNING);
+                    trigger_error(sprintf('Failed to store data model "%s" object in cache', $instanceKey), E_USER_WARNING);
+                }
             }
         }
 
