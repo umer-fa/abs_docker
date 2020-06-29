@@ -9,6 +9,9 @@ try {
     $kernel->setErrorHandler($errorHandler);
     $router = $kernel->router();
 
+    $webHooksRoute = $router->route('/wh/*', 'App\API\Controllers\WebHooks\*')
+        ->fallbackController('App\API\Controllers\Hello');
+
     $defaultRoute = $router->route('/*', 'App\API\Controllers\*')
         ->fallbackController('App\API\Controllers\Hello');
 
