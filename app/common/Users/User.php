@@ -257,6 +257,15 @@ class User extends AbstractAppModel
     }
 
     /**
+     * @return Binary
+     * @throws AppException
+     */
+    public function emailVerifyBytes(): Binary
+    {
+        return $this->cipher()->pbkdf2("sha1", $this->email, 0x21a);
+    }
+
+    /**
      * @return void
      */
     public function deleteCached(): void
