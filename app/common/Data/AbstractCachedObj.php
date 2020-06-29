@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Common\Data;
 
-use App\API\APIService;
+use App\Common\Kernel;
 
 /**
  * Class AbstractCachedObj
@@ -24,7 +24,7 @@ abstract class AbstractCachedObj
      */
     public static function getInstance(string $instanceKey, bool $useCache = true): ?self
     {
-        $app = APIService::getInstance();
+        $app = Kernel::getInstance();
 
         // In run-time memory?
         if (isset(static::$instances[$instanceKey])) {
@@ -56,7 +56,7 @@ abstract class AbstractCachedObj
      */
     public static function createInstance(string $instanceKey, bool $useCache, array $constructorArgs): self
     {
-        $app = APIService::getInstance();
+        $app = Kernel::getInstance();
 
         // Create new instance
         $instanceClass = get_called_class();
