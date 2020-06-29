@@ -100,6 +100,8 @@ class VerifyEmail extends AbstractAuthSessAPIController
             throw API_Exception::InternalError();
         }
 
+        $this->authUser->deleteCached();
+
         $this->status(true);
     }
 }

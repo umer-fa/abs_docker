@@ -117,4 +117,41 @@ class UserEmailsPresets
 
         $mail->addToQueue();
     }
+
+    /**
+     * @param User $user
+     * @param string $prev
+     * @param string $current
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\MailConstructException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Knit\Exception\KnitException
+     */
+    public static function SignInIPChange(User $user, string $prev, string $current): void
+    {
+        $k = Kernel::getInstance();
+        $publicConfig = $k->config()->public();
+
+        $mail = $k->mailer()->compose($user->email, "Detected IP Address Change");
+        $mail->preHeader(
+            sprintf(
+                'Warning! Your %1$s account %2$s was accessed from a different IP address!',
+                $publicConfig->title(),
+                $user->username
+            )
+        );
+
+        $mail->htmlMessageFromTemplate("signin_ip_change.knit", [
+            "user" => [
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "username" => $user->username,
+                "email" => $user->email,
+            ],
+            "prevIPAddr" => $prev,
+            "currIPAddr" => $current,
+        ]);
+
+        $mail->addToQueue();
+    }
 }

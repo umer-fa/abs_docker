@@ -1,0 +1,12 @@
+{knit "header"}
+<p>Dear {$user.firstName} {$user.lastName},</p>
+<p>Your {$config.public.title} account has been accessed from a different IP address; Please review the following
+    details:</p>
+<p>Your username is: <strong>{$user.username}</strong><br>
+    Previous IP Address: <strong>{$prevIPAddr}</strong><br>
+    Current IP Address: <strong>{$currIPAddr}</strong></p>
+
+<p>Contact support immediately if you did not access your account!</p>
+<p>Regards,<br>
+    {$config.public.title} Team</p>
+{knit "footer"}

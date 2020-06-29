@@ -9,6 +9,7 @@ use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppException;
 use App\Common\Packages\ReCaptcha\ReCaptcha;
 use App\Common\Users\Log;
+use App\Common\Users\UserEmailsPresets;
 use App\Common\Validator;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
@@ -147,7 +148,7 @@ class Signin extends AbstractSessionAPIController
 
             // Difference IP from last login
             if ($lastLoginLog->ipAddress !== $this->ipAddress) {
-                // Todo: Send e-mail notification
+                UserEmailsPresets::SignInIPChange($user, $lastLoginLog->ipAddress, $this->ipAddress);
             }
 
             $db->commit();
