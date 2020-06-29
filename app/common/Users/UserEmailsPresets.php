@@ -49,4 +49,72 @@ class UserEmailsPresets
 
         $mail->addToQueue();
     }
+
+    /**
+     * @param User $user
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\AppException
+     * @throws \App\Common\Exception\MailConstructException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Knit\Exception\KnitException
+     */
+    public static function EmailVerifyRequest(User $user): void
+    {
+        $k = Kernel::getInstance();
+        $publicConfig = $k->config()->public();
+
+        $mail = $k->mailer()->compose($user->email, "E-mail verification required");
+        $mail->preHeader(
+            sprintf(
+                'E-mail verification is required for your %1$s account %2$s',
+                $publicConfig->title(),
+                $user->username
+            )
+        );
+
+        $mail->htmlMessageFromTemplate("email_verify_request.knit", [
+            "user" => [
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "username" => $user->username,
+                "email" => $user->email,
+            ],
+            "emailVerificationCode" => substr($user->emailVerifyBytes()->base16()->hexits(), -16),
+        ]);
+
+        $mail->addToQueue();
+    }
+
+    /**
+     * @param User $user
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\MailConstructException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Knit\Exception\KnitException
+     */
+    public static function EmailVerified(User $user): void
+    {
+        $k = Kernel::getInstance();
+        $publicConfig = $k->config()->public();
+
+        $mail = $k->mailer()->compose($user->email, "E-mail address VERIFIED");
+        $mail->preHeader(
+            sprintf(
+                'E-mail address for your %1$s account %2$s is now VERIFIED',
+                $publicConfig->title(),
+                $user->username
+            )
+        );
+
+        $mail->htmlMessageFromTemplate("email_verified.knit", [
+            "user" => [
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "username" => $user->username,
+                "email" => $user->email,
+            ]
+        ]);
+
+        $mail->addToQueue();
+    }
 }

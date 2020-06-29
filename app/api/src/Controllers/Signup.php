@@ -263,8 +263,9 @@ class Signup extends AbstractSessionAPIController
 
             $user->log("signup", null, null, null, ["signup"]);
 
-            // E-mail message
+            // E-mail messages
             UserEmailsPresets::Signup($user, $country);
+            UserEmailsPresets::EmailVerifyRequest($user);
 
             $db->commit();
         } catch (AppException $e) {

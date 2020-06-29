@@ -1,0 +1,27 @@
+{knit "header"}
+<p>Dear {$user.firstName} {$user.lastName},</p>
+<p>Please click on the link below or copy & paste your e-mail verification code to verify your e-mail address
+    at {$config.public.title}</p>
+<p>Your username is: <strong>{$user.username}</strong><br>
+    Your verification code: <strong>{$emailVerificationCode}</strong></p>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+    <tr>
+        <td align="left">
+            <table role="presentation" border="0" cellpadding="0"
+                   cellspacing="0">
+                <tbody>
+                <tr>
+                    <td><a href="https://{$config.public.domain}/verify_email?code={$emailVerificationCode}"
+                           target="_blank">Verify E-mail</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>Feel free to let us know if you require further information!</p>
+<p>Regards,<br>
+    {$config.public.title} Team</p>
+{knit "footer"}

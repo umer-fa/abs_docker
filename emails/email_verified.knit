@@ -1,0 +1,7 @@
+{knit "header"}
+<p>Dear {$user.firstName} {$user.lastName},</p>
+<p>Your e-mail address is now verified.</p>
+<p>Feel free to let us know if you require further information!</p>
+<p>Regards,<br>
+    {$config.public.title} Team</p>
+{knit "footer"}

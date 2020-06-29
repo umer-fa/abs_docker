@@ -99,7 +99,7 @@ class Signin extends AbstractSessionAPIController
 
             // User Status
             if (!in_array($user->status, ["active", "frozen"])) {
-                throw new API_Exception('USER_STATUS_DISABLED');
+                throw new API_Exception('AUTH_USER_DISABLED');
             }
 
         } catch (API_Exception $e) {
@@ -159,6 +159,8 @@ class Signin extends AbstractSessionAPIController
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw API_Exception::InternalError();
         }
+
+        $user->deleteCached();
 
         // Authenticate Session
         $this->apiSession->loginAs($user);
