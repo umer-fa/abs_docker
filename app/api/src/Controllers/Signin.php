@@ -147,8 +147,10 @@ class Signin extends AbstractSessionAPIController
             $tally->save();
 
             // Difference IP from last login
-            if ($lastLoginLog->ipAddress !== $this->ipAddress) {
-                UserEmailsPresets::SignInIPChange($user, $lastLoginLog->ipAddress, $this->ipAddress);
+            if (isset($lastLoginLog)) {
+                if ($lastLoginLog->ipAddress !== $this->ipAddress) {
+                    UserEmailsPresets::SignInIPChange($user, $lastLoginLog->ipAddress, $this->ipAddress);
+                }
             }
 
             $db->commit();
