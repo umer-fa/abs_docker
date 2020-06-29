@@ -22,7 +22,7 @@ abstract class AbstractCachedObj
      * @param bool $useCache
      * @return static|null
      */
-    public static function getInstance(string $instanceKey, bool $useCache = true): ?self
+    public static function retrieveInstance(string $instanceKey, bool $useCache = true): ?self
     {
         $app = Kernel::getInstance();
 
