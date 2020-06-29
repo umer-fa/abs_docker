@@ -80,6 +80,7 @@ class Session extends AbstractSessionAPIController
                     "email" => $authUser->email,
                     "isEmailVerified" => $authUser->isEmailVerified === 1,
                     "hasGoogle2FA" => $authUser->credentials()->googleAuthSeed ? true : false,
+                    "country" => $authUser->country,
                     "joinedStamp" => $authUser->joinStamp
                 ];
 
