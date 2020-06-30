@@ -7,6 +7,7 @@ use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
 use App\Common\Users\UserEmailsPresets;
+use Comely\Database\Schema;
 use Comely\Utils\Time\Time;
 
 /**
@@ -30,9 +31,13 @@ class VerifyEmail extends AbstractAuthSessAPIController
     /**
      * @throws API_Exception
      * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function postRequestResend(): void
     {
+        $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\MailsQueue');
+
         $lastRequestedOn = $this->authUser->tally()->lastReqRec;
         if (is_int($lastRequestedOn)) {
             $timeSinceLast = Time::difference($lastRequestedOn);
