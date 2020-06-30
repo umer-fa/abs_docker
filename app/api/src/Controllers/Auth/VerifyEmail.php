@@ -20,24 +20,24 @@ class VerifyEmail extends AbstractAuthSessAPIController
 
     /**
      * @throws AppControllerException
+     * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function authSessCallback(): void
     {
         if ($this->authUser->isEmailVerified === 1) {
             throw new AppControllerException('EMAIL_ADDR_VERIFIED');
         }
+
+        $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\MailsQueue');
     }
 
     /**
      * @throws API_Exception
      * @throws AppException
-     * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function postRequestResend(): void
     {
-        $db = $this->app->db()->primary();
-        Schema::Bind($db, 'App\Common\Database\Primary\MailsQueue');
-
         $lastRequestedOn = $this->authUser->tally()->lastReqRec;
         if (is_int($lastRequestedOn)) {
             $timeSinceLast = Time::difference($lastRequestedOn);

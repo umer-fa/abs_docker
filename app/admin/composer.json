@@ -9,7 +9,7 @@
     "comely-io/data-types": "1.0.34",
     "comely-io/filesystem": "1.0.13",
     "comely-io/yaml": "1.0.10",
-    "comely-io/http": "1.0.46",
+    "comely-io/http": "1.0.47",
     "comely-io/db-orm": "1.2.10",
     "comely-io/sessions": "1.0.12",
     "comely-io/knit": "2.2.11",
