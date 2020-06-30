@@ -42,6 +42,10 @@ class Password extends AbstractAuthSessAPIController
             } elseif (Passwords::Strength($password) < 4) {
                 throw new API_Exception('PASSWORD_WEAK');
             }
+
+            if ($this->authUser->credentials()->verifyPassword($password)) {
+                throw new API_Exception('PASSWORD_SAME');
+            }
         } catch (AppException $e) {
             $e->setParam("newPassword");
             throw $e;
