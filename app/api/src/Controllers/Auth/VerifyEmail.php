@@ -56,6 +56,8 @@ class VerifyEmail extends AbstractAuthSessAPIController
 
         $this->authUser->tally()->lastReqRec = time();
         $this->authUser->tally()->save();
+
+        $this->status(true);
     }
 
     /**
