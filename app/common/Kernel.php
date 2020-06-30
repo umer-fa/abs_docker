@@ -177,9 +177,7 @@ class Kernel implements AppConstants
     {
         if (!$this->mem) {
             $this->mem = new Memory();
-            if ($this->cache) {
-                $this->mem->caching($this->cache);
-            }
+            $this->mem->caching($this->cache);
         }
 
         return $this->mem;

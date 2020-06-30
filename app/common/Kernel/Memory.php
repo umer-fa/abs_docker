@@ -72,7 +72,7 @@ class Memory
         $this->validateKey($key);
 
         // Check in run-time memory
-        $object = $this->instances[$key] ?? null;
+        $object = $this->objects[$key] ?? null;
         if (is_object($object) && is_a($object, $instanceOf)) {
             return $object;
         }
