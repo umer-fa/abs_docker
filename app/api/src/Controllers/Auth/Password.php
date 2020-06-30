@@ -65,7 +65,7 @@ class Password extends AbstractAuthSessAPIController
                 throw new API_Exception('PASSWORD_INCORRECT');
             }
         } catch (API_Exception $e) {
-            $e->setParam("confirmPassword");
+            $e->setParam("currentPassword");
             throw $e;
         }
 
