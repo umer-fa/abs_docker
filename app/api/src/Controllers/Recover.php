@@ -57,9 +57,6 @@ class Recover extends AbstractSessionAPIController
         $this->reCaptchaValidation();
         $user = $this->inputEmailToUser();
         $userParams = $user->params();
-        var_dump($userParams);
-        var_dump($user->params());
-        var_dump($userParams->resetTokenEpoch);
 
         // Is still valid?
         if (!is_int($userParams->resetTokenEpoch) || Time::difference($userParams->resetTokenEpoch) >= 3600) {
