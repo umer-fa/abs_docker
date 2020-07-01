@@ -117,7 +117,7 @@ class MailConstructor
             );
         }
 
-        if (!Validator::isASCII($msg, "!-_+=@#$?<>|][}{\\/*.&%~`\"'")) {
+        if (!Validator::isASCII($msg, "!-_+=@#$?<>|][}{\\/*;,.&%~`\"'")) {
             throw new MailConstructException('Pre-header contains an illegal character');
         }
 
