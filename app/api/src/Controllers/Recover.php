@@ -22,6 +22,8 @@ use Comely\Utils\Time\Time;
  */
 class Recover extends AbstractSessionAPIController
 {
+    public const EXPLICIT_METHOD_NAMES = true;
+
     /**
      * @throws API_Exception
      * @throws \Comely\Database\Exception\DbConnectionException
