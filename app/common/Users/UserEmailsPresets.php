@@ -154,4 +154,39 @@ class UserEmailsPresets
 
         $mail->addToQueue();
     }
+
+    /**
+     * @param User $user
+     * @param string $resetCode
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\MailConstructException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Knit\Exception\KnitException
+     */
+    public static function RecoveryRequest(User $user, string $resetCode): void
+    {
+        $k = Kernel::getInstance();
+        $publicConfig = $k->config()->public();
+
+        $mail = $k->mailer()->compose($user->email, "Account recovery requested");
+        $mail->preHeader(
+            sprintf(
+                'Forgot your %1$s password? This email contains password recovery instructions for %2$s',
+                $publicConfig->title(),
+                $user->username
+            )
+        );
+
+        $mail->htmlMessageFromTemplate("recover_req.knit", [
+            "user" => [
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "username" => $user->username,
+                "email" => $user->email,
+            ],
+            "resetCode" => $resetCode,
+        ]);
+
+        $mail->addToQueue();
+    }
 }

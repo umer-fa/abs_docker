@@ -1,0 +1,26 @@
+{knit "header"}
+<p>Dear {$user.firstName} {$user.lastName},</p>
+<p>Please follow the instructions below to recover your {$config.public.title} account password</p>
+<p>Your username is: <strong>{$user.username}</strong><br>
+    Reset code: <strong>{$resetCode}</strong></p>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+    <tr>
+        <td align="left">
+            <table role="presentation" border="0" cellpadding="0"
+                   cellspacing="0">
+                <tbody>
+                <tr>
+                    <td><a href="https://{$config.public.domain}/recover?code={$resetCode}"
+                           target="_blank">Reset Password</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>Contact support immediately if you did not request this change!</p>
+<p>Regards,<br>
+    {$config.public.title} Team</p>
+{knit "footer"}

@@ -48,3 +48,5 @@ LOGIN_ID_INVALID | Login ID contains an illegal character | Focus on field
 LOGIN_ID_UNKNOWN | No such user is registered | Focus on field
 VERIFY_CODE_REQ | Verification code cannot be blank | Focus on field
 VERIFY_CODE_INVALID | Incorrect validation code | Focus on field
+USER_MATCH_COUNTRY | User country does not match | Focus on field
+RECOVER_REQ_TIMEOUT | Account recovery was requested less than 15 minutes ago | Response has **"wait"** property with number of minutes user should wait
