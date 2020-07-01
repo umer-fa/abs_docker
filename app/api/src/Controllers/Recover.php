@@ -23,6 +23,7 @@ use Comely\Utils\Time\Time;
 class Recover extends AbstractSessionAPIController
 {
     /**
+     * @throws API_Exception
      * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function sessionAPICallback(): void
@@ -31,6 +32,10 @@ class Recover extends AbstractSessionAPIController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
+
+        if ($this->apiSession->authUserId) {
+            throw new API_Exception('ALREADY_LOGGED_IN');
+        }
     }
 
     /**
