@@ -61,6 +61,16 @@ class Query extends AbstractAppModel
     }
 
     /**
+     * @return void
+     */
+    public function beforeQuery(): void
+    {
+        if (strlen($this->endpoint) > 512) {
+            $this->endpoint = substr($this->endpoint, 0, 512);
+        }
+    }
+
+    /**
      * @throws AppException
      * @throws \App\Common\Exception\AppConfigException
      */

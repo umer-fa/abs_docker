@@ -30,7 +30,7 @@ class Queries extends AbstractAppTable
         $cols->binary("checksum")->fixed(20);
         $cols->string("ip_address")->length(45);
         $cols->string("method")->length(8);
-        $cols->string("endpoint")->length(256);
+        $cols->string("endpoint")->length(512);
         $cols->double("start_on")->precision(14, 4)->unSigned();
         $cols->double("end_on")->precision(14, 4)->unSigned();
         $cols->int("res_code")->bytes(2)->unSigned()->nullable();
