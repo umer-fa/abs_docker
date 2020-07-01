@@ -34,6 +34,7 @@ class Recover extends AbstractSessionAPIController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
         Schema::Bind($db, 'App\Common\Database\Primary\Users');
         Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users\Tally');
 
         if ($this->apiSession->authUserId) {
             throw new API_Exception('ALREADY_LOGGED_IN');
