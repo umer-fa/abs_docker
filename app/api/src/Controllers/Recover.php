@@ -84,8 +84,8 @@ class Recover extends AbstractSessionAPIController
             $user->params()->resetTokenEpoch = null;
             $user->params()->resetToken = null;
             $user->credentials()->hashPassword($randomPassword);
-            $user->set("params", $user->cipher()->encrypt(clone $user->params()));
-            $user->set("credentials", $user->cipher()->encrypt(clone $user->credentials()));
+            $user->set("params", $user->cipher()->encrypt(clone $user->params())->raw());
+            $user->set("credentials", $user->cipher()->encrypt(clone $user->credentials())->raw());
             $user->query()->update(function () {
                 throw new AppException('Failed to save new password');
             });
@@ -155,7 +155,7 @@ class Recover extends AbstractSessionAPIController
             $resetToken = PRNG::randomBytes(16)->base64()->value();
             $user->params()->resetTokenEpoch = time();
             $user->params()->resetToken = $resetToken;
-            $user->set("params", $user->cipher()->encrypt(clone $user->params()));
+            $user->set("params", $user->cipher()->encrypt(clone $user->params())->raw());
             $user->query()->update(function () {
                 throw new AppException('Failed to save user params');
             });
