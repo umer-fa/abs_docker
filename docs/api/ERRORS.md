@@ -17,6 +17,8 @@ AUTH_USER_2FA_NOT_SETUP | User has not enabled 2FA authentication | Redirect to 
 ALREADY_LOGGED_IN | You are already logged in! | Redirect user to authenticated screen (i.e. dashboard)
 RECAPTCHA_REQ | ReCaptcha validation is required | n/a
 RECAPTCHA_FAILED | ReCaptcha validation was failed | Reset reCaptcha on user screen
+REFERRER_ID_INVALID | Entered referrer ID is invalid | n/a
+REFERRER_NOT_FOUND | No such referrer exists | n/a
 FIRST_NAME_REQ | First name is required | Focus on input field
 FIRST_NAME_LEN | First name must be between 3 and 16 characters | Focus on input field
 FIRST_NAME_INVALID | First name contains an illegal character | Focus on input field

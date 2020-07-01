@@ -203,6 +203,29 @@ class Signup extends AbstractSessionAPIController
             throw $e;
         }
 
+        // Referrer
+        $referrer = trim(strval($this->input()->get("referrer")));
+        if ($referrer) {
+            try {
+                if (!Validator::isValidUsername($referrer)) {
+                    throw new API_Exception('REFERRER_ID_INVALID');
+                }
+
+                try {
+                    $referrerUser = Users::Username($referrer);
+                } catch (AppException $e) {
+                    if ($e->getCode() === AppException::MODEL_NOT_FOUND) {
+                        throw new API_Exception('REFERRER_NOT_FOUND');
+                    }
+
+                    throw $e;
+                }
+            } catch (API_Exception $e) {
+                $e->setParam("referrer");
+                throw $e;
+            }
+        }
+
         // Terms and conditions
         try {
             $terms = trim(strval($this->input()->get("terms")));
@@ -221,7 +244,7 @@ class Signup extends AbstractSessionAPIController
             $user = new User();
             $user->id = 0;
             $user->set("checksum", "tba");
-            $user->referrer = null;
+            $user->referrer = isset($referrerUser) ? $referrerUser->id : null;
             $user->status = "active";
             $user->firstName = $firstName;
             $user->lastName = $lastName;
