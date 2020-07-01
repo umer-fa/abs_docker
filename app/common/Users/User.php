@@ -273,7 +273,8 @@ class User extends AbstractAppModel
         try {
             $cache = $this->app->cache();
             $cache->delete(sprintf(self::CACHE_KEY, $this->id));
-            $cache->delete(sprintf(self::CACHE_KEY_EMAIL, $this->email));
+            $cache->delete(sprintf(self::CACHE_KEY_USERNAME, strtolower($this->username)));
+            $cache->delete(sprintf(self::CACHE_KEY_EMAIL, md5(strtolower($this->email))));
         } catch (CacheException $e) {
         }
     }
