@@ -189,4 +189,38 @@ class UserEmailsPresets
 
         $mail->addToQueue();
     }
+
+    /**
+     * @param User $user
+     * @param string $newPassword
+     * @throws \App\Common\Exception\AppConfigException
+     * @throws \App\Common\Exception\MailConstructException
+     * @throws \Comely\Database\Exception\ORM_Exception
+     * @throws \Comely\Knit\Exception\KnitException
+     */
+    public static function PasswordReset(User $user, string $newPassword): void
+    {
+        $k = Kernel::getInstance();
+        $publicConfig = $k->config()->public();
+
+        $mail = $k->mailer()->compose($user->email, "Your new account password");
+        $mail->preHeader(
+            sprintf(
+                'Password reset was successful; This e-mail contains your new %1$s account password',
+                $publicConfig->title()
+            )
+        );
+
+        $mail->htmlMessageFromTemplate("password_reset.knit", [
+            "user" => [
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "username" => $user->username,
+                "email" => $user->email,
+            ],
+            "newPassword" => $newPassword,
+        ]);
+
+        $mail->addToQueue();
+    }
 }

@@ -50,3 +50,6 @@ VERIFY_CODE_REQ | Verification code cannot be blank | Focus on field
 VERIFY_CODE_INVALID | Incorrect validation code | Focus on field
 USER_MATCH_COUNTRY | User country does not match | Focus on field
 RECOVER_REQ_TIMEOUT | Account recovery was requested less than 15 minutes ago | Response has **"wait"** property with number of minutes user should wait
+RECOVER_CODE_REQ | Recovery code is required | Focus on field
+RECOVER_CODE_INVALID | Recovery code is incorrect | Focus on field
+RECOVER_CODE_EXPIRED | Account recovery code has expired | Redirect to recover screen

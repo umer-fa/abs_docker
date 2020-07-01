@@ -8,9 +8,11 @@ use App\Common\Database\Primary\Users;
 use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppException;
 use App\Common\Packages\ReCaptcha\ReCaptcha;
+use App\Common\Users\User;
 use App\Common\Users\UserEmailsPresets;
 use App\Common\Validator;
 use Comely\Database\Schema;
+use Comely\Utils\Security\Passwords;
 use Comely\Utils\Security\PRNG;
 use Comely\Utils\Time\Time;
 
@@ -37,61 +39,79 @@ class Recover extends AbstractSessionAPIController
      * @throws \Comely\Database\Exception\DbConnectionException
      * @throws \Comely\Database\Exception\PDO_Exception
      */
-    public function postRequest(): void
+    public function postSubmit(): void
     {
-        // ReCaptcha Validation
-        if ($this->isReCaptchaRequired()) {
-            try {
-                $reCaptchaRes = $this->input()->get("reCaptchaRes");
-                if (!$reCaptchaRes || !is_string($reCaptchaRes)) {
-                    throw new API_Exception('RECAPTCHA_REQ');
-                }
+        $this->reCaptchaValidation();
+        $user = $this->inputEmailToUser();
+        $userParams = $user->params();
 
-                $programConfig = ProgramConfig::getInstance();
-                $reCaptchaSecret = $programConfig->reCaptchaPrv;
-                if (!$reCaptchaSecret || !is_string($reCaptchaSecret)) {
-                    throw new AppException('ReCaptcha secret was not available');
-                }
-
-                try {
-                    ReCaptcha::Verify($reCaptchaSecret, $reCaptchaRes, $this->ipAddress);
-                } catch (\Exception $e) {
-                    throw new API_Exception('RECAPTCHA_FAILED');
-                }
-            } catch (API_Exception $e) {
-                $e->setParam("reCaptchaRes");
-                throw $e;
-            }
+        // Is still valid?
+        if (!is_int($userParams->resetTokenEpoch) || Time::difference($userParams->resetTokenEpoch) >= 3600) {
+            throw new API_Exception('RECOVER_CODE_EXPIRED');
         }
 
-        // E-mail address
+        // Code
         try {
-            $email = trim(strval($this->input()->get("email")));
-            if (!$email) {
-                throw new API_Exception('EMAIL_ADDR_REQ');
-            } elseif (!Validator::isValidEmailAddress($email)) {
-                throw new API_Exception('EMAIL_ADDR_INVALID');
-            } elseif (strlen($email) > 64) {
-                throw new API_Exception('EMAIL_ADDR_LEN');
+            $code = trim(strval($this->input()->get("code")));
+            if (!$code) {
+                throw new API_Exception('RECOVER_CODE_REQ');
+            } elseif (!preg_match('/^[a-z0-9=]+$/i', $code)) {
+                throw new API_Exception('RECOVER_CODE_INVALID');
             }
 
-            try {
-                $user = Users::Email($email);
-                $user->validate();
-                $user->credentials();
-                $user->params();
-                $user->tally();
-            } catch (AppException $e) {
-                if ($e->getCode() === AppException::MODEL_NOT_FOUND) {
-                    throw new API_Exception('LOGIN_ID_UNKNOWN');
-                }
-
-                throw $e;
+            if ($userParams->resetToken !== $code) {
+                throw new API_Exception('RECOVER_CODE_INVALID');
             }
         } catch (API_Exception $e) {
-            $e->setParam("email");
+            $e->setParam("code");
             throw $e;
         }
+
+        $db = $this->app->db()->primary();
+        try {
+            $db->beginTransaction();
+
+            // Generate and same token
+            $randomPassword = Passwords::Generate(12);
+            $user->params()->resetTokenEpoch = null;
+            $user->params()->resetToken = null;
+            $user->credentials()->hashPassword($randomPassword);
+            $user->set("params", $user->cipher()->encrypt(clone $user->params()));
+            $user->set("credentials", $user->cipher()->encrypt(clone $user->credentials()));
+            $user->query()->update(function () {
+                throw new AppException('Failed to save new password');
+            });
+
+            // User Log
+            $user->log('reset-password', null, null, null, ["account", "recovery"]);
+
+            // Send e-mail message
+            UserEmailsPresets::PasswordReset($user, $randomPassword);
+
+            $db->commit();
+        } catch (AppException $e) {
+            $db->rollBack();
+            throw $e;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
+            throw API_Exception::InternalError();
+        }
+
+        $user->deleteCached();
+        $this->status(true);
+    }
+
+    /**
+     * @throws API_Exception
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
+     * @throws \Comely\Database\Exception\PDO_Exception
+     */
+    public function postRequest(): void
+    {
+        $this->reCaptchaValidation();
+        $user = $this->inputEmailToUser();
 
         // Country
         try {
@@ -129,14 +149,15 @@ class Recover extends AbstractSessionAPIController
             $user->params()->resetToken = $resetToken;
             $user->set("params", $user->cipher()->encrypt(clone $user->params()));
             $user->query()->update(function () {
-                throw new AppException('Failed to same user params');
+                throw new AppException('Failed to save user params');
             });
 
             // Update Tally
             $user->tally()->lastReqRec = time();
+            $user->tally()->save();
 
             // User Log
-            $user->log('recovery-req', null, null, null, ["account"]);
+            $user->log('recovery-req', null, null, null, ["account", "recovery"]);
 
             // Send e-mail message
             UserEmailsPresets::RecoveryRequest($user, $resetToken);
@@ -152,7 +173,77 @@ class Recover extends AbstractSessionAPIController
         }
 
         $user->deleteCached();
-
         $this->status(true);
+    }
+
+    /**
+     * @throws API_Exception
+     * @throws AppException
+     */
+    private function reCaptchaValidation(): void
+    {
+        // ReCaptcha Validation
+        if ($this->isReCaptchaRequired()) {
+            try {
+                $reCaptchaRes = $this->input()->get("reCaptchaRes");
+                if (!$reCaptchaRes || !is_string($reCaptchaRes)) {
+                    throw new API_Exception('RECAPTCHA_REQ');
+                }
+
+                $programConfig = ProgramConfig::getInstance();
+                $reCaptchaSecret = $programConfig->reCaptchaPrv;
+                if (!$reCaptchaSecret || !is_string($reCaptchaSecret)) {
+                    throw new AppException('ReCaptcha secret was not available');
+                }
+
+                try {
+                    ReCaptcha::Verify($reCaptchaSecret, $reCaptchaRes, $this->ipAddress);
+                } catch (\Exception $e) {
+                    throw new API_Exception('RECAPTCHA_FAILED');
+                }
+            } catch (API_Exception $e) {
+                $e->setParam("reCaptchaRes");
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @return User
+     * @throws API_Exception
+     * @throws AppException
+     */
+    private function inputEmailToUser(): User
+    {
+        // E-mail address
+        try {
+            $email = trim(strval($this->input()->get("email")));
+            if (!$email) {
+                throw new API_Exception('EMAIL_ADDR_REQ');
+            } elseif (!Validator::isValidEmailAddress($email)) {
+                throw new API_Exception('EMAIL_ADDR_INVALID');
+            } elseif (strlen($email) > 64) {
+                throw new API_Exception('EMAIL_ADDR_LEN');
+            }
+
+            try {
+                $user = Users::Email($email);
+                $user->validate();
+                $user->credentials();
+                $user->params();
+                $user->tally();
+            } catch (AppException $e) {
+                if ($e->getCode() === AppException::MODEL_NOT_FOUND) {
+                    throw new API_Exception('LOGIN_ID_UNKNOWN');
+                }
+
+                throw $e;
+            }
+        } catch (API_Exception $e) {
+            $e->setParam("email");
+            throw $e;
+        }
+
+        return $user;
     }
 }
