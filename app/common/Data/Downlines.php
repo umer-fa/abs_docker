@@ -16,7 +16,9 @@ use Comely\Database\Exception\ORM_ModelNotFoundException;
 class Downlines extends AbstractCachedObj
 {
     /** @var int Cached for 0.5 hours */
-    protected const CACHE_TTL = 1800;
+    //protected const CACHE_TTL = 1800;
+    // Todo: increase cache back
+    protected const CACHE_TTL = 120;
 
     /** @var array */
     private array $tier1;
