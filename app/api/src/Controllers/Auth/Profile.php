@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace App\API\Controllers\Auth;
 
-
 use App\Common\Database\Primary\Users;
 
 /**
- * Class Referrer
+ * Class Profile
  * @package App\API\Controllers\Auth
  */
-class Referrer extends AbstractAuthSessAPIController
+class Profile extends AbstractAuthSessAPIController
 {
+    public const EXPLICIT_METHOD_NAMES = true;
+
     public function authSessCallback(): void
     {
     }
@@ -19,7 +20,7 @@ class Referrer extends AbstractAuthSessAPIController
     /**
      * @throws \App\Common\Exception\AppException
      */
-    public function get(): void
+    public function getReferrer(): void
     {
         if (!$this->authUser->referrer) {
             $this->status(true);
