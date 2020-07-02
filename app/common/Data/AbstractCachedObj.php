@@ -84,4 +84,17 @@ abstract class AbstractCachedObj
         static::$instances[$instanceKey] = $instance;
         return static::$instances[$instanceKey];
     }
+
+    /**
+     * @param string $instanceKey
+     */
+    public static function deleteCached(string $instanceKey): void
+    {
+        unset(static::$instances[$instanceKey]);
+
+        try {
+            Kernel::getInstance()->cache()->delete($instanceKey);
+        } catch (\Exception $e) {
+        }
+    }
 }
