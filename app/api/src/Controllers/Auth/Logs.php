@@ -17,6 +17,10 @@ class Logs extends AbstractAuthSessAPIController
     {
     }
 
+    /**
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
+     */
     public function get(): void
     {
         // Per Page
