@@ -256,4 +256,20 @@ class AppConfig
     {
         return $this->adminPort;
     }
+
+    /**
+     * @return string
+     */
+    public function apiHost(): string
+    {
+        return $this->apiHost;
+    }
+
+    /**
+     * @return int
+     */
+    public function apiPort(): int
+    {
+        return $this->apiPort;
+    }
 }
