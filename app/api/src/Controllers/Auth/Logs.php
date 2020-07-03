@@ -29,7 +29,8 @@ class Logs extends AbstractAuthSessAPIController
             $perPage = 50;
         }
 
-        if (!in_array($perPage, [50, 100, 250])) {
+        // Todo: remove 5
+        if (!in_array($perPage, [5, 50, 100, 250])) {
             throw new AppException('Invalid pagination perPage value');
         }
 
