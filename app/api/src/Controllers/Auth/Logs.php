@@ -58,7 +58,7 @@ class Logs extends AbstractAuthSessAPIController
 
             $result["totalRows"] = $search->totalRows();
             $result["page"] = $page;
-            $result["nav"] = $search->compactNav(3);
+            $result["nav"] = $search->compactNav();
         } catch (\Exception $e) {
             $this->app->errors()->triggerIfDebug($e, E_USER_WARNING);
             throw new AppException('Failed to retrieve activity log');
