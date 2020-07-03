@@ -26,10 +26,10 @@ class Logs extends AbstractAuthSessAPIController
         // Per Page
         $perPage = (int)trim(strval($this->input()->get("perPage")));
         if (!$perPage) {
-            $perPage = 25;
+            $perPage = 50;
         }
 
-        if (!in_array($perPage, [25, 50, 100])) {
+        if (!in_array($perPage, [50, 100, 250])) {
             throw new AppException('Invalid pagination perPage value');
         }
 
