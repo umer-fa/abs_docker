@@ -105,7 +105,7 @@ class Signin extends AbstractSessionAPIController
             }
 
         } catch (API_Exception $e) {
-            $e->setParam("email");
+            $e->setParam("login");
             throw $e;
         }
 
