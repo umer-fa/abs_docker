@@ -163,10 +163,9 @@ class Sessions extends AbstractAppTable
                 $checkSince = $timeStamp - $timeOutPerIP;
                 $lastTokenForIp = $db->query()->table(self::NAME)
                     ->where('`ip_address`=? AND `issued_on`>=?', [$ip, $checkSince])
-                    ->limit(1)
                     ->fetch();
 
-                if ($lastTokenForIp->count()) {
+                if ($lastTokenForIp->count() >= 4) {
                     throw new API_Exception('SESSION_CREATE_TIMEOUT');
                 }
             }
