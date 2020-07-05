@@ -171,5 +171,6 @@ class Signin extends AbstractSessionAPIController
 
         $this->status(true);
         $this->response()->set("username", $user->username);
+        $this->response()->set("hasGoogle2FA", $user->credentials()->googleAuthSeed ? true : false);
     }
 }
