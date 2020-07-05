@@ -100,7 +100,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
                 try {
                     $this->apiSession->lastUsedOn = $timeStamp;
                     $this->apiSession->query()->update(function (Query $query) {
-                        if ($query->isSuccess(false)) {
+                        if (!$query->isSuccess(false)) {
                             throw new AppException('Failed to update API session time pointer');
                         }
                     });
