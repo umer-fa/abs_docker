@@ -8,6 +8,7 @@ use App\Common\Config\ProgramConfig;
 use App\Common\Database\API\Sessions;
 use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppException;
+use Comely\Database\Queries\Query;
 use Comely\Database\Schema;
 use Comely\DataTypes\Buffer\Base16;
 use FurqanSiddiqui\SemaphoreEmulator\Exception\ConcurrentRequestBlocked;
@@ -98,10 +99,15 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
             if ($timeStamp !== $this->apiSession->lastUsedOn) {
                 try {
                     $this->apiSession->lastUsedOn = $timeStamp;
-                    $this->apiSession->query()->update();
+                    $this->apiSession->query()->update(function (Query $query) {
+                        if ($query->isSuccess(false)) {
+                            throw new AppException('Failed to update API session time pointer');
+                        }
+                    });
                 } catch (\Exception $e) {
-                    $this->app->errors()->triggerIfDebug($e);
-                    throw new AppException('Failed to update API session time pointer');
+                    if ($e instanceof AppException) {
+                        throw $e;
+                    }
                 }
             }
 
