@@ -25,6 +25,7 @@ class Profile extends AbstractAuthSessAPIController
         if (!$this->authUser->referrer) {
             $this->status(true);
             $this->response()->set("referrer", null);
+            return;
         }
 
         $referrer = Users::get($this->authUser->referrer);
