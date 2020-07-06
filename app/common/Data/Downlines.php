@@ -131,6 +131,7 @@ class Downlines extends AbstractCachedObj
                 "username" => $referral->username,
                 "country" => $referral->country,
                 "email" => $hideEmails ? $this->hideEmailAddress($referral->email) : $referral->email,
+                "joinedDate" => date("d-m-Y", $referral->joinStamp),
             ];
         }
 
