@@ -68,7 +68,7 @@ class Recover extends AbstractSessionAPIController
             $code = trim(strval($this->input()->get("code")));
             if (!$code) {
                 throw new API_Exception('RECOVER_CODE_REQ');
-            } elseif (!preg_match('/^[a-z0-9=]+$/i', $code)) {
+            } elseif (!preg_match('/^[a-z0-9]{16}$/i', $code)) {
                 throw new API_Exception('RECOVER_CODE_INVALID');
             }
 
@@ -157,7 +157,7 @@ class Recover extends AbstractSessionAPIController
             $db->beginTransaction();
 
             // Generate and same token
-            $resetToken = PRNG::randomBytes(16)->base64()->value();
+            $resetToken = PRNG::randomBytes(8)->base16()->hexits(false);
             $user->params()->resetTokenEpoch = time();
             $user->params()->resetToken = $resetToken;
             $user->set("params", $user->cipher()->encrypt(clone $user->params())->raw());
