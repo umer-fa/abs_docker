@@ -86,7 +86,7 @@ class Oauth2 extends AbstractSessionAPIController
             throw new AppControllerException(sprintf('AuthenticateURL method does not exists in %s', $oAuth2Vendor));
         }
 
-        $authURL = call_user_func([$oAuthClassname, "AuthenticateURL"], [$appId, "[redirect-url]"]);
+        $authURL = call_user_func_array([$oAuthClassname, "AuthenticateURL"], [$appId, "[redirect-url]"]);
 
         $this->status(true);
         $this->response()->set("redirect", $authURL);
