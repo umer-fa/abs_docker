@@ -77,7 +77,7 @@ class Oauth2 extends AbstractSessionAPIController
             throw new AppControllerException(sprintf('%s OAuth2 App ID or Key is not configured', $oAuth2Vendor));
         }
 
-        $oAuthClassname = sprintf('FurqanSiddiqui\OAuth2\Vendors\%s', $oAuth2Vendor);
+        $oAuthClassname = sprintf('FurqanSiddiqui\OAuth2\Vendors\%1$s\%1$s', $oAuth2Vendor);
         if (!class_exists($oAuthClassname)) {
             throw new AppControllerException(sprintf('%s OAuth2 vendor class does not exist', $oAuth2Vendor));
         }
