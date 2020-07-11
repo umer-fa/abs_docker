@@ -194,7 +194,7 @@ class Program extends AbstractAdminConfigController
                 if ($appId) {
                     try {
                         $appId = \Comely\Utils\Validator\Validator::String($appId)
-                            ->match('/^[\w\-\:\@\#]+$/')
+                            ->match('/^[\w\-\:\@\#\.]+$/')
                             ->len(8, 128)
                             ->validate();
                     } catch (LengthException $e) {
