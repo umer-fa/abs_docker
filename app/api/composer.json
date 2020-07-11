@@ -14,7 +14,8 @@
     "comely-io/cache": "1.0.24",
     "comely-io/knit": "2.2.11",
     "comely-io/mailer": "1.0.11",
-    "furqansiddiqui/semaphore-emulator-php": "0.1.2"
+    "furqansiddiqui/semaphore-emulator-php": "0.1.2",
+    "furqansiddiqui/oauth2-php": "0.4.1"
   },
   "autoload": {
     "psr-4": {
