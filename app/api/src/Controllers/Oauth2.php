@@ -11,6 +11,7 @@ use App\Common\Exception\AppException;
 use App\Common\Users\User;
 use App\Common\Users\UserEmailsPresets;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
+use Comely\Database\Schema;
 
 /**
  * Class Oauth2
@@ -21,7 +22,8 @@ class Oauth2 extends AbstractSessionAPIController
     /**
      * @throws API_Exception
      * @throws AppControllerException
-     * @throws \App\Common\Exception\AppException
+     * @throws AppException
+     * @throws \Comely\Database\Exception\DbConnectionException
      */
     public function sessionAPICallback(): void
     {
@@ -33,6 +35,13 @@ class Oauth2 extends AbstractSessionAPIController
         if (!$programConfig->oAuthStatus) {
             throw new AppControllerException('OAuth2.0 has been disabled');
         }
+
+        $db = $this->app->db()->primary();
+        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users\Logs');
+        Schema::Bind($db, 'App\Common\Database\Primary\Users\Tally');
+        Schema::Bind($db, 'App\Common\Database\Primary\MailsQueue');
     }
 
     /**
