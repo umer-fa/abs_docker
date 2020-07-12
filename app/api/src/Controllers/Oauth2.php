@@ -90,6 +90,10 @@ class Oauth2 extends AbstractSessionAPIController
      */
     private function oAuthSignIn(User $user, string $oAuthId): void
     {
+        if (!$this->apiAccess->signIn) {
+            throw API_Exception::ControllerDisabled();
+        }
+
         $db = $this->app->db()->primary();
         $timeStamp = time();
 
