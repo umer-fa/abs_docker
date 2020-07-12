@@ -76,7 +76,7 @@ class Oauth2 extends AbstractAuthSessAPIController
                 throw new API_Exception('Failed to update user row');
             });
 
-            $this->authUser->log('oauth2-connect', null, null, null, [$vendorName]);
+            $this->authUser->log('oauth2-connect', [$vendorName], null, null, ["oauth2"]);
 
             $db->commit();
         } catch (AppException $e) {
@@ -124,7 +124,7 @@ class Oauth2 extends AbstractAuthSessAPIController
                 throw new API_Exception('Failed to update user row');
             });
 
-            $this->authUser->log('oauth2-disconnect', null, null, null, [$vendorName]);
+            $this->authUser->log('oauth2-disconnect', [$vendorName], null, null, ["oauth2"]);
 
             $db->commit();
         } catch (AppException $e) {
