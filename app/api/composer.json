@@ -15,7 +15,7 @@
     "comely-io/knit": "2.2.11",
     "comely-io/mailer": "1.0.11",
     "furqansiddiqui/semaphore-emulator-php": "0.1.2",
-    "furqansiddiqui/oauth2-php": "0.4.2"
+    "furqansiddiqui/oauth2-php": "0.4.3"
   },
   "autoload": {
     "psr-4": {
