@@ -59,6 +59,7 @@ class Oauth2 extends AbstractAuthSessAPIController
         $profile = $oAuth2->requestProfile($this->input()->array(), $redirectURI);
 
         if ($profile->email !== $this->authUser->email) {
+            $this->response()->set("errorData", [$vendorName]);
             throw new API_Exception('OAUTH2_EMAIL_MISMATCH');
         }
 
