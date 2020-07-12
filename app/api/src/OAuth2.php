@@ -57,6 +57,10 @@ class OAuth2
     public static function Get(string $oAuthId): AbstractVendor
     {
         $programConfig = ProgramConfig::getInstance(true);
+        if (!$programConfig->oAuthStatus) {
+            throw new AppException('OAuth2.0 has been disabled');
+        }
+
         $oAuth2Vendor = null;
         switch (strtolower(strval($oAuthId))) {
             case "google":

@@ -11,6 +11,9 @@ AUTH_USER_DISABLED | Your account is disabled; Contact support | Redirect to log
 AUTH_USER_TIMEOUT | Your session has timed out | Redirect to login page
 AUTH_USER_OTP | 2FA authentication is required | Redirect to 2FA page
 AUTH_USER_2FA_NOT_SETUP | User has not enabled 2FA authentication | Redirect to dashboard page
+OAUTH2_ALREADY_CONNECTED | An OAuth2.0 account for this vendor is already connected | n/a
+OAUTH2_NOT_CONNECTED | Not connected to OAuth2.0 vendor | n/a
+OAUTH2_EMAIL_MISMATCH | E-mail does not match with OAuth2.0 account | n/a
 2FA_TOTP_REQ | TOTP code is required | Focus on input field
 2FA_TOTP_INVALID | TOTP code is invalid | Focus on input field
 2FA_TOTP_USED | This TOTP is already used | Focus on input field

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\API\Controllers;
 
-use App\Common\Config\ProgramConfig;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\API_Exception;
 use App\Common\Exception\AppControllerException;
@@ -29,11 +28,6 @@ class Oauth2 extends AbstractSessionAPIController
     {
         if ($this->apiSession->authUserId) {
             throw new API_Exception('ALREADY_LOGGED_IN');
-        }
-
-        $programConfig = ProgramConfig::getInstance(true);
-        if (!$programConfig->oAuthStatus) {
-            throw new AppControllerException('OAuth2.0 has been disabled');
         }
 
         $db = $this->app->db()->primary();
