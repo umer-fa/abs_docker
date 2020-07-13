@@ -100,7 +100,7 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
 
         // Timestamp
         $reqTimeStamp = (int)trim(strval($this->input()->get("timeStamp")));
-        if (Time::difference($reqTimeStamp) >= 2) {
+        if (Time::difference($reqTimeStamp) >= 6) {
             $age = Time::difference($reqTimeStamp);
             throw new API_Exception(sprintf('The request query has expired, -%d seconds', $age));
         }
