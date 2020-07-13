@@ -5,6 +5,7 @@ namespace App\Common;
 
 use App\Common\Config\AppConfig;
 use App\Common\Exception\AppBootstrapException;
+use App\Common\Exception\AppConfigException;
 use App\Common\Exception\AppDirException;
 use App\Common\Exception\AppException;
 use App\Common\Kernel\AbstractErrorHandler;
@@ -76,6 +77,8 @@ class Kernel implements AppConstants
     private ?Memory $mem = null;
     /** @var SemaphoreEmulator|null */
     private ?SemaphoreEmulator $semaphore = null;
+    /** @var string */
+    private string $timeZone;
 
     /**
      * Kernel constructor.
@@ -91,6 +94,7 @@ class Kernel implements AppConstants
         $this->errHandler = new StdErrorHandler($this);
         $this->errs = new Errors($this);
         $this->ciphers = new Ciphers($this);
+        $this->setTimeZone(trim(strval(getenv("APP_TIMEZONE"))));
 
         $this->initConfig(Validator::getBool(trim(strval(getenv("COMELY_APP_CACHED_CONFIG")))));
 
@@ -110,6 +114,22 @@ class Kernel implements AppConstants
                 $this->errors()->trigger($e, E_USER_WARNING);
             }
         }
+    }
+
+    /**
+     * @param string $tz
+     * @return $this
+     * @throws AppConfigException
+     */
+    public function setTimeZone(string $tz): self
+    {
+        if (!in_array($tz, \DateTimeZone::listIdentifiers())) {
+            throw new AppConfigException('Invalid configured timezone');
+        }
+
+        $this->timeZone = $tz;
+        date_default_timezone_set($this->timeZone);
+        return $this;
     }
 
     /**
