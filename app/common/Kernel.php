@@ -117,6 +117,14 @@ class Kernel implements AppConstants
     }
 
     /**
+     * @return string
+     */
+    public function getTimezone(): string
+    {
+        return $this->timeZone;
+    }
+
+    /**
      * @param string $tz
      * @return $this
      * @throws AppConfigException
