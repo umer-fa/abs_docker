@@ -76,7 +76,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
         }
 
         if ($validateAPISession) {
-            $sessionTokenId = $this->app->constant("api_auth_header_sess_token");
+            $sessionTokenId = $this->httpAuthHeader($this->app->constant("api_auth_header_sess_token"));
             if (!$sessionTokenId) {
                 throw new API_Exception('SESSION_ID_HEADER');
             }
