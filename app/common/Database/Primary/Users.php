@@ -45,6 +45,7 @@ class Users extends AbstractAppTable
         $cols->binary("credentials")->length(self::BINARY_OBJ_SIZE);
         $cols->binary("params")->length(self::BINARY_OBJ_SIZE);
         $cols->binary("auth_token")->fixed(32)->nullable();
+        $cols->binary("auth_api_hmac")->fixed(16)->nullable();
         $cols->int("join_stamp")->bytes(4)->unSigned();
         $cols->int("time_stamp")->bytes(4)->unSigned();
         $cols->primaryKey("id");

@@ -10,6 +10,7 @@ use App\Common\Exception\AppException;
 use App\Common\Packages\GoogleAuth\GoogleAuthenticator;
 use App\Common\Users\User;
 use Comely\Database\Schema;
+use Comely\Utils\Time\Time;
 
 /**
  * Class AbstractAuthSessAPIController
@@ -54,7 +55,61 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
             }
         }
 
+        // Validate SIGNATURE
+        $this->validateUserSignature();
+
+        // Callback
         $this->authSessCallback();
+    }
+
+    /**
+     * @param array $excludeBodyParams
+     * @throws API_Exception
+     */
+    private function validateUserSignature(array $excludeBodyParams = []): void
+    {
+        $userSecret = $this->authUser->private("authApiHmac");
+        if (strlen($userSecret) !== 16) {
+            throw new API_Exception('No secret value set for user HMAC');
+        }
+
+        // Prepare exclude vars
+        $excludeBodyParams = array_map("strtolower", $excludeBodyParams);
+
+        // Request params
+        $payload = [];
+        foreach ($this->input()->array() as $key => $value) {
+            if (in_array(strtolower($key), $excludeBodyParams)) {
+                $value = "";
+            }
+
+            $payload[$key] = $value;
+        }
+
+        $queryString = http_build_query($payload);
+
+        // Calculate HMAC
+        $hmac = hash_hmac("sha512", $queryString, $userSecret, false);
+        if (!$hmac) {
+            throw new API_Exception('Failed to generate cross-check HMAC signature');
+        }
+
+        if ($this->httpAuthHeader($this->app->constant("api_auth_header_user_sign")) !== $hmac) {
+            throw new API_Exception('HMAC user signature validation failed');
+        }
+
+        // Timestamp
+        $reqTimeStamp = (int)trim(strval($this->input()->get("timeStamp")));
+        if (Time::difference($reqTimeStamp) >= 2) {
+            $age = Time::difference($reqTimeStamp);
+            throw new API_Exception(sprintf('The request query has expired, -%d seconds', $age));
+        }
+
+        // Nonce
+        $reqNonce = trim(strval($this->input()->get("nonce")));
+        if (!$reqNonce) {
+            throw new API_Exception('Nonce value is required with auth API queries');
+        }
     }
 
     /**

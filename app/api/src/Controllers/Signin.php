@@ -13,6 +13,8 @@ use App\Common\Users\UserEmailsPresets;
 use App\Common\Validator;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
+use Comely\Utils\Security\Passwords;
+use Comely\Utils\Security\PRNG;
 
 /**
  * Class Signin
@@ -137,9 +139,12 @@ class Signin extends AbstractSessionAPIController
         try {
             $db->beginTransaction();
 
+            $apiHmacSecret = Passwords::Generate(16);
+
             $tally->lastLogin = $timeStamp;
             $user->timeStamp = $timeStamp;
             $user->set("authToken", $this->apiSession->token()->binary()->raw());
+            $user->set("authApiHmac", $apiHmacSecret);
             $user->query()->update(function () {
                 throw new AppException('Failed to update user row');
             });
@@ -172,5 +177,6 @@ class Signin extends AbstractSessionAPIController
         $this->status(true);
         $this->response()->set("username", $user->username);
         $this->response()->set("hasGoogle2FA", $user->credentials()->googleAuthSeed ? true : false);
+        $this->response()->set("authHMACSecret", $apiHmacSecret);
     }
 }

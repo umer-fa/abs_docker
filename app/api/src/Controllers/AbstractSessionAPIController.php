@@ -29,6 +29,8 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
     protected ?ResourceLock $semaphoreIPLock = null;
     /** @var API_Session|null */
     protected ?API_Session $apiSession = null;
+    /** @var array */
+    private array $httpAuthHeader;
 
     /**
      * @throws API_Exception
@@ -39,6 +41,8 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
      */
     final public function apiCallback(): void
     {
+        $this->httpAuthHeader = explode(",", strval($this->request()->headers()->get("authorization")));
+
         // Semaphore Emulator
         if (static::SEMAPHORE_IP_LOCK) {
             if ($this->request()->method() !== "GET") { // Nevermind concurrent GET requests
@@ -72,15 +76,8 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
         }
 
         if ($validateAPISession) {
-            $httpAuthHeader = explode(",", strval($this->request()->headers()->get("authorization")));
-            foreach ($httpAuthHeader as $auth) {
-                $auth = explode(" ", strval($auth));
-                if (trim(strtolower(strval($auth[0]))) === $this->app->constant("api_sess_auth_name")) {
-                    $sessionTokenId = trim(strval($auth[1] ?? ""));
-                }
-            }
-
-            if (!isset($sessionTokenId) || !is_string($sessionTokenId) || !$sessionTokenId) {
+            $sessionTokenId = $this->app->constant("api_auth_header_sess_token");
+            if (!$sessionTokenId) {
                 throw new API_Exception('SESSION_ID_HEADER');
             }
 
@@ -138,6 +135,23 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
 
         // Callback
         $this->sessionAPICallback();
+    }
+
+    /**
+     * @param string $which
+     * @return string|null
+     */
+    final public function httpAuthHeader(string $which): ?string
+    {
+        $value = null;
+        foreach ($this->httpAuthHeader as $auth) {
+            $auth = explode(" ", strval($auth));
+            if (trim(strtolower(strval($auth[0]))) === strtolower($which)) {
+                $value = trim(strval($auth[1] ?? ""));
+            }
+        }
+
+        return $value;
     }
 
     /**

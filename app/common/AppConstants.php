@@ -18,5 +18,7 @@ interface AppConstants
     /** @var int[] */
     public const ROOT_ADMINISTRATORS = [1];
     /** @var string */
-    public const API_SESS_AUTH_NAME = "api-token";
+    public const API_AUTH_HEADER_SESS_TOKEN = "api-token";
+    /** @var string */
+    public const API_AUTH_HEADER_USER_SIGN = "user-signature";
 }

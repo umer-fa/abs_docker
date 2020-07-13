@@ -5,7 +5,6 @@ namespace App\Admin\Controllers\Api;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\API\API_Session;
-use App\Common\Database\API\Baggage;
 use App\Common\Database\Primary\Users;
 use App\Common\Exception\AppControllerException;
 use App\Common\Exception\AppException;
