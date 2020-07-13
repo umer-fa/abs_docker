@@ -241,6 +241,8 @@ class Signup extends AbstractSessionAPIController
         try {
             $db->beginTransaction();
 
+            $apiHmacSecret = Passwords::Generate(16);
+
             $user = new User();
             $user->id = 0;
             $user->set("checksum", "tba");
@@ -278,6 +280,7 @@ class Signup extends AbstractSessionAPIController
             $user->set("credentials", $userCipher->encrypt(clone $credentials)->raw());
             $user->set("params", $userCipher->encrypt(clone $params)->raw());
             $user->set("authToken", $this->apiSession->token()->binary()->raw());
+            $user->set("authApiHmac", $apiHmacSecret);
 
             // Save Changes
             $user->query()->where('id', $user->id)->update(function () {
@@ -305,5 +308,6 @@ class Signup extends AbstractSessionAPIController
 
         $this->status(true);
         $this->response()->set("username", $user->username);
+        $this->response()->set("authHMACSecret", $apiHmacSecret);
     }
 }

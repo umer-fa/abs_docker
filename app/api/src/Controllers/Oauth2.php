@@ -11,6 +11,7 @@ use App\Common\Users\User;
 use App\Common\Users\UserEmailsPresets;
 use Comely\Database\Exception\ORM_ModelNotFoundException;
 use Comely\Database\Schema;
+use Comely\Utils\Security\Passwords;
 
 /**
  * Class Oauth2
@@ -63,6 +64,8 @@ class Oauth2 extends AbstractSessionAPIController
             throw new AppException('Failed to retrieve User');
         }
 
+        $apiHmacSecret = Passwords::Generate(16);
+
         if (isset($user) && $user) {
             $userCredOAuth = $user->credentials()->oAuth;
             $credProp = $this->getUserCredProp($oAuthId);
@@ -70,25 +73,27 @@ class Oauth2 extends AbstractSessionAPIController
                 throw new AppException(sprintf('%s account not linked with your account profile', $oAuthId));
             }
 
-            $this->oAuthSignIn($user, $oAuthId);
+            $this->oAuthSignIn($user, $apiHmacSecret, $oAuthId);
 
             $this->status(true);
             $this->response()->set("oAuthResult", "signin");
             $this->response()->set("username", $user->username);
             $this->response()->set("hasGoogle2FA", $user->credentials()->googleAuthSeed ? true : false);
+            $this->response()->set("authHMACSecret", $apiHmacSecret);
             return;
         }
     }
 
     /**
      * @param User $user
+     * @param string $apiAuthHMAC
      * @param string $oAuthId
      * @throws API_Exception
      * @throws AppException
      * @throws \Comely\Database\Exception\DbConnectionException
      * @throws \Comely\Database\Exception\PDO_Exception
      */
-    private function oAuthSignIn(User $user, string $oAuthId): void
+    private function oAuthSignIn(User $user, string $apiAuthHMAC, string $oAuthId): void
     {
         if (!$this->apiAccess->signIn) {
             throw API_Exception::ControllerDisabled();
@@ -106,6 +111,7 @@ class Oauth2 extends AbstractSessionAPIController
             $tally->lastLogin = $timeStamp;
             $user->timeStamp = $timeStamp;
             $user->set("authToken", $this->apiSession->token()->binary()->raw());
+            $user->set("authApiHmac", $apiAuthHMAC);
             $user->query()->update(function () {
                 throw new AppException('Failed to update user row');
             });
