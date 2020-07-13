@@ -42,6 +42,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
     final public function apiCallback(): void
     {
         $this->httpAuthHeader = explode(",", strval($this->request()->headers()->get("authorization")));
+        $this->httpAuthHeader = array_map("trim", $this->httpAuthHeader);
 
         // Semaphore Emulator
         if (static::SEMAPHORE_IP_LOCK) {
@@ -145,7 +146,7 @@ abstract class AbstractSessionAPIController extends AbstractAPIController
     {
         $value = null;
         foreach ($this->httpAuthHeader as $auth) {
-            $auth = explode(" ", strval($auth));
+            $auth = explode(" ", trim(strval($auth)));
             if (trim(strtolower(strval($auth[0]))) === strtolower($which)) {
                 $value = trim(strval($auth[1] ?? ""));
             }
