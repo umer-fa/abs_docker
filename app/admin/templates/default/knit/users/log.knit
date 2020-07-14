@@ -1,7 +1,7 @@
 {knit "header"}
 <div class="row">
     <div class="col-12">
-        <form method="get" action="{$page.authRoot}user/log">
+        <form method="get" action="{$page.authRoot}users/log">
             <div class="card">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0"><i class="ion ion-ios-search-strong mr-2"></i>Log Filters</h5>
