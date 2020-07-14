@@ -1,7 +1,7 @@
 {knit "header"}
 <div class="row">
     <div class="col-12">
-        <form method="get" action="{$page.authRoot}staff/log">
+        <form method="get" action="{$page.authRoot}user/log">
             <div class="card">
                 <div class="card-header bg-light">
                     <h5 class="card-title mb-0"><i class="ion ion-ios-search-strong mr-2"></i>Log Filters</h5>
@@ -128,7 +128,7 @@
                                         {/if}
                                     </td>
                                     <td class="text-left">{$log.log}</td>
-                                    <td class="text-center">{$log.data}</td>
+                                    <td class="text-center">{if $log.data}{$log.data}{else}<span class="text-muted">n/a</span>{/if}</td>
                                     <td class="{if $log.ipAddress}text-right{else}text-center text-muted{/if}">{if $log.ipAddress}{$log.ipAddress}{else}n/a{/if}</td>
                                     <td class="text-right">{$log.timeStamp|dated}</td>
                                 </tr>
