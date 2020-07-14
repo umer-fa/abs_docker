@@ -113,5 +113,15 @@ class Session extends AbstractSessionAPIController
         $this->response()->set("reCaptcha", $reCaptcha);
         $this->response()->set("issuedOn", $this->apiSession->issuedOn);
         $this->response()->set("lastUsedOn", $this->apiSession->lastUsedOn);
+
+        // Baggage
+        $baggage = [];
+
+        $cfIPCountry = $this->request()->headers()->get("cf-ipcountry");
+        if (is_string($cfIPCountry) && preg_match('/^[a-z]{2}$/i', $cfIPCountry)) {
+            $baggage["cf-ipcountry"] = $cfIPCountry;
+        }
+
+        $this->response()->set("baggage", $baggage);
     }
 }
