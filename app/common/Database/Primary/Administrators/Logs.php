@@ -8,7 +8,6 @@ use App\Common\Admin\Log;
 use App\Common\Database\AbstractAppTable;
 use App\Common\Database\Primary\Administrators;
 use App\Common\Exception\AppException;
-use Comely\Database\Exception\DatabaseException;
 use Comely\Database\Schema\Table\Columns;
 use Comely\Database\Schema\Table\Constraints;
 
@@ -54,7 +53,7 @@ class Logs extends AbstractAppTable
      */
     public static function insert(int $adminId, string $message, ?string $controller = null, ?int $line = null, ?array $flags = null): Log
     {
-        if (!preg_match('/^\w+[\w\s@\-:=.#\",\[\];]+$/', $message)) {
+        if (!preg_match('/^\w+[\w\s@\-:=.#\",()\[\];]+$/', $message)) {
             throw new AppException('Admin log contains an illegal character');
         } elseif (strlen($message) > 255) {
             throw new AppException('Admin log cannot exceed 255 bytes');
