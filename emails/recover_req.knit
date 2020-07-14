@@ -11,7 +11,7 @@
                    cellspacing="0">
                 <tbody>
                 <tr>
-                    <td><a href="https://{$config.public.domain}/recover?code={$resetCode}"
+                    <td><a href="https://{$config.public.domain}/recover/reset?code={$resetCode}"
                            target="_blank">Reset Password</a></td>
                 </tr>
                 </tbody>

@@ -12,7 +12,7 @@
                    cellspacing="0">
                 <tbody>
                 <tr>
-                    <td><a href="https://{$config.public.domain}/verify_email?code={$emailVerificationCode}"
+                    <td><a href="https://{$config.public.domain}/auth/account?verifyEmail&code={$emailVerificationCode}"
                            target="_blank">Verify E-mail</a></td>
                 </tr>
                 </tbody>
