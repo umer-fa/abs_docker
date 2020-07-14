@@ -15,6 +15,10 @@ authToken = authToken[0];
 
 let rootPath = root + "/" + authToken;
 
+String.prototype.ucfirst = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
     $('[data-toggle="popover"]').popover();
