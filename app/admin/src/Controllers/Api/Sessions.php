@@ -299,7 +299,7 @@ class Sessions extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'api/sessions?key=%s&value=%s&type=%s&archived=%s&sort=%d&perPage=%d',
+                'api/sessions?key=%s&value=%s&type=%s&archived=%s&sort=%s&perPage=%d',
                 $search["key"],
                 $search["value"],
                 $search["type"],

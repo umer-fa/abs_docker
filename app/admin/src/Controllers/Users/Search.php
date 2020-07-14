@@ -254,7 +254,7 @@ class Search extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'users/search?key=%s&value=%s&status=%s&country=%s&sort=%d&perPage=%d',
+                'users/search?key=%s&value=%s&status=%s&country=%s&sort=%s&perPage=%d',
                 $search["key"],
                 $search["value"],
                 $search["status"],

@@ -264,7 +264,7 @@ class Queue extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'mails/queue?status=%s&email=%s&subject=%s&sort=%d&perPage=%d',
+                'mails/queue?status=%s&email=%s&subject=%s&sort=%s&perPage=%d',
                 $search["status"],
                 $search["email"],
                 $search["subject"],

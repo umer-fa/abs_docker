@@ -176,7 +176,7 @@ class Log extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'users/log?user=%s&match=%s&sort=%d&perPage=%d',
+                'users/log?user=%s&match=%s&sort=%s&perPage=%d',
                 $search["user"],
                 $search["match"],
                 $search["sort"],

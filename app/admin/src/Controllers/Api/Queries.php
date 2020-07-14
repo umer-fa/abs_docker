@@ -290,7 +290,7 @@ class Queries extends AbstractAdminController
 
         // Search Link
         $search["link"] = $this->authRoot . sprintf(
-                'api/queries?key=%s&value=%s&method=%s&endpoint=%s&sort=%d&perPage=%d',
+                'api/queries?key=%s&value=%s&method=%s&endpoint=%s&sort=%s&perPage=%d',
                 $search["key"],
                 $search["value"],
                 $search["method"],
