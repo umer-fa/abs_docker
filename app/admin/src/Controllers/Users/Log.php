@@ -165,7 +165,7 @@ class Log extends AbstractAdminController
                     $log = new \App\Common\Users\Log($logRow);
                     $logUser = Users::get($log->user);
                     $log = Validator::JSON_Filter($log, sprintf("log:%d", $log->id));
-                    $log["data"] = $log["data"] ? base64_decode($log["data"]) : "[]";
+                    $log["data"] = json_encode($log["data"]);
                     $log["username"] = $logUser->username;
                     $result["rows"][] = $log;
                 } catch (\Exception $e) {

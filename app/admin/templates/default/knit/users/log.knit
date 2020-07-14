@@ -129,7 +129,7 @@
                                     </td>
                                     <td class="text-left">{$log.log}</td>
                                     <td class="text-center">{$log.data}</td>
-                                    <td class="text-right">{$log.ipAaddress}</td>
+                                    <td class="{if $log.ipAddress}text-right{else}text-center text-muted{/if}">{if $log.ipAddress}{$log.ipAddress}{else}n/a{/if}</td>
                                     <td class="text-right">{$log.timeStamp|dated}</td>
                                 </tr>
                                 {foreachelse}
