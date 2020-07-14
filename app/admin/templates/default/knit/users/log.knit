@@ -20,7 +20,7 @@
                             <i class="ion ion-arrow-down-c ml-2"></i>
                         </a>
                     </p>
-                    <div id="logFilterAdvanced" class="collapse">
+                    <div id="logFilterAdvanced" class="collapse{if $search.advanced} show{/if}">
                         <div class="form-group row">
                             <label class="col-form-label col-sm-3" for="searchQuery">Search Matching</label>
                             <div class="col-sm-6">
