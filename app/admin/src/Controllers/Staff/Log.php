@@ -18,8 +18,8 @@ use Comely\DataTypes\Integers;
  */
 class Log extends AbstractAdminController
 {
-    private const PER_PAGE_OPTIONS = [25, 50, 100];
-    private const PER_PAGE_DEFAULT = self::PER_PAGE_OPTIONS[0];
+    private const PER_PAGE_OPTIONS = [50, 100, 250];
+    private const PER_PAGE_DEFAULT = self::PER_PAGE_OPTIONS[1];
 
     /** @var array */
     private array $adminsList;
