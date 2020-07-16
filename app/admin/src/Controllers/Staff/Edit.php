@@ -50,7 +50,7 @@ class Edit extends AbstractAdminController
                 throw new AppControllerException('Only root admins can edit/reset administrative accounts');
             } else {
                 if ($this->adminAcc->privileges()->root()) {
-                    if ($this->adminAcc->id > $this->authAdmin->id) {
+                    if ($this->adminAcc->id < $this->authAdmin->id) {
                         throw new AppControllerException('You cannot edit this root administrative account');
                     }
                 }
