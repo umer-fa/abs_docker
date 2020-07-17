@@ -151,7 +151,7 @@ class API_Session extends AbstractAppModel
             }
 
             // Check Timeout
-            if (is_int($this->_lastUsedOn) && Time::difference($this->_lastUsedOn) >= 1800) {
+            if (is_int($this->_lastUsedOn) && Time::difference($this->_lastUsedOn) >= 43200) {
                 try {
                     $user->log('session-timeout', null, null, null, ["auth"]);
                 } catch (\Exception $e) {
