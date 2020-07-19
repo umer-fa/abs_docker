@@ -218,7 +218,7 @@ class UserEmailsPresets
                 "username" => $user->username,
                 "email" => $user->email,
             ],
-            "newPassword" => $newPassword,
+            "newPassword" => htmlspecialchars($newPassword),
         ]);
 
         $mail->addToQueue();
