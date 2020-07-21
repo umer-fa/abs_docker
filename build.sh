@@ -38,8 +38,6 @@ if [[ ! -f "$DOCKER_ENV_FILE" ]]; then
   exit
 fi
 
-rm -rf tmp/semaphore/*.lock
-
 cp .env docker/.env
 cd docker/
 DOCKER_COMPOSE_FILE="docker-compose.$DOCKER_COMPOSE.yml";
