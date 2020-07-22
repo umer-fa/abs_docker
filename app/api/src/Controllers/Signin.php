@@ -126,15 +126,6 @@ class Signin extends AbstractSessionAPIController
             throw $e;
         }
 
-        // Last Login Log
-        try {
-            /** @var Log $lastLoginLog */
-            $lastLoginLog = Users\Logs::Find()
-                ->query(sprintf("WHERE `user`=%d AND `flags` LIKE '%%signin%%' ORDER BY `id` DESC", $user->id))
-                ->first();
-        } catch (ORM_ModelNotFoundException $e) {
-        }
-
         // Sign In
         try {
             $db->beginTransaction();
@@ -151,13 +142,6 @@ class Signin extends AbstractSessionAPIController
 
             $user->log("signin", null, null, null, ["signin", "auth"]);
             $tally->save();
-
-            // Difference IP from last login
-            if (isset($lastLoginLog)) {
-                if ($lastLoginLog->ipAddress !== $this->ipAddress) {
-                    UserEmailsPresets::SignInIPChange($user, $lastLoginLog->ipAddress, $this->ipAddress);
-                }
-            }
 
             $db->commit();
         } catch (AppException $e) {

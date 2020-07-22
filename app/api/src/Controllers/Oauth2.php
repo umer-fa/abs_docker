@@ -119,13 +119,6 @@ class Oauth2 extends AbstractSessionAPIController
             $user->log("oauth-signin", [$oAuthId], null, null, ["signin", "auth", "oauth"]);
             $tally->save();
 
-            // Difference IP from last login
-            if (isset($lastLoginLog)) {
-                if ($lastLoginLog->ipAddress !== $this->ipAddress) {
-                    UserEmailsPresets::SignInIPChange($user, $lastLoginLog->ipAddress, $this->ipAddress);
-                }
-            }
-
             $db->commit();
         } catch (AppException $e) {
             $db->rollBack();
