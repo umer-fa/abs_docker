@@ -126,7 +126,7 @@ abstract class AbstractAdminController extends GenericHttpController
             }
 
             // Timeout
-            if (Time::minutesDifference(intval($sessionBag->get("timeStamp"))) >= 60) {
+            if (Time::minutesDifference(intval($sessionBag->get("timeStamp"))) >= 240) {
                 $admin->log('Session timed out', get_called_class(), 0, ["auth"]);
                 throw new AppControllerException('Your session has timed out; Please login again!');
             }
