@@ -155,6 +155,46 @@ class Edit extends AbstractAdminController
             throw $e;
         }
 
+        // First name
+        try {
+            $firstName = trim(strval($this->input()->get("first_name")));
+            $firstNameLen = strlen($firstName);
+            if (!$firstName) {
+                throw new AppControllerException('First name is required');
+            } elseif ($firstNameLen < 3) {
+                throw new AppControllerException('First name is too short');
+            } elseif ($firstNameLen > 32) {
+                throw new AppControllerException('First name is too long');
+            } elseif (!preg_match('/^[a-z]+(\s[a-z]+)*$/i', $firstName)) {
+                throw new AppControllerException('First name contains an illegal character');
+            }
+        } catch (AppControllerException $e) {
+            $e->setParam("first_name");
+            throw $e;
+        }
+
+        $this->user->firstName = $firstName;
+
+        // Last name
+        try {
+            $lastName = trim(strval($this->input()->get("last_name")));
+            $lastNameLen = strlen($lastName);
+            if (!$lastName) {
+                throw new AppControllerException('Last name is required');
+            } elseif ($lastNameLen < 3) {
+                throw new AppControllerException('Last name is too short');
+            } elseif ($lastNameLen > 32) {
+                throw new AppControllerException('Last name is too long');
+            } elseif (!preg_match('/^[a-z]+(\s[a-z]+)*$/i', $lastName)) {
+                throw new AppControllerException('Last name contains an illegal character');
+            }
+        } catch (AppControllerException $e) {
+            $e->setParam("last_name");
+            throw $e;
+        }
+
+        $this->user->lastName = $lastName;
+
         // E-mail Address
         $email = trim(strval($this->input()->get("email")));
         try {
