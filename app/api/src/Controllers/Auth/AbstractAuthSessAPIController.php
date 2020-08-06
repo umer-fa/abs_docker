@@ -86,7 +86,7 @@ abstract class AbstractAuthSessAPIController extends AbstractSessionAPIControlle
             $payload[$key] = $value;
         }
 
-        $queryString = http_build_query($payload);
+        $queryString = http_build_query($payload, "" ,"&", PHP_QUERY_RFC3986);
 
         // Calculate HMAC
         $hmac = hash_hmac("sha512", $queryString, $userSecret, false);
