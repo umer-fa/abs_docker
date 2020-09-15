@@ -96,7 +96,7 @@ class Signup extends AbstractSessionAPIController
             $lastName = trim(strval($this->input()->get("lastName")));
             if (!$lastName) {
                 throw new API_Exception('LAST_NAME_REQ');
-            } elseif (!Integers::Range(strlen($lastName), 3, 16)) {
+            } elseif (!Integers::Range(strlen($lastName), 2, 16)) {
                 throw new API_Exception('LAST_NAME_LEN');
             } elseif (!preg_match('/^[a-z]+(\s[a-z]+)*$/i', $lastName)) {
                 throw new API_Exception('LAST_NAME_INVALID');

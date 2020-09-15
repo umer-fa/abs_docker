@@ -181,7 +181,7 @@ class Edit extends AbstractAdminController
             $lastNameLen = strlen($lastName);
             if (!$lastName) {
                 throw new AppControllerException('Last name is required');
-            } elseif ($lastNameLen < 3) {
+            } elseif ($lastNameLen < 2) {
                 throw new AppControllerException('Last name is too short');
             } elseif ($lastNameLen > 32) {
                 throw new AppControllerException('Last name is too long');
