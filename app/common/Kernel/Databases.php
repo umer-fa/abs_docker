@@ -121,4 +121,23 @@ class Databases
 
         return $queries;
     }
+
+    /**
+     * @return int
+     */
+    public function flushAllQueries(): int
+    {
+        $flushed = 0;
+
+        /**
+         * @var string $name
+         * @var Database $db
+         */
+        foreach ($this->dbs as $name => $db) {
+            $flushed += $db->queries()->count();
+            $db->queries()->flush();
+        }
+
+        return $flushed;
+    }
 }
