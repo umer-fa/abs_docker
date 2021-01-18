@@ -34,6 +34,9 @@ class Countries extends AbstractAdminController
         } catch (SchemaException|ORM_Exception $e) {
             $countries = [];
         }
+        echo '<pre>';
+        var_dump($countries);
+        exit();
         $this->countries = $countries;
     }
 
