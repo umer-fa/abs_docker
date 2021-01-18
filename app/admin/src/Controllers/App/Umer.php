@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\App;
 
 use Comely\Database\Database;
 
