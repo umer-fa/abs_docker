@@ -1,0 +1,9 @@
+2021/01/07 08:18:41 [crit] 27#27: *13 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 184.105.139.67, server: 0.0.0.0:6000
+2021/01/08 11:44:59 [crit] 27#27: *47 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 184.105.139.68, server: 0.0.0.0:6000
+2021/01/11 19:17:04 [crit] 27#27: *125 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 184.105.247.254, server: 0.0.0.0:6000
+2021/01/12 09:56:50 [crit] 27#27: *148 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 65.49.20.68, server: 0.0.0.0:6000
+2021/01/13 15:18:20 [crit] 27#27: *174 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 184.105.247.254, server: 0.0.0.0:6000
+2021/01/14 13:47:39 [crit] 27#27: *202 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 216.218.206.68, server: 0.0.0.0:6000
+2021/01/15 14:49:46 [crit] 27#27: *231 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 216.218.206.69, server: 0.0.0.0:6000
+2021/01/16 17:03:41 [crit] 27#27: *258 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 74.82.47.5, server: 0.0.0.0:6000
+2021/01/17 10:52:09 [crit] 27#27: *288 SSL_do_handshake() failed (SSL: error:141CF06C:SSL routines:tls_parse_ctos_key_share:bad key share) while SSL handshaking, client: 184.105.139.67, server: 0.0.0.0:6000
