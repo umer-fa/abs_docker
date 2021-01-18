@@ -31,6 +31,9 @@ class Countries extends AbstractAdminController
 
         try {
             $countries = \App\Common\Database\Primary\Countries::Find()->query("WHERE 1 ORDER BY `name` ASC", [])->all();
+            echo '<pre>';
+            var_dump($countries);
+            exit();
         } catch (SchemaException|ORM_Exception $e) {
             $countries = [];
         }
