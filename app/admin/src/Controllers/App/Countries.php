@@ -93,7 +93,10 @@ class Countries extends AbstractAdminController
      */
     public function get(): void
     {
+        echo '<pre>';
         var_dump($this->countries);exit();
+
+
         $this->page()->title('Countries')->index(310, 40)
             ->prop("icon", "mdi mdi-earth");
 
