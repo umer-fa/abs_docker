@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Admin\Controllers\App;
+namespace App\Admin\Controllers;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Country;
