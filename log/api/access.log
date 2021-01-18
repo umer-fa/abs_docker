@@ -153,3 +153,4 @@
 45.125.65.61 - - [18/Jan/2021:01:50:24 +0000] "GET / HTTP/1.1" 400 264 "-" "-"
 172.69.39.17 - - [18/Jan/2021:05:09:35 +0000] "GET / HTTP/1.1" 403 196 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
 172.69.39.7 - - [18/Jan/2021:05:09:36 +0000] "GET /favicon.ico HTTP/1.1" 403 196 "https://front.mediapark.work:8443/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+139.162.116.230 - - [18/Jan/2021:06:19:48 +0000] "GET / HTTP/1.1" 400 264 "-" "HTTP Banner Detection (https://security.ipip.net)"
