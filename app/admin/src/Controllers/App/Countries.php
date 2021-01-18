@@ -30,13 +30,10 @@ class Countries extends AbstractAdminController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
 
         try {
-            $countries = \App\Common\Database\Primary\Countries::Find()->query("WHERE 1 ORDER BY `name` ASC", [])->match(['name','code']);
+            $countries = \App\Common\Database\Primary\Countries::Find()->query("WHERE 1 ORDER BY `name` ASC", [])->all();
         } catch (SchemaException|ORM_Exception $e) {
             $countries = [];
         }
-        echo '<pre>';
-        var_dump($countries);
-        exit();
         $this->countries = $countries;
     }
 
@@ -101,15 +98,19 @@ class Countries extends AbstractAdminController
 
         $this->breadcrumbs("Application", null, "mdi mdi-server-network");
 
+        $json = json_encode($this->countries);
+
+        $filtered = json_decode($json, true);
+        echo "<pre>";
+        var_dump($filtered);
+        exit();
+
         try {
             $countries = Validator::JSON_Filter($this->countries, "Countries");
         } catch (AppException $e) {
             trigger_error($e->getMessage(), E_USER_WARNING);
             $countries = [];
         }
-
-        echo '<pre>';
-        var_dump($countries);exit();
 
         $template = $this->template("app/countries.knit")
             ->assign("countries", $countries);
