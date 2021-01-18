@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Admin\Controllers;
 
+use Comely\Database\Database;
+
 /**
  * Class Dashboard
  * @package App\Admin\Controllers
@@ -19,10 +21,8 @@ class Umer extends AbstractAdminController
      */
     public function get(): void
     {
-<<<<<<< HEAD
-        echo umer farooq chattha'';
-=======
-        echo "umer farooq asa";
->>>>>>> 0fadad3dec72d23d7bb7bfdcaf81b578bfc2c425
+//        $this->app->db()->primary();
+
+
     }
 }
