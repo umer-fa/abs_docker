@@ -1,0 +1,18 @@
+
+[36m[07-01-2021 06:35][0m
+[33mError:[0m [31mWarning[0m
+[33mMessage:[0m [App\Common\Exception\AppConfigException][#0] Cipher key "primary" entropy is set to default; It must be changed
+[33mFile:[0m [34mcommon/Admin/Administrator.php[0m
+[33mLine:[0m [36m100[0m
+
+[36m[07-01-2021 06:37][0m
+[33mError:[0m [31mWarning[0m
+[33mMessage:[0m [App\Common\Exception\AppConfigException][#0] Cipher key "primary" entropy is set to default; It must be changed
+[33mFile:[0m [34mcommon/Admin/Administrator.php[0m
+[33mLine:[0m [36m100[0m
+
+[36m[07-01-2021 06:58][0m
+[33mError:[0m [31mWarning[0m
+[33mMessage:[0m [App\Common\Exception\AppConfigException][#0] Cipher key "primary" entropy is set to default; It must be changed
+[33mFile:[0m [34mcommon/Admin/Administrator.php[0m
+[33mLine:[0m [36m100[0m
