@@ -6,5 +6,5 @@ workspace/
 .env
 vendor/
 config/
-log/
-tmp/
+log/*
+tmp/*
