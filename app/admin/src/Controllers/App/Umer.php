@@ -22,7 +22,7 @@ class Umer extends AbstractAdminController
     public function get(): void
     {
 //        $this->app->db()->primary();
-
+        echo 'hello';
 
     }
 }
