@@ -35,7 +35,8 @@ class Umer extends AbstractAdminController
 
         echo sprintf('SELECT `user` FROM `%s`', Countries::NAME);
 //        $dt = $db->fetch("SELECT name from countries")->all();
-        $dt = $db->fetch("SELECT name from countries")->count();
+//        $dt = $db->fetch("SELECT name from countries")->count();
+        $dt = $db->fetch("SELECT name from countries")->first();
         var_dump($dt);
         exit();
         $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
