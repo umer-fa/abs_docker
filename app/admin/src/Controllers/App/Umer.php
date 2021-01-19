@@ -43,6 +43,7 @@ class Umer extends AbstractAdminController
      */
     public function get(): void
     {
+echo 'umer';exit;
         $this->page()->title('Countries')->index(310, 40)
             ->prop("icon", "mdi mdi-earth");
 
