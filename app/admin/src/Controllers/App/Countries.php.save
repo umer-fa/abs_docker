@@ -30,7 +30,7 @@ class Countries extends AbstractAdminController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
 
         try {
-            $countries = \App\Common\Database\Primary\Countries::Find()->query("WHERE 1 ORDER BY `name` ASC", [])->all();
+            $countries = \App\Common\Database\Primary\Countries::Find()->query("WHERE 1 ORDER BY `name` ASC", [])->match(['name']);
         } catch (SchemaException|ORM_Exception $e) {
             $countries = [];
         }
