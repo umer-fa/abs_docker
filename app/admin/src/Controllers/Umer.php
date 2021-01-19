@@ -37,7 +37,8 @@ class Umer extends AbstractAdminController
 //        $dt = $db->fetch("SELECT name from countries")->all();
 //        $dt = $db->fetch("SELECT name from countries")->count();
 //        $dt = $db->fetch("SELECT name from countries")->first();
-        $dt = $db->fetch("SELECT name from countries")->last();
+//        $dt = $db->fetch("SELECT name from countries")->last();
+        $dt = $db->fetch("SELECT name from countries")->current();
         var_dump($dt);
         exit();
         $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
