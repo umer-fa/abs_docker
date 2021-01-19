@@ -28,17 +28,26 @@ class Umer extends AbstractAdminController
     public function adminCallback(): void
     {
         $db = $this->app->db()->primary();
-        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
+//        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->all();
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->first();
         echo '<pre>';
-
+//        select
 //        echo sprintf('SELECT `user` FROM `%s`', Countries::NAME);
 //        $dt = $db->fetch("SELECT name from countries")->all();
 //        $dt = $db->fetch("SELECT name from countries")->count();
 //        $dt = $db->fetch("SELECT name from countries")->first();
 //        $dt = $db->fetch("SELECT name from countries")->last();
-        $dt = $db->fetch("SELECT name from countries")->current();
+//        $dt = $db->fetch("SELECT name from countries")->current(); //select first only
+
+//        update
+        $statusQuery = $db->query()->table(\App\Common\Database\Primary\Countries::NAME)
+//            ->where('`code`=:code')
+            ->update(["status" => 2]);
+
+        $statusQuery->checkSuccess(true);
+
+        $dt = $db->fetch("SELECT name from countries");
         var_dump($dt);
         exit();
         $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
