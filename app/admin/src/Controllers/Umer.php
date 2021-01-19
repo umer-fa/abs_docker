@@ -41,6 +41,6 @@ class Umer extends AbstractAdminController
      */
     public function get(): void
     {
-
+        echo 'umer';exit();
     }
 }
