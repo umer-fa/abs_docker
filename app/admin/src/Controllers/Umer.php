@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Controllers\AbstractAdminController;
 use App\Common\Country;
+use App\Common\Database\Primary\Countries;
 use App\Common\Exception\AppException;
 use App\Common\Validator;
 use Comely\Database\Exception\DatabaseException;
@@ -26,7 +27,9 @@ class Umer extends AbstractAdminController
      */
     public function adminCallback(): void
     {
-        echo 'admin_call_able calll first';
+        $db = $this->app->db()->primary();
+        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->all();
+        var_dump($country);exit();
     }
 
     /**
@@ -41,6 +44,6 @@ class Umer extends AbstractAdminController
      */
     public function get(): void
     {
-
+        echo 'umer';exit();
     }
 }
