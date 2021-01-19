@@ -31,6 +31,9 @@ class Umer extends AbstractAdminController
         Schema::Bind($db, 'App\Common\Database\Primary\Countries');
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->all();
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->first();
+        $dt = $db->fetch("SELECT name from countries")->all();
+        var_dump($dt);
+        exit();
         $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
         echo '<pre>';
         var_dump(json_decode(json_encode($country)));
