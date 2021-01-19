@@ -193,8 +193,7 @@ class Search extends AbstractAdminController
                         break;
                     case "ip_addr":
                         $logsQuery = $db->fetch(
-                            sprintf('SELECT `user` FROM `%s` WHERE `ip_address` LIKE ? GROUP BY `user`', Users\Logs::NAME),
-                            ["%" . $searchValue . "%"]
+                            sprintf('SELECT `user` FROM `%s` WHERE `ip_address` LIKE ? GROUP BY `user`', Users\Logs::NAME),["%" . $searchValue . "%"]
                         )->all();
                         $logsUsersId = [0];
                         if ($logsQuery) {
