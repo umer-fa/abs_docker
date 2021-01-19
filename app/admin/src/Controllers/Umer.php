@@ -31,7 +31,7 @@ class Umer extends AbstractAdminController
 //        Schema::Bind($db, 'App\Common\Database\Primary\Countries');
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->all();
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->first();
-        echo '<pre>';
+        echo "<pre>";
 //        select
 //        echo sprintf('SELECT `user` FROM `%s`', Countries::NAME);
 //        $dt = $db->fetch("SELECT name from countries")->all();
@@ -42,10 +42,10 @@ class Umer extends AbstractAdminController
 
 //        update
         $statusQuery = $db->query()->table(\App\Common\Database\Primary\Countries::NAME)
-//            ->where('`code`=:code')
+            ->where('`status`=:code', ["code" => 1])
             ->update(["status" => 2]);
 
-        $statusQuery->checkSuccess(true);
+        echo $statusQuery->checkSuccess(true);
 
         $dt = $db->fetch("SELECT name from countries");
         var_dump($dt);
