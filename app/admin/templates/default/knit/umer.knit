@@ -1,5 +1,6 @@
-{$count|var_dump}
+
 {foreach $count as $foo}
-    {$foo|var_dump}
+    {$foo.name}<br>
+    {$foo.id}<br>
 {/foreach}
 
