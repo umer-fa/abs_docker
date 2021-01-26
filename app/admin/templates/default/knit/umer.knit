@@ -1,10 +1,6 @@
-<!--{$count|var_dump}-->
-<!--{foreach $count as $foo}
-    {$foo.name}<br>
-    {$foo.id}<br>
-{/foreach}-->
 
-{switch $count|count }
+
+{switch 2 }
 {case 1}
 one
 {/case}
