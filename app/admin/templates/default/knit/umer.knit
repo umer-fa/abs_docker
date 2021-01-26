@@ -1,3 +1,7 @@
 {$foo}
 <br>
 {$foo|strtoupper}
+<br>
+{$foo|strtolower}
+{var foo = 4}
+{$foo}
