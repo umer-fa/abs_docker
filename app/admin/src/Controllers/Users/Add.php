@@ -230,7 +230,6 @@ class Add extends AbstractAdminController
         $this->messages()->info("Redirecting...");
         $this->response()->set("disabled", true);
         $this->response()->set("redirect", $this->authRoot . "users/search?key=email&value=" . $user->email);
-
     }
 
     /**

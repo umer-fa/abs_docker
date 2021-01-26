@@ -32,7 +32,11 @@ class Umer extends AbstractAdminController
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->all();
 //        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->first();
         echo "<pre>";
-//        select
+//        $delete = $db->query()->table("table_name")->where('`status`=:code', ["code" => 1])->delete();
+//        $db->query()->table()->insert(['col1'=>'val1','col2'=>'val2']);
+        $object = new Countries();
+        $object->structure();
+
 //        echo sprintf('SELECT `user` FROM `%s`', Countries::NAME);
 //        $dt = $db->fetch("SELECT name from countries")->all();
 //        $dt = $db->fetch("SELECT name from countries")->count();
@@ -41,18 +45,20 @@ class Umer extends AbstractAdminController
 //        $dt = $db->fetch("SELECT name from countries")->current(); //select first only
 
 //        update
-        $statusQuery = $db->query()->table(\App\Common\Database\Primary\Countries::NAME)
-            ->where('`status`=:code', ["code" => 1])
-            ->update(["status" => 2]);
+//        $statusQuery = $db->query()->table(\App\Common\Database\Primary\Countries::NAME)
+//            ->where('`status`=:code', ["code" => 1])
+//            ->update(["status" => 2]);
+//
+//        echo $statusQuery->checkSuccess(true);
+//        exit();
 
-        echo $statusQuery->checkSuccess(true);
+//        $dt = $db->fetch("SELECT name from countries");
+//        var_dump($dt);
+//        exit();
+//        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
+//        var_dump(json_decode(json_encode($country)));
+//        exit();
 
-        $dt = $db->fetch("SELECT name from countries");
-        var_dump($dt);
-        exit();
-        $country = Countries::Find()->query("WHERE 1 ORDER BY `name` ASC",[])->match(['name'])->all();
-        var_dump(json_decode(json_encode($country)));
-        exit();
     }
 
     /**
