@@ -3,5 +3,5 @@
 {$foo|strtoupper}
 <br>
 {$foo|strtolower}
-{var foo = 4}
+{$foo = "umer is adding this"}
 {$foo}
