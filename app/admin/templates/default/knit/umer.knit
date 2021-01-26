@@ -1,5 +1,10 @@
 
 
 <?php
-    echo 'yes i am working';
+    switch(2){
+        case 1:
+            echo 'one';
+        case 2:
+            echo 'two';
+    }
 ?>
