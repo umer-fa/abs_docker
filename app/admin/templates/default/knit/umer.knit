@@ -1,3 +1,5 @@
-{while $foo > 0}
+<!--{while $foo > 0}
     {$foo--}
-{/while}
+{/while}-->
+
+sa
