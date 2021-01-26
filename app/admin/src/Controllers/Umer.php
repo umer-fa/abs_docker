@@ -73,6 +73,9 @@ class Umer extends AbstractAdminController
      */
     public function get(): void
     {
-        echo 'umer';exit();
+        $arr = array("name"=>"umer","id"=>12);
+        $template = $this->template("umer.knit")
+            ->assign("countries", $arr);
+        $this->body($template);
     }
 }
