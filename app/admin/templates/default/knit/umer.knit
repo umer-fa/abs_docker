@@ -1,1 +1,5 @@
 {$count|var_dump}
+{foreach from=$count item=foo}
+    {$foo.name}
+{/foreach}
+
