@@ -1,10 +1,5 @@
 
 
-{switch 2 }
-{case 1}
-one
-{/case}
-{case 2}
-    two
-{/case}
-{/switch}
+{php}
+    echo 'yes i am working';
+{/php}
