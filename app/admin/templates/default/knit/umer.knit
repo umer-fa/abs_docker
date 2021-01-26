@@ -3,5 +3,5 @@
 {$foo|strtoupper}
 <br>
 {$foo|strtolower}
-{assign var=foo value=$x+$y}
+{assign var=foo value="sasasaasas"}
 {$foo}
