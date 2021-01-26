@@ -4,4 +4,11 @@
     {$foo.id}<br>
 {/foreach}-->
 
-{$count|count}
+{switch $count|count }
+{case 1}
+one
+{/case}
+{case 2}
+    two
+{/case}
+{/switch}
