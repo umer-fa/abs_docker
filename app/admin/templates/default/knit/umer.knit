@@ -1,5 +1,5 @@
-{$articleTitle}
+{$foo}
 <br>
-{$articleTitle|capitalize}
+{$foo|capitalize}
 <br>
-{$articleTitle|capitalize:true}
+{$foo|capitalize:true}
