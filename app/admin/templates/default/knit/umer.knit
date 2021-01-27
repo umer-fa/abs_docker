@@ -1,6 +1,6 @@
 
 
-{$count|var_dump}
+{$foo|cat:' chattha'}
 <br>
 
 
