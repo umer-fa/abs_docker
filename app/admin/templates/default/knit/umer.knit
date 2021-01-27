@@ -2,8 +2,6 @@
 
 {$count|var_dump}
 <br>
-{$count|var_export}
-<br>
 {$count|print_r}
 
 
