@@ -1,5 +1,5 @@
 {$foo|strtoupper}
 {$foo|strtolower}
-{$foo|substr:2:1}
+{$foo|substr:2}
 
 
