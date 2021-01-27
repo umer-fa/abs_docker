@@ -1,4 +1,5 @@
 {$foo|strtoupper}
 {$foo|strtolower}
+{$foo|truncate:2:"..."}
 
 
