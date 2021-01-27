@@ -1,6 +1,7 @@
 <!--{$foo|strtoupper}
-{$foo|strtolower}-->
-<!--{$foo|substr:2}-->
-{$foo|mb_substr:2 : 4}
+{$foo|strtolower} working-->
+<!--{$foo|substr:2} working -->
+<!--{$foo|strtolower:2 : 4} not working -->
 
 
+{date("y-m-d")}
