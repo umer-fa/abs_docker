@@ -1,7 +1,7 @@
-{$foo}
-<br>
-{$foo|strtoupper}
-<br>
-{$foo|strtolower}
-<br>
-{$foo}
+
+
+{$arr|var_dump}
+
+
+
+
