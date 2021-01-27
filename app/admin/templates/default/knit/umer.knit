@@ -1,4 +1,4 @@
 
-{knit "farooq" title="my title"}
+{knit "farooq"}
 <!--{$foo}-->
 
