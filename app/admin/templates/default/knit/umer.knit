@@ -1,9 +1,4 @@
 
-
-{$foo}
-<br>
-
-
-
-
+{knit "farooq" title="my title"}
+<!--{$foo}-->
 
