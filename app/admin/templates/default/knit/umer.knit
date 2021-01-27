@@ -2,7 +2,6 @@
 
 {$count|var_dump}
 <br>
-{$count|print_r}
 
 
 
