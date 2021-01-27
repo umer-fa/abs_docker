@@ -1,6 +1,6 @@
 
 
-{$arr|var_dump}
+{$count|var_dump}
 
 
 
