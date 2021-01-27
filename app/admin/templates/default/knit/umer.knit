@@ -1,5 +1,4 @@
 
 {knit "farooq"}
-{assign var=foo1 value=12}
-{$foo1}
+
 
