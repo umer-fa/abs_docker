@@ -1,6 +1,6 @@
 <!--{$foo|strtoupper}
 {$foo|strtolower}-->
 <!--{$foo|substr:2}-->
-{$foo|substr:2 ? 4}
+{$foo|mb_substr:2 : 4}
 
 
